@@ -1,0 +1,171 @@
+/*
+ * Custom CSS
+ */
+
+:root {
+/*  --bs-body-bg: #b51111; */
+  --bs-box-shadow: 0.5rem 0.5rem 0.5rem rgba(255, 255, 255, 0.1);
+}
+
+body {
+  margin: 0px;
+}
+
+.flip {
+  -webkit-transform: scaleX(-1);
+  transform: scaleX(-1);
+}
+
+.parisienne-regular {
+  font-family: "Parisienne", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.carattere-regular {
+  font-family: "Carattere", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+#invite-wrapper {
+  background-color: #b51111;
+  padding: 0.5rem;
+}
+
+.img-fluid {
+    max-width: 100%;
+    height: auto;
+}
+
+h1 {
+  margin: 0;
+}
+
+#invite {
+  font-family: Serif;
+  font-weight: 400;
+  font-style: normal;
+
+  display: grid;
+  grid-auto-rows: 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  border-image: url('images/border.svg') round;
+  border-image-slice: 33%;
+  border-image-width: 8rem;
+  border-image-repeat: stretch;
+
+  text-align: center;
+  white-space: nowrap;
+
+  font-size: 2.5vw;
+}
+
+#invite .middle {
+  margin-left: -4em; 
+  margin-right: -4em; 
+  margin-bottom: 1em;
+  margin-top: 1em;
+}
+
+#invite > * {
+  padding:1rem;
+
+  align-self: center;
+  justify-self: center;
+}
+
+
+#invite .fancy {
+  font-family: "Carattere", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+.gold { 
+    color: #ffc107;
+
+    /* #ffc107 is a nice shade to add */
+    background: linear-gradient(to right, #c1ac51, #f7eead, #c1ac51); 
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text; 
+} 
+
+
+.display-4 {
+  font-size: calc(1.425rem + 2.1vw);
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.display-5 {
+  font-size: calc(1.475rem + 2.7vw);
+  font-weight: 300;
+  line-height: 1.2;
+}
+
+.btn {
+  color: #ffc107;
+
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  background-color: transparent;
+
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+
+  transition-duration: 0.4s;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+
+  cursor: pointer;
+}
+
+.btn:hover {
+    color: #000000;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine:after {
+  content: "";
+  position: absolute;
+  top: -110%;
+  left: -210%;
+  width: 200%;
+  height: 200%;
+  opacity: 0;
+  transform: rotate(30deg);
+  
+  background: rgba(255, 255, 255, 0.13);
+  background: linear-gradient(
+    to right, 
+    rgba(255, 255, 255, 0.13) 0%,
+    rgba(255, 255, 255, 0.13) 77%,
+    rgba(255, 255, 255, 0.5) 92%,
+    rgba(255, 255, 255, 0.0) 100%
+  );
+}
+
+/* Hover state - trigger effect */
+
+.shine:hover:after {
+  opacity: 1;
+  top: -30%;
+  left: -30%;
+  transition-property: left, top, opacity;
+  transition-duration: 0.7s, 0.7s, 0.15s;
+  transition-timing-function: ease;
+}
+
+/* Active state */
+
+.shine:active:after {
+  opacity: 0;
+}
