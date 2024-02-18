@@ -3,17 +3,17 @@
  */
 
 :root {
-/*  --bs-body-bg: #b51111; */
+  /*  --bs-body-bg: #b51111; */
   --bs-box-shadow: 0.5rem 0.5rem 0.5rem rgba(255, 255, 255, 0.1);
 }
 
 @font-face {
-    font-family: 'Apple Chancery';
-    src: url('fonts/AppleChancery.woff2') format('woff2'),
-         url('fonts/AppleChancery.woff') format('woff');
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
+  font-family: 'Apple Chancery';
+  src: url('fonts/AppleChancery.woff2') format('woff2'),
+       url('fonts/AppleChancery.woff') format('woff');
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
 }
 
 
@@ -32,8 +32,8 @@ body {
 }
 
 .img-fluid {
-    max-width: 100%;
-    height: auto;
+  max-width: 100%;
+  height: auto;
 }
 
 #invite {
@@ -112,7 +112,20 @@ body {
     grid-template-columns: 100px 1fr 100px;
     font-size: 2.5vw;
   }
+}
 
+#invite a {
+  color: inherit;
+  text-decoration: underline #f3eaa740;
+
+}
+
+#invite a:hover {
+  text-decoration: underline #f3eaa780;
+}
+
+sup {
+  font-size: 0.5em;
 }
 
 .top {
@@ -124,6 +137,7 @@ body {
 
 .middle {
   padding: 1em;
+  padding-bottom: 0;
 
   /* Allow the middle to spill into the sides if they need to */
   
@@ -138,65 +152,63 @@ body {
 
 .footer {
   padding: 1em;
+  padding-top: 0;
+}
+
+#invite button {
+  margin: 1em;
+  font-size: 1.5em;
 }
 
 .pillayar_suli {
-  width: 1em;
-  height: 1em;
+  width: 1.5em;
+  height: 1.5em;
   margin: auto;
   background: linear-gradient(to right, #c1ac51, #f7eead, #c1ac51); 
   clip-path: url('#pillayar_suli');
 }
 
 .gold { 
-    color: #ffc107;
+  color: #f3eaa7;
 
-    /* #ffc107 is a nice shade to add */
-    background: linear-gradient(to right, #c1ac51, #f7eead, #c1ac51); 
+  background: linear-gradient(to right, #c1ac51, #f7eead, #c1ac51); 
 }
 
 .gold-text {
-    text-fill-color: transparent;
-    background-clip: text;
+  color: transparent;
+  background-clip: text;
 
-    -webkit-text-fill-color: transparent;
-    -webkit-background-clip: text;
+  -webkit-background-clip: text;
 } 
 
 
 .tiny {
-  font-size: calc(0.5em - 0vw);
-  font-weight: 300;
+  font-size: 0.75em;
   line-height: 1.2;
 }
 
 .small {
-  font-size: calc(0.75em - 0vw);
-  font-weight: 300;
+  font-size: 0.9em;
   line-height: 1.2;
 }
 
 .normal {
-  font-size: calc(1em - 0vw);
-  font-weight: 300;
+  font-size: 1em;
   line-height: 1.2;
 }
 
 .medium {
-  font-size: calc(2em + 0vw);
-  font-weight: 300;
+  font-size: 2em;
   line-height: 1.2;
 }
 
 .large {
-  font-size: calc(3em + 0vw);
-  font-weight: 300;
+  font-size: 3em;
   line-height: 1.2;
 }
 
 .larger {
-  font-size: calc(3.5em + 0vw);
-  font-weight: 300;
+  font-size: 4.5em;
   line-height: 1.2;
 }
 
