@@ -47,7 +47,7 @@ body {
   font-family: Georgia, Garamond, serif;
   font-family: Garamond, serif;
   */
-  font-weight: 400;
+  font-weight: normal;
   font-style: normal;
 
   /*
@@ -131,8 +131,8 @@ sup {
 .top {
   padding: 1em;
 
-  margin-left: -5vw;
-  margin-right: -5vw;
+  margin-left: -10vw;
+  margin-right: -10vw;
 }
 
 .middle {
@@ -157,6 +157,7 @@ sup {
 
 #invite button {
   margin: 1em;
+  margin-bottom: 0;
   font-size: 1.5em;
 }
 
@@ -181,19 +182,23 @@ sup {
   -webkit-background-clip: text;
 } 
 
+.divider {
+  font-family: serif;
+  padding: 1em;
+}
 
 .tiny {
-  font-size: 0.75em;
+  font-size: 0.8em;
   line-height: 1.2;
 }
 
 .small {
-  font-size: 0.9em;
+  font-size: 1em;
   line-height: 1.2;
 }
 
 .normal {
-  font-size: 1em;
+  font-size: 1.1em;
   line-height: 1.2;
 }
 
@@ -230,7 +235,6 @@ sup {
   padding: 0.5rem 1rem;
   font-size: 1.25rem;
 
-  transition-duration: 0.4s;
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 
   cursor: pointer;
