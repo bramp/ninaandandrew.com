@@ -116,8 +116,8 @@ body {
 
 
 .pillayar_suli {
-  width: 24px;
-  height: 24px;
+  width: 1em;
+  height: 1em;
   margin: auto;
   background: linear-gradient(to right, #c1ac51, #f7eead, #c1ac51); 
   clip-path: url('#pillayar_suli');
