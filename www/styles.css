@@ -63,7 +63,10 @@ body {
   text-align: center;
   white-space: nowrap;
 
-  font-size: 2vw;
+  font-size: min(2vw, 20px);
+  min-width: 300px;
+  max-width: 960px;
+  margin: auto;
 
   padding-bottom: 1em;
   padding-top: 1em;
@@ -85,6 +88,18 @@ body {
   justify-self: center;
 }
 
+.reception-only .ceremony {
+  display: none;
+  visibility: hidden;
+}
+
+.reception-only .left {
+  padding-top: 150px
+}
+
+.reception-only .right {
+  padding-top: 150px
+}
 
 /* Desktop */
 /* <row-start> / <column-start> / <row-end> / <column-end> */
@@ -109,6 +124,14 @@ body {
   #invite {
     grid-template-columns: 100px 1fr 100px;
     font-size: 3vw;
+  }
+
+  .reception-only .left {
+    padding-top: unset;
+  }
+
+  .reception-only .right {
+    padding-top: unset;
   }
 }
 
