@@ -172,7 +172,7 @@ sup {
 .gold { 
   color: #f3eaa7;
 
-  background: linear-gradient(to right, #c1ac51, #f7eead, #c1ac51); 
+  background: linear-gradient(to right bottom, #c1ac51, #f7eead, #c1ac51);
 }
 
 .gold-text {
