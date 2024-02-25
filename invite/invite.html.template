@@ -28,7 +28,7 @@
     </script>
   </head>
   <body>
-    <div id=invite-wrapper  >
+    <div id=invite-wrapper @@if (ceremony === false) { class="reception-only" } >
       <div id="invite" class="gold gold-text">
         <div class=left>
           <img src="images/peacock.webp" class="flip img-fluid peacock" />
@@ -41,7 +41,7 @@
           <div class="pillayar_suli"></div>
           <div class="tiny">Sri Ramajayam</div>
           <div style="height:0.5em"></div>
-          <div class="medium">Papoos & Kanna</div>
+          <div class="medium">@@amma & @@appa</div>
           <div class="normal">cordially invite you to the wedding of their daughter</div>
         </div>
 
@@ -55,7 +55,7 @@
         <div class=bottom>
           <div class="normal">son of Barbara & Michael Brampton</div><br/>
 
-          
+          @@if (ceremony) {
           <div class="ceremony">
             <div class="normal">Ceremony on</div>
             <div class="medium">Friday, 23<sup>rd</sup> August 2024</div>
@@ -65,7 +65,7 @@
 
             <br />
           </div>
-          
+          }
 
           <div class="normal">Reception on</div>
           <div class="medium">Sunday, 25<sup>th</sup> August 2024</div>
