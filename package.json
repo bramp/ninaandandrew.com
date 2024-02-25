@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-file-include": "^2.3.0"
+  },
+  "dependencies": {
+    "puppeteer": "^22.2.0",
+    "simple-scrollspy": "^2.4.2"
+  }
+}

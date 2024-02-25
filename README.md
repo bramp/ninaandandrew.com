@@ -28,8 +28,11 @@ Examples
 Some deps
 
 ```shell
+npm install --global gulp-cli
 npm install http-server -g
 brew install webp
+
+alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 ```
 
 Run a local web server
@@ -37,6 +40,19 @@ Run a local web server
 ```shell
 http-server -p 8000 -c-1 www
 ```
+
+Build the invites
+
+```shell
+# Build the HTML
+gulp
+
+# Create the screenshots
+http-server -p 8000 -c-1 www &
+node create-invite-jpg.js
+
+```
+
 
 
 ## Compress files
