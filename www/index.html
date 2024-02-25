@@ -59,7 +59,10 @@
           <!-- Ceremony -->
           <div>
             <h2>Ceremony</h2>
+          </div>
+          <div></div>
 
+          <div>
             <p>A small private south indian <a href="https://en.wikipedia.org/wiki/Iyengar">Iyengar</a> style ceremony will be held in for close family.</p>
 
             <div class=definition>
@@ -74,28 +77,34 @@
 
               <div class=title>When:</div>
 
-              <div>Friday, 23<sup>rd</sup>August 2024<br/>(add to calendar)</div>
+              <div>Friday, 23<sup>rd</sup>August 2024<br/>(<a href="TODO">add to calendar</a>)</div>
 
 
               <div></div>
               <div>
                 <table>
-                  <tr><td>Breakfast?</td><td>7:00 am</td></tr>
-                  <tr><td>Muhurtham</td><td>10:00 am</td></tr>
-                  <tr><td></td><td>Kanya Lagnam</td></tr>
+                  <tr><td>7:00 am</td><td>Breakfast?</td></tr>
+                  <tr><td>10:00 am</td><td>Muhurtham</td></tr>
+                  <!--
+                    <tr><td></td><td>Kanya Lagnam</td></tr>
+                  -->
                 </table>
               </div>
 
             </div>
           </div>
 
-          <div>
+          <div class=map>
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25250.220897504252!2d-121.75292908179593!3d37.71316109901957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fe6d80927f9e5%3A0xa827d35be914878c!2sShiva-Vishnu%20Temple!5e0!3m2!1sen!2sus!4v1708382415656!5m2!1sen!2sus" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
 
           <!-- Reception -->
           <div>
             <h2>Reception</h2>
+          </div>
+          <div></div>
+
+          <div>
 
             <p>A festive wedding reception will be held with friends and family. Dinner, drinks and dancing will be provided.</p>
 
@@ -104,11 +113,11 @@
               <div><a href="https://www.google.com/maps/dir/?api=1&destination=Casa%20Real%20at%20Ruby%20Hill&destination_place_id=ChIJqyp8hVXdj4ARCs7FaAeT_C8" target="_blank">Casa Real at Ruby Hill,<br/> California, USA</a></div>
 
               <div class=title>When:</div>
-              <div>Sunday, 25<sup>th</sup> August 2024<br/>(add to calendar)</div>
+              <div>Sunday, 25<sup>th</sup> August 2024<br/>(<a href="TODO">add to calendar</a>)</div>
             </div>
           </div>
 
-          <div>
+          <div class=map>
             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12635.628239124433!2d-121.81752189853873!3d37.651389011910815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fdd55857c2aab%3A0x2ffc930768c5ce0a!2sCasa%20Real%20at%20Ruby%20Hill!5e0!3m2!1sen!2sus!4v1708382491637!5m2!1sen!2sus" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
           </div>
         </div>
@@ -202,32 +211,68 @@
       <h1>Registry</h1>
       <img src=https://placehold.co/600x400 />
     </section>
-    
+
     <section id=faq>
       <h1>FAQs</h1>
-      <img src=https://placehold.co/600x400 />
-    </section>
+      <ul>
+        <li><b>What to wear? </b>
+          <p>
+            <span class=emojii>🥻</span> The ceremony will be festive indian.
+          </p>
 
+          <p>
+            <span class=emojii>💃</span> The reception will be Cocktail atire or festive indian.
+          </p>
 
+        </li>
+        <li><b>Where can I stay? </b>
+          <p><span class=emojii>🏨</span>TODO</p>
+        </li>
+
+        <li><b>Where can I fly? </b>
+
+          <p><span class=emojii>✈️</span> <a href="https://www.flysfo.com/">San Francisco Airport (SFO)</a>, <a href="https://www.flysanjose.com/">San Jose (SJC)</a>, and <a href="https://www.oaklandairport.com/">Oakland (OAK)</a> are recommended airports to fly into.</p>
+
+        </li>
+        <li><b>What's happening on Saturday?</b>
+
+          <p>
+            Nothing
+          </p>
+        </li>
+
+        <li><b>Have more questions?</b>
+
+          <p>
+            <span class=emojii>✉️</span> Contact us at <a href="mailto:wedding@ninaandandrew.com">wedding@ninaandandrew.com</a>
+          </p>
+
+        </li>
+      </ul>
+      </section>
+
+      <div id="footer">
+        <p>Designed by Nina and Andrew</p>
+        <img src="/images/pillayar_suli.svg" width="24" />
+      </div>
     </div>
 
-  <script src="/js/simple-scrollspy.min.js"></script>
-  <script defer>
-    window.onload = function () {
-      scrollSpy('#header', {
-        sectionClass: 'section',
-        menuActiveTarget: 'a',
-        offset: 100,
+    <script src="/js/simple-scrollspy.min.js"></script>
+    <script defer>
+      window.onload = function () {
+        scrollSpy('#header', {
+          sectionClass: 'section',
+          menuActiveTarget: 'a',
+          offset: 100,
 
-        // smooth scroll
-        smoothScroll: false,
-        smoothScrollBehavior: function(element) {
-          console.log('run "smoothScrollBehavior"...', element)
-          element.scrollIntoView({ behavior: 'smooth' }) // default behavior
-        },
-      })
-    }
-  </script>
-
+          // smooth scroll
+          smoothScroll: false,
+          smoothScrollBehavior: function(element) {
+            console.log('run "smoothScrollBehavior"...', element)
+            element.scrollIntoView({ behavior: 'smooth' }) // default behavior
+          },
+        })
+      }
+    </script>
   </body>
 </html>
