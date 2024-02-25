@@ -1,0 +1,284 @@
+<!-- TODO Remove / as this is part of index now -->
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Wedding RSVP</title>
+
+    <!--link rel="stylesheet" href="styles.css"-->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <style>
+      body {
+          background-color: #b51111;
+          color: #f3eaa7;
+      }
+
+      #container {
+        min-width: 300px;
+        max-width: 960px;
+
+        margin: auto;
+        margin-top: 2em;
+        margin-bottom: 2em;
+      }
+
+      .fancy-border {
+        border-image: url('images/border.svg') round;
+        border-image-slice: 33%;
+        border-image-width: 10em;
+        border-image-repeat: stretch;
+
+        padding: 1em;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
+      }
+
+      #rsvp-form {
+        margin: auto;
+      }
+
+      #rsvp {
+        text-align: center;
+      }
+      .right-align {
+        text-align: right;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div id=container>
+      <h1>RSVP</h1>
+
+      <table>
+        <tr>
+          <td>Ceremony:</td>
+          <td>
+          Friday, 23<sup>rd</sup> August 2024 (add to calendar)<br />
+          <a href="https://www.google.com/maps/dir/?api=1&destination=Shiva-Vishnu Temple&destination_place_id=ChIJ5fknCdjmj4ARjIcU6VvTJ6g" target="_blank">Shiva-Vishnu Temple, Livermore, CA, USA</a>
+
+          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25250.220897504252!2d-121.75292908179593!3d37.71316109901957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fe6d80927f9e5%3A0xa827d35be914878c!2sShiva-Vishnu%20Temple!5e0!3m2!1sen!2sus!4v1708382415656!5m2!1sen!2sus" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </tr>
+
+        <tr>
+          <td>Reception:</td>
+
+          <td>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12635.628239124433!2d-121.81752189853873!3d37.651389011910815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fdd55857c2aab%3A0x2ffc930768c5ce0a!2sCasa%20Real%20at%20Ruby%20Hill%20Winery!5e0!3m2!1sen!2sus!4v1708382491637!5m2!1sen!2sus" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          </td>
+        </tr>
+
+      </table>
+    <!--
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Link</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  -->
+
+    <script>
+      const data = {
+        "ceremony": true,
+        "reception": true,
+        "guests": [
+          {
+            "name": "John",
+            "email": "John@example.com",
+            "phone": "+1 123 567 890",
+            "ceremony": true,
+            "reception": true,
+          },
+          {
+            "name": "Bob",
+            "email": "bob@example.com",
+            "phone": "+1 123 567 890",
+            "ceremony": true,
+            "reception": false,
+          }
+        ]
+      };
+
+      function row_name(row) {
+        switch(row) {
+          case 1: return "Primary Guest";
+          case 2: return "2nd Guest";
+          case 3: return "3rd Guest";
+        }
+        return row + "th Guest";
+      }
+
+      function add_row(guest) {
+        const template = document.querySelector("#guest-row");
+        const tbody = document.querySelector("#rsvp-form tbody");
+
+        const rows = tbody.querySelectorAll('tr').length + 1;
+
+        const row = template.content.cloneNode(true);
+        row.querySelector('label[for="name"]').innerText = row_name(rows);
+
+        if (guest) {
+          // If we have guest info, populate it.
+          let td = row.querySelectorAll("td");
+
+          row.querySelector('input[name="name"]').value = guest.name ?? '';
+          row.querySelector('input[name="email"]').value = guest.email ?? '';
+          row.querySelector('input[name="phone"]').value = guest.phone ?? '';
+
+          row.querySelector('input[name="ceremony"]').checked = guest.name ?? false;
+          row.querySelector('input[name="reception"]').checked = guest.reception ?? false;
+
+          if (rows == 1) {
+            row.querySelector('.remove-row').innerText = '';
+          } else {
+            row.querySelector('.remove-row a').dataset.row = rows;
+          }
+        }
+
+        tbody.appendChild(row);
+
+        if (rows >= 10) {
+          // Disable the add button
+          document.querySelector('#add-row-button').disabled = true;
+          
+        }
+      }
+
+      function remove_row(btn) {
+        var row = btn.parentNode.parentNode;
+        row.parentNode.removeChild(row);
+
+        // renumber all the guests
+        const tbody = document.querySelector("#rsvp-form tbody");
+        const rows = tbody.querySelectorAll('label[for="name"]');
+
+        var i = 1;
+        for (const row of rows) {
+          row.innerText = row_name(i);
+          i++;
+        }
+      }
+
+      function to_json() {
+        const tbody = document.querySelector("#rsvp-form tbody");
+        const rows = tbody.querySelectorAll('tr');
+
+        let guests = [];
+        for (const row of rows) {
+          const name = row.querySelector('input[name="name"]').value;
+          const email = row.querySelector('input[name="email"]').value;
+          const phone = row.querySelector('input[name="phone"]').value;
+          const ceremony = row.querySelector('input[name="ceremony"]').checked;
+          const reception = row.querySelector('input[name="reception"]').checked;
+
+          guests.push({
+            "name": name ?? '',
+            "email": email ?? '',
+            "phone": phone ?? '',
+            "ceremony": ceremony ?? false,
+            "reception": reception ?? false,
+          });
+        }
+
+        console.log(guests); // TODO Remove
+      }
+
+      window.onload = function () {
+        if (!data.ceremony) {
+          document.querySelector('#rsvp').classList.add('reception-only');
+
+          let tds = document.querySelectorAll(".colspan-hack");
+          for (const td of tds) {
+            td.colSpan = 1;
+          }
+
+        }
+
+        for (const guest of data.guests) {
+          add_row(guest);
+        }
+      }
+
+    </script>
+
+    <template id="guest-row">
+      <tr>
+        <td class="right-align"><label for="name"></label></td>
+        <td><input type="text" name="name" value="" required></td>
+        <td><input type="email" name="email" value=""></td>
+        <td><input type="tel" name="phone" value=""></td>
+
+        <td class=ceremony><input type="checkbox" name="ceremony"></td>
+        <td><input type="checkbox" name="reception"></td>
+
+        <td class="remove-row">
+          <a href="#" onclick="remove_row(this)" data-row>(remove guest)</a>
+        </td>
+      </tr>
+    </template>
+
+    <div id=rsvp class="fancy-border">
+      <form action="">
+
+        <table id="rsvp-form">
+          <thead>
+            <tr>
+              <td></td><td></td><td></td><td></td>
+              <td colspan=2 class="colspan-hack">Attending</td></tr>
+            <tr>
+              <td></td>
+              <td>Name</td>
+              <td>Email (optional)</td>
+              <td>Phone (optional)</td>
+              <td class=ceremony>Ceremony</td>
+              <td>Reception</td>
+
+              <td></td>
+            </tr>
+          </thead>
+          <tbody> 
+          </tbody>
+          <tfooter>
+           <tr>
+              <td colspan=4></td>
+              <td colspan=2 class="colspan-hack">
+                <button type="button" id="add-row-button" onclick="add_row()">+ add guest</button>
+              </td>
+              <td></td>
+            </tr>
+          </tfooter>
+
+          </table>
+          <br>
+        <!-- TODO Ensure the form validates -->
+        <button type="button" onclick="to_json()">Submit</button>
+        <!--input type="submit" value="Submit"-->
+      </form>
+    </div>
+
+    </div>
+
+  </body>
+</html>
