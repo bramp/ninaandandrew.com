@@ -47,7 +47,6 @@
         </ul>
       </div>
     </div>
-  
 
     <img src="images/peacock-light.webp" class="peacock" />
 
@@ -72,7 +71,7 @@
           <div></div>
 
           <div>
-            <p>A small private south indian <a href="https://en.wikipedia.org/wiki/Iyengar">Iyengar</a> style ceremony will be held in for close family.</p>
+            <p>A private South Indian <a href="https://en.wikipedia.org/wiki/Iyengar">Iyengar</a> style ceremony will be held with close family.</p>
 
             <div class=definition>
               <div class=title>Where:</div>
@@ -86,7 +85,9 @@
 
               <div class=title>When:</div>
 
-              <div>Friday, 23<sup>rd</sup>August 2024<br/>(<a href="TODO">add to calendar</a>)</div>
+              <div>Friday, 23<sup>rd</sup>August 2024<br/>
+                (<a href="https://calendar.google.com/calendar/event?action=TEMPLATE&tmeid=Nm9xamFlMWk2b3NtNmJiMTZkaDZjYjlrNnNyNjZiOW9jY282NGI5bDZzcDNhcGhpY29wajBjYjY2OCBicmFtcHRvbkBt&tmsrc=brampton%40gmail.com">add to calendar</a>)
+              </div>
 
 
               <div></div>
@@ -114,7 +115,6 @@
           <div></div>
 
           <div>
-
             <p>A festive wedding reception will be held with friends and family. Dinner, drinks and dancing will be provided.</p>
 
             <div class=definition>
@@ -122,7 +122,10 @@
               <div><a href="https://www.google.com/maps/dir/?api=1&destination=Casa%20Real%20at%20Ruby%20Hill&destination_place_id=ChIJqyp8hVXdj4ARCs7FaAeT_C8" target="_blank">Casa Real at Ruby Hill,<br/> California, USA</a></div>
 
               <div class=title>When:</div>
-              <div>Sunday, 25<sup>th</sup> August 2024<br/>(<a href="TODO">add to calendar</a>)</div>
+              <div>Sunday, 25<sup>th</sup> August 2024<br/>
+
+                (<a href="https://calendar.google.com/calendar/event?action=TEMPLATE&tmeid=NzRxMzJjMW1jbGkzOGJiMTZvcWpjYjlrNmhpMzZiOXBjOWozaWI5aWM4b21hY3BsY2tzM2llYjY2OCBicmFtcHRvbkBt&tmsrc=brampton%40gmail.com">add to calendar</a>)
+              </div>
             </div>
           </div>
 
@@ -281,7 +284,10 @@
             console.log('run "smoothScrollBehavior"...', element)
             element.scrollIntoView({ behavior: 'smooth' }) // default behavior
           },
-        })
+        });
+
+        // Trigger on load, incase we started half way down the page.
+        window.dispatchEvent(new CustomEvent('scroll'));
       }
     </script>
   </body>
