@@ -46,7 +46,7 @@
       }
 
       .fancy-border {
-        border-image: url('/images/border.svg') round;
+        border-image: url('/images/border-rsvp.svg') round;
         border-image-slice: 33%;
         border-image-width: 10em;
         border-image-repeat: stretch;
@@ -54,6 +54,12 @@
         padding: 1em;
         padding-top: 3rem;
         padding-bottom: 3rem;
+
+      }
+
+      form {
+                background-color: #fef3ea;
+
       }
 
       #rsvp-form {
