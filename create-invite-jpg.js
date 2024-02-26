@@ -23,7 +23,7 @@ function timeout(ms) {
 
         const filename = path.basename(url.parse(currentUrl).pathname, '.html');
 
-        for (width of [480, 720]) {
+        for (width of [400, 720]) {
             await page.setViewport({
                 width: width,
                 height: width,

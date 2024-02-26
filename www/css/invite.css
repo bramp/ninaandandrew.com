@@ -30,6 +30,11 @@ body {
 #invite-wrapper {
   background-color: #b51111;
   padding: 0.5rem;
+
+  /* If the page is too wide, center it all */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .img-fluid {
@@ -59,7 +64,7 @@ body {
   text-align: center;
   white-space: nowrap;
 
-  font-size: min(2.2vw, 24px);
+  font-size: min(2vw, 20px);
   min-width: 300px;
   max-width: 960px;
   margin: auto;
@@ -70,7 +75,7 @@ body {
 
 #invite {
   display: grid;
-  grid-template-rows: auto 1fr auto auto;
+  grid-template-rows: auto auto auto auto;
   grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: 0px;
   grid-row-gap: 0px;
@@ -96,6 +101,52 @@ body {
 .reception-only .right {
   padding-top: 150px
 }
+
+.peacock {
+  padding-top: 3em;
+}
+
+.reception-only .peacock {
+  padding-top: 0;
+}
+
+
+.bottom .medium {
+  font-size: 1.5em;
+}
+
+.tiny {
+  font-size: 0.8em;
+  line-height: 1.2;
+}
+
+.small {
+  font-size: 1em;
+  line-height: 1.2;
+}
+
+.normal {
+  font-size: 1.1em;
+  line-height: 1.2;
+}
+
+.medium {
+  font-size: 2em;
+  line-height: 1.2;
+}
+
+.large {
+  font-size: 3em;
+  line-height: 1.2;
+}
+
+
+.larger {
+  font-size: 3.5em;
+  line-height: 1.2;
+}
+
+
 
 /* Desktop */
 /* <row-start> / <column-start> / <row-end> / <column-end> */
@@ -129,6 +180,20 @@ body {
   .reception-only .right {
     padding-top: unset;
   }
+
+  .reception-only .medium {
+    font-size: 1.5em;
+    line-height: 1.2;
+  }
+
+  .reception-only .larger {
+    font-size: 2.5em;
+    line-height: 1.2;
+  }
+
+  .peacock {
+    padding-top: 0;
+  }
 }
 
 #invite a {
@@ -140,6 +205,7 @@ body {
 #invite a:hover {
   text-decoration: underline #f3eaa780;
 }
+
 
 sup {
   font-size: 0.5em;
@@ -167,6 +233,7 @@ sup {
   margin-right: -5vw;
 }
 
+
 .footer {
   padding-bottom: 1em;
   padding-top: 0;
@@ -183,6 +250,7 @@ sup {
 }
 
 @media print {
+
   #invite button {
     display: none;
   }
@@ -212,36 +280,6 @@ sup {
 .divider {
   font-family: serif;
   padding: 1em;
-}
-
-.tiny {
-  font-size: 0.8em;
-  line-height: 1.2;
-}
-
-.small {
-  font-size: 1em;
-  line-height: 1.2;
-}
-
-.normal {
-  font-size: 1.1em;
-  line-height: 1.2;
-}
-
-.medium {
-  font-size: 2em;
-  line-height: 1.2;
-}
-
-.large {
-  font-size: 3em;
-  line-height: 1.2;
-}
-
-.larger {
-  font-size: 4.5em;
-  line-height: 1.2;
 }
 
 

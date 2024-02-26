@@ -47,13 +47,13 @@
 
         <div class="middle">
 
-          <div class="larger fancy">Nina</div>
+          <div class="larger fancy">@@nina</div>
           <div class="normal">with</div>
-          <div class="larger fancy">Andrew</div>
+          <div class="larger fancy">@@andrew</div>
         </div>
 
         <div class=bottom>
-          <div class="normal">son of Barbara & Michael Brampton</div><br/>
+          <div class="normal">son of @@barbara & @@michael</div><br/>
 
           @@if (ceremony) {
           <div class="ceremony">
@@ -72,10 +72,9 @@
           <div class="small">at</div>
           <div class="medium"><a href="https://www.google.com/maps/dir/?api=1&destination=Casa%20Real%20at%20Ruby%20Hill&destination_place_id=ChIJqyp8hVXdj4ARCs7FaAeT_C8" target="_blank">Casa Real at Ruby Hill</a></div>
           <div class="normal">Pleasanton, CA, USA</div>
-
-          <button type="button" class="btn">RSVP</button>
         </div>
         <div class=footer>
+          <button type="button" class="btn">RSVP</button>
           <div class="normal divider">━━━━━━ ◦ ◈❖◈ ◦ ━━━━━━</div>
           <div class="small">With best compliments from</div>
           <div class="normal">
