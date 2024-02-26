@@ -20,6 +20,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Raleway:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
+    <script src="/js/rsvp.js"></script>
+
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-1KTQJJZ0VC"></script>
     <script>
@@ -140,83 +142,60 @@
         <!-- Répondez S'il Vous Plaît -->
         <h1>RSVP</h1>
 
+        <template id="guest-row">
+          <tr>
+            <td class="right-align"><label for="name"></label></td>
+            <td><input type="text" name="name" value="" required></td>
+            <td><input type="email" name="email" value=""></td>
+            <td><input type="tel" name="phone" value=""></td>
 
-      <!--
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-              </li>
-            </ul>
-          </div>
+            <td class=ceremony><input type="checkbox" name="ceremony"></td>
+            <td><input type="checkbox" name="reception"></td>
+
+            <td class="remove-row">
+              <a href="#" onclick="remove_row(this)" data-row>(remove guest)</a>
+            </td>
+          </tr>
+        </template>
+
+        <div class="fancy-border">
+          <form action="">
+
+            <table id="rsvp-form">
+              <thead>
+                <tr>
+                  <td></td><td></td><td></td><td></td>
+                  <td colspan=2 class="colspan-hack">Attending</td></tr>
+                <tr>
+                  <td></td>
+                  <td>Name</td>
+                  <td>Email (optional)</td>
+                  <td>Phone (optional)</td>
+                  <td class=ceremony>Ceremony</td>
+                  <td>Reception</td>
+
+                  <td></td>
+                </tr>
+              </thead>
+              <tbody> 
+              </tbody>
+              <tfooter>
+               <tr>
+                  <td colspan=4></td>
+                  <td colspan=2 class="colspan-hack">
+                    <button type="button" id="add-row-button" onclick="add_row()">+ add guest</button>
+                  </td>
+                  <td></td>
+                </tr>
+              </tfooter>
+
+              </table>
+              <br>
+            <!-- TODO Ensure the form validates -->
+            <button type="button" onclick="to_json()">Submit</button>
+            <!--input type="submit" value="Submit"-->
+          </form>
         </div>
-      </nav>
-    -->
-
-      <script src="/js/rsvp.js"></script>
-
-      <template id="guest-row">
-        <tr>
-          <td class="right-align"><label for="name"></label></td>
-          <td><input type="text" name="name" value="" required></td>
-          <td><input type="email" name="email" value=""></td>
-          <td><input type="tel" name="phone" value=""></td>
-
-          <td class=ceremony><input type="checkbox" name="ceremony"></td>
-          <td><input type="checkbox" name="reception"></td>
-
-          <td class="remove-row">
-            <a href="#" onclick="remove_row(this)" data-row>(remove guest)</a>
-          </td>
-        </tr>
-      </template>
-
-      <div id=rsvp class="fancy-border">
-        <form action="">
-
-          <table id="rsvp-form">
-            <thead>
-              <tr>
-                <td></td><td></td><td></td><td></td>
-                <td colspan=2 class="colspan-hack">Attending</td></tr>
-              <tr>
-                <td></td>
-                <td>Name</td>
-                <td>Email (optional)</td>
-                <td>Phone (optional)</td>
-                <td class=ceremony>Ceremony</td>
-                <td>Reception</td>
-
-                <td></td>
-              </tr>
-            </thead>
-            <tbody> 
-            </tbody>
-            <tfooter>
-             <tr>
-                <td colspan=4></td>
-                <td colspan=2 class="colspan-hack">
-                  <button type="button" id="add-row-button" onclick="add_row()">+ add guest</button>
-                </td>
-                <td></td>
-              </tr>
-            </tfooter>
-
-            </table>
-            <br>
-          <!-- TODO Ensure the form validates -->
-          <button type="button" onclick="to_json()">Submit</button>
-          <!--input type="submit" value="Submit"-->
-        </form>
-      </div>
     </section>
 
     <section id=registry>
