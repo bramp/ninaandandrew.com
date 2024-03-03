@@ -64,7 +64,11 @@ function add_row(guest) {
   }
 }
 
-function remove_row(btn) {
+function remove_row() {
+  window.event.preventDefault();
+
+  const btn = window.event.target;
+
   var row = btn.parentNode.parentNode;
   row.parentNode.removeChild(row);
 
@@ -103,7 +107,13 @@ function to_json() {
   console.log(guests); // TODO Remove
 }
 
-window.onload = function () {
+window.addEventListener("load", function () {
+
+  // Unhide RSVP
+  for (const e of document.querySelectorAll('.hide-rsvp')) {
+    e.classList.remove('hide-rsvp');
+  };
+
   if (!data.ceremony) {
     document.querySelector('#rsvp').classList.add('reception-only');
 
@@ -111,10 +121,10 @@ window.onload = function () {
     for (const td of tds) {
       td.colSpan = 1;
     }
-
   }
 
   for (const guest of data.guests) {
     add_row(guest);
   }
-}
+});
+ 

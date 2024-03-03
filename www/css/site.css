@@ -8,9 +8,17 @@
 
         margin: 0;
       
+      }
+
+      body, input, button {
         font-family: "Raleway", sans-serif;
-        /*font-family: "Cinzel", serif;*/
-        font-size: 1.1rem;
+        font-size: 1.2rem;
+        line-height: 1.5em;
+      }
+
+      #about-us {
+        text-align: justify;
+        margin: 1.5em;
       }
 
       #header, h1, h2, h3, h4 {
@@ -18,16 +26,34 @@
       }
 
       h1 {
-        font-size: 2em;
-        margin-bottom: 0;
-        margin-top: 0;
+        font-size: 4em;
+        text-align: center;
+
+        /*
+        font-family: 'Apple Chancery', cursive;
+        font-family: "Hurricane", cursive;
+        */
+        
+        font-family: "Oooh Baby", cursive;
+
+      }
+
+      h2 {
+
+        /* Nice but can't read FAQ */
+        font-family: "Carattere", cursive;
+        font-size: 3em;
+        text-align: center;
+      }
+
+      #outer {
+        margin: auto;
+        text-align: center;
       }
 
       #container {
         min-width: 300px;
-        max-width: 960px;
-
-        margin: auto;
+        max-width: 720px;
 
         margin-top: 2em;
         margin-bottom: 0;
@@ -37,6 +63,9 @@
         font-weight: 400;
 
         padding: 1em;
+
+        text-align: center;
+        display: inline-block;
       }
 
 
@@ -48,18 +77,12 @@
       .fancy-border {
         border-image: url('/images/border-rsvp.svg') round;
         border-image-slice: 33%;
-        border-image-width: 10em;
+        border-image-width: 10rem;
         border-image-repeat: stretch;
 
         padding: 1em;
         padding-top: 3rem;
         padding-bottom: 3rem;
-
-      }
-
-      form {
-                background-color: #fef3ea;
-
       }
 
       #rsvp-form {
@@ -115,7 +138,7 @@
         scroll-margin-top: 4em;
         scroll-snap-margin-top: 4em; /* iOS 11 and older */
 
-        margin-top: 1em;
+        margin-top: 4em;
         padding-bottom: 1em;
         border-bottom: 1px solid #4e2e1430;
       }
@@ -179,10 +202,13 @@
       }
 
 
-      .peacock {
+      .peacock1 {
         position: fixed; /* Sit on top of the page content */
+        
+        /*
         float:right;
         right: 0;
+        */
 
         bottom: 0;
         height: 50%;
@@ -191,18 +217,24 @@
       }
 
 
-      #schedule .parent {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-auto-rows: auto 1fr;
-        grid-column-gap: 0px;
-        grid-row-gap: 0px;
+      .peacock2 {
+        position: fixed; /* Sit on top of the page content */
+        float:left;
+        left: 0;
+
+        top: 0;
+        height: 50%;
+
+        z-index: -1;
       }
 
-      #schedule .map {
-        text-align: center;
 
+      @media (max-width: 1000px) {
+        .peacock {
+          display: none;
+        }
       }
+
       #schedule .map iframe {
         border: rgb(229, 231, 235);
         box-shadow: -2px 4px 12px #00000026;
@@ -210,9 +242,12 @@
 
       #schedule .definition {
         display: grid;
-        grid-template-columns: auto 1fr;
+        grid-template-columns: 1fr 2fr;
         grid-column-gap: 1em;
-        grid-row-gap: 1em
+        grid-row-gap: 1em;
+
+        margin-top: 2em;
+        margin-bottom: 2em;
       }
 
       #schedule .definition .title {
@@ -220,13 +255,54 @@
         font-weight: bold;
       }
 
+      #schedule .definition .body {
+        text-align: center;
+
+      }
+
       #faq .emojii {
         font-size: 2em;
         vertical-align:middle;
-        padding-right: 0.3em;
       }
+
+      #faq ul {
+        list-style-type: none;
+      }
+      #faq li {
+        margin-top: 3em;
+        margin-bottom: 3em;
+      }
+
 
       #footer {
         text-align: center;
       }
 
+      .hide-rsvp {
+        display: none;
+      }
+
+
+      form {
+        background-color: #fef3ea;
+      }
+
+
+      input {
+        color: #4e2e14;
+        
+        border: 1px solid #4e2e14;
+        border-radius: 4px;
+      }
+
+      button {
+        color: #4e2e14;
+
+        border: 1px solid #4e2e14;
+        border-radius: 8px;
+        
+        padding: 0.5rem 1rem;
+        font-size: 1.25rem;
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+        cursor: pointer;
+      }

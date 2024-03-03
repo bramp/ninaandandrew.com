@@ -53,8 +53,17 @@ node create-invite-jpg.js
 
 ```
 
+# Lint
+
+```shell
+npm init stylelint
+npm install --save-dev --save-exact prettier
+
+npx stylelint "www/css/*.css"
+npx prettier www --check
+```
 
 
-## Compress files
+# Compress everything files
 
 cwebp input.webp -o output.webp

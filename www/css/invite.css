@@ -250,7 +250,6 @@ sup {
 }
 
 @media print {
-
   #invite button {
     display: none;
   }
