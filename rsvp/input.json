@@ -1,0 +1,21 @@
+{
+  "ceremony": true,
+  "reception": true,
+  "comments": "King Bob!!!",
+  "guests": [
+    {
+      "name": "John Smith",
+      "email": "John@example.com",
+      "phone": "+1 123 567 890",
+      "ceremony": false,
+      "reception": true
+    },
+    {
+      "name": "King Bob",
+      "email": "bob@example.com",
+      "phone": "+1 123 567 890",
+      "ceremony": true,
+      "reception": false
+    }
+  ]
+}

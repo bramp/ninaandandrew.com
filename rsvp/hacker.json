@@ -1,0 +1,20 @@
+{
+  "ceremony": true,
+  "reception": true,
+  "comments": "Muahahaha!!!",
+  "guests": [
+    {
+      "name": "Evil hacker",
+      "email": "hacker@evil.com",
+      "phone": "+1 123 456 789",
+      "ceremony": false,
+      "reception": true
+    },
+    {
+      "name": "Minion",
+      "email": "me@despicable.com",
+      "ceremony": true,
+      "reception": false
+    }
+  ]
+}
