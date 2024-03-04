@@ -23,8 +23,8 @@ PRIMARY_GUEST_COLUMN = 11
 RSVP_PROVIDED_COLUMN = 8
 CREATE_TIME_COLUMN = 9
 MAX_GUESTS = 10
-FIRST_GUEST_COLUMN = 17
-MAX_COLUMN = FIRST_GUEST_COLUMN + (MAX_GUESTS * 5)
+MAIN_COLUMNS = 17
+MAX_COLUMN = MAIN_COLUMNS + (MAX_GUESTS * 5)
 
 
 NOT_FOUND_ERROR = "Please enter the primary guest's full name, as it appeared in the email."
@@ -135,7 +135,7 @@ def _read_spreadsheet():
   # Empty trailing values will not be included, so pad each values
   # with empty cell values for easier processing.
   for row in values:
-    while len(row) < FIRST_GUEST_COLUMN:
+    while len(row) < MAIN_COLUMNS:
       row.append("")
 
   return (sheet, values)
@@ -156,6 +156,7 @@ def spreadsheet_to_json(primary_guest_name):
     for idx, row in enumerate(values):
       if row[PRIMARY_GUEST_COLUMN] == primary_guest_name:
         current_row = row
+        assert len(current_row) >= MAIN_COLUMNS
 
         output_dict["ceremony"] = True if current_row[4] == "TRUE" else False  # INVITED TO WEDDING
         output_dict["reception"] = True if current_row[5] == "TRUE" else False # INVITED TO RECEPTION
@@ -173,8 +174,8 @@ def spreadsheet_to_json(primary_guest_name):
 
         output_dict["comments"] = current_row[16] # GUEST COMMENTS
 
-        if (len(current_row) > FIRST_GUEST_COLUMN):
-          remaining_guests = current_row[FIRST_GUEST_COLUMN:]
+        if (len(current_row) > MAIN_COLUMNS):
+          remaining_guests = current_row[MAIN_COLUMNS:]
 
           # Pad in case the last guest doesn't have a reception value,
           # for easier iteration over the remaining guests
