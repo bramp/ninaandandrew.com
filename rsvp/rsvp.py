@@ -1,11 +1,10 @@
 import datetime
 import google.auth
-import json
-import os.path
-
-from google.auth.transport.requests import Request
-from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppFlow
+#import json
+#import os.path
+#from google.auth.transport.requests import Request
+#from google.oauth2.credentials import Credentials
+#from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
@@ -16,13 +15,18 @@ SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 SPREADSHEET_ID = "1e7fIMg8PamT-jH8UH_v2kUKqzwz79UGIkXdP24wILm0"
 SHEET_RANGE_NAME = "Sheet1!A3:BO"
 
+QUOTA_PROJECT_ID = "ninaandandrew-com"
+
 START_ROW = 3
 
 PRIMARY_GUEST_COLUMN = 11
 RSVP_PROVIDED_COLUMN = 8
 CREATE_TIME_COLUMN = 9
 
-ERROR_JSON = json.dumps({"error": "Please enter the primary guest's full name, as it appeared in the email."}, indent=2)
+NOT_FOUND_ERROR = "Please enter the primary guest's full name, as it appeared in the email."
+INTERNAL_ERROR = "An internal error occurred. Please try again later."
+NO_DATA_FOUND_ERROR = "No data found."
+
 
 #### TODOS
 # Make real spreadsheet look like test spreadsheet, and add column ACLs
@@ -81,8 +85,6 @@ class PrimaryGuest(Guest):
       guest.PrettyPrint()
 
 def _get_creds():
-  creds, project_id = google.auth.default(scopes=SCOPES, quota_project_id="ninaandandrew-com")
-  return creds
 #   creds = None
 #   # The file token.json stores the user's access and refresh tokens, and is
 #   # created automatically when the authorization flow completes for the first
@@ -102,54 +104,55 @@ def _get_creds():
 #     with open("token.json", "w") as token:
 #       token.write(creds.to_json())
 #   return creds
+  creds, project_id = google.auth.default(scopes=SCOPES, quota_project_id=QUOTA_PROJECT_ID)
+  return creds
+
 
 def _read_spreadsheet():
+  '''Reads the entire spreadsheet and returns the sheet, values, and each row
+  indexed by primary_guest column.
+  May raise an HttpError on a SpreadsheetService issue, or Exception if the data
+  is invalid.'''
   creds = _get_creds()
 
-  try:
-    service = build("sheets", "v4", credentials=creds)
+  service = build("sheets", "v4", credentials=creds)
 
-    # Call the Sheets API
-    sheet = service.spreadsheets()
-    result = (
-        sheet.values()
-        .get(spreadsheetId=SPREADSHEET_ID, range=SHEET_RANGE_NAME)
-        .execute()
-    )
-    values = result.get("values", [])
-    values_dict = {v[PRIMARY_GUEST_COLUMN]:v for v in values}
+  # Call the Sheets API
+  sheet = service.spreadsheets()
+  result = (
+      sheet.values()
+      .get(spreadsheetId=SPREADSHEET_ID, range=SHEET_RANGE_NAME)
+      .execute()
+  )
+  values = result.get("values", [])
+  values_dict = {v[PRIMARY_GUEST_COLUMN]:v for v in values}
 
-    if not values:
-      print("No data found.")
-      return
+  if not values:
+    raise Exception(NO_DATA_FOUND_ERROR)
 
-    return (sheet, values, values_dict)
-
-  except HttpError as err:
-    print(err)
-    return
+  return (sheet, values, values_dict)
 
 def spreadsheet_to_json(primary_guest_name):
+  """Returns a row of the spreadsheet for the given primary guest.
+  Raises an exception if the primary guest is not found."""
+  
   if not primary_guest_name:
-    return ERROR_JSON
+    raise Exception(NOT_FOUND_ERROR)
 
   try:
     sheet, values, values_dict = _read_spreadsheet()
-
-    if not values:
-      print("No data found.")
-      # TODO: There should be values in the spreadsheet, throw an error
-      return
+    assert values, NO_DATA_FOUND_ERROR
 
     output_dict = {}
     found_row = False
     for idx, row in enumerate(values):
       if row[PRIMARY_GUEST_COLUMN] == primary_guest_name:
         current_row = None
+
+        # TODO bramp@ Why is there this check? And why not index directly into
+        # values_dict, instead of looping though values?
         if not values_dict.__contains__(primary_guest_name):
-          # TODO: if guest name is wrong, return error to the user
-          print("Fail fail fail")
-          return
+          raise Exception(NOT_FOUND_ERROR)
 
         found_row = True
         current_row = values_dict[primary_guest_name]
@@ -197,68 +200,63 @@ def spreadsheet_to_json(primary_guest_name):
           output_dict["guests"] = guest_list
 
         # TODO: Validate there's only one matching row
-        json_obj = json.dumps(output_dict, indent=2)
-        with open("output.json", "w") as outfile:
-          outfile.write(json_obj)
-
-        #print(output_dict)
-        return json_obj
+        return output_dict;
 
     # Return error to user if there is no matching row
     if not found_row:
-      return ERROR_JSON
+      raise Exception(NOT_FOUND_ERROR)
 
   except HttpError as err:
     print(err)
+    raise Exception(INTERNAL_ERROR)
 
 
-def json_to_primary_guest(input):
+def json_to_primary_guest(d):
+  """Takes the provided map, and returns a PrimaryGuest object."""
   p = None
-  with open(input) as f:
-    d = json.load(f)    
 
-    if not d.__contains__("guests"):
-      # RSVP not filled out yet
-      return p
-    primary = True
-    for guest_input in d["guests"]:
-      if primary:
-        if not guest_input.__contains__("name") or not guest_input.__contains__("ceremony") or not guest_input.__contains__("reception"):
+  if not d.__contains__("guests"):
+    # RSVP not filled out yet
+    return p
+
+  primary = True
+  for guest_input in d["guests"]:
+    if primary:
+      if not guest_input.__contains__("name") or not guest_input.__contains__("ceremony") or not guest_input.__contains__("reception"):
+        # incomplete RSVP, return
+        return p
+
+      p = PrimaryGuest(guest_input["name"], guest_input["ceremony"], guest_input["reception"])
+      if guest_input.__contains__("email"):
+        p.email = guest_input["email"]
+      if guest_input.__contains__("phone"):
+        p.phone = guest_input["phone"]
+      if d.__contains__("comments"):
+        p.comments = d["comments"]
+
+      primary = False
+    else:
+      assert p is not None, "We need to have a primary guest to have secondary guests"
+
+      if not guest_input.__contains__("name") or not guest_input.__contains__("ceremony") or not guest_input.__contains__("reception"):
           # incomplete RSVP, return
           return p
-        p = PrimaryGuest(guest_input["name"], guest_input["ceremony"], guest_input["reception"])
-        if guest_input.__contains__("email"):
-          p.email = guest_input["email"]
-        if guest_input.__contains__("phone"):
-          p.phone = guest_input["phone"]
-        if d.__contains__("comments"):
-          p.comments = d["comments"]
-        primary = False
-      else:
-        if p == None:
-          # Bug in code above!
-          raise Exception("We need to have a primary guest to have secondary guests") 
-        if not guest_input.__contains__("name") or not guest_input.__contains__("ceremony") or not guest_input.__contains__("reception"):
-            # incomplete RSVP, return
-            return p
-        g = Guest(guest_input["name"], guest_input["ceremony"], guest_input["reception"])
-        if guest_input.__contains__("email"):
-          g.email = guest_input["email"]
-        if guest_input.__contains__("phone"):
-          g.phone = guest_input["phone"]
-        p.guests.append(g)
+
+      g = Guest(guest_input["name"], guest_input["ceremony"], guest_input["reception"])
+      if guest_input.__contains__("email"):
+        g.email = guest_input["email"]
+      if guest_input.__contains__("phone"):
+        g.phone = guest_input["phone"]
+      p.guests.append(g)
 
   return p
 
 
 def update_guest_row(primary_guest):
+  """Updates the given primary guest's row in the spreadsheet."""
   try:
     sheet, values, values_dict = _read_spreadsheet()
-
-    if not values:
-      print("No data found.")
-      # TODO: There should be values in the spreadsheet, throw an error
-      return
+    assert values, NO_DATA_FOUND_ERROR
 
     # TODO: Validate that the values for Primary Guest are unique
     # TODO: Throw error if primary_guest is not in spreadsheet
@@ -292,23 +290,21 @@ def update_guest_row(primary_guest):
           stuff_to_write.append(guest.ceremony)              # U --->
           stuff_to_write.append(guest.reception)             # V --->
 
-        result = (
-          sheet.values()
-          .update(
-            spreadsheetId=SPREADSHEET_ID, 
-            range=f"Sheet1!I{START_ROW+idx}:BO{START_ROW+idx}",
-            valueInputOption="USER_ENTERED",
-            body={"values": [stuff_to_write]}
-          )
-          .execute()
-        )
-        return json.dumps({"success": ("Successfully updated guest row for " + primary_guest.name)}, indent=2)
+        sheet.values().update(
+          spreadsheetId=SPREADSHEET_ID, 
+          range=f"Sheet1!I{START_ROW+idx}:BO{START_ROW+idx}",
+          valueInputOption="USER_ENTERED",
+          body={"values": [stuff_to_write]}
+        ).execute()
+
+        return {"success": ("Successfully updated guest row for " + primary_guest.name)};
 
     if not found_row:
-      return ERROR_JSON
+      raise Exception(NOT_FOUND_ERROR)
 
   except HttpError as err:
     print(err)
+    raise Exception(INTERNAL_ERROR)
 
 def main():
 
