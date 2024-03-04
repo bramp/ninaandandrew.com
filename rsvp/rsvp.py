@@ -22,6 +22,10 @@ START_ROW = 3
 PRIMARY_GUEST_COLUMN = 11
 RSVP_PROVIDED_COLUMN = 8
 CREATE_TIME_COLUMN = 9
+MAX_GUESTS = 10
+FIRST_GUEST_COLUMN = 17
+MAX_COLUMN = FIRST_GUEST_COLUMN + (MAX_GUESTS * 5)
+
 
 NOT_FOUND_ERROR = "Please enter the primary guest's full name, as it appeared in the email."
 INTERNAL_ERROR = "An internal error occurred. Please try again later."
@@ -128,6 +132,12 @@ def _read_spreadsheet():
   if not values:
     raise Exception(NO_DATA_FOUND_ERROR)
 
+  # Empty trailing values will not be included, so pad each values
+  # with empty cell values for easier processing.
+  for row in values:
+    while len(row) < FIRST_GUEST_COLUMN:
+      row.append("")
+
   return (sheet, values)
 
 def spreadsheet_to_json(primary_guest_name):
@@ -163,8 +173,8 @@ def spreadsheet_to_json(primary_guest_name):
 
         output_dict["comments"] = current_row[16] # GUEST COMMENTS
 
-        if (len(current_row) > 17):
-          remaining_guests = current_row[17:]
+        if (len(current_row) > FIRST_GUEST_COLUMN):
+          remaining_guests = current_row[FIRST_GUEST_COLUMN:]
 
           # Pad in case the last guest doesn't have a reception value,
           # for easier iteration over the remaining guests
@@ -187,7 +197,7 @@ def spreadsheet_to_json(primary_guest_name):
             guest_list.append(guest)
             j += 5
 
-          output_dict["guests"] = guest_list
+        output_dict["guests"] = guest_list
 
         # TODO: Validate there's only one matching row
         return output_dict;
