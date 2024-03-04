@@ -125,12 +125,10 @@ def _read_spreadsheet():
       .execute()
   )
   values = result.get("values", [])
-  values_dict = {v[PRIMARY_GUEST_COLUMN]:v for v in values}
-
   if not values:
     raise Exception(NO_DATA_FOUND_ERROR)
 
-  return (sheet, values, values_dict)
+  return (sheet, values)
 
 def spreadsheet_to_json(primary_guest_name):
   """Returns a row of the spreadsheet for the given primary guest.
@@ -140,22 +138,14 @@ def spreadsheet_to_json(primary_guest_name):
     raise Exception(NOT_FOUND_ERROR)
 
   try:
-    sheet, values, values_dict = _read_spreadsheet()
+    sheet, values = _read_spreadsheet()
     assert values, NO_DATA_FOUND_ERROR
 
     output_dict = {}
     found_row = False
     for idx, row in enumerate(values):
       if row[PRIMARY_GUEST_COLUMN] == primary_guest_name:
-        current_row = None
-
-        # TODO bramp@ Why is there this check? And why not index directly into
-        # values_dict, instead of looping though values?
-        if not values_dict.__contains__(primary_guest_name):
-          raise Exception(NOT_FOUND_ERROR)
-
-        found_row = True
-        current_row = values_dict[primary_guest_name]
+        current_row = row
 
         output_dict["ceremony"] = True if current_row[4] == "TRUE" else False  # INVITED TO WEDDING
         output_dict["reception"] = True if current_row[5] == "TRUE" else False # INVITED TO RECEPTION
@@ -165,9 +155,9 @@ def spreadsheet_to_json(primary_guest_name):
         primary_guest['name'] = current_row[11]
         if (current_row[12]): primary_guest['email'] = current_row[12]
         if (current_row[13]): primary_guest['phone'] = current_row[13]
-        if (current_row[14]): 
+        if (current_row[14]):
           primary_guest['ceremony'] = True if current_row[14] == "TRUE" else False  # ATTENDING WEDDING
-        if (current_row[15]): 
+        if (current_row[15]):
           primary_guest['reception'] = True if current_row[15] == "TRUE" else False # ATTENDING RECEPTION
         guest_list.append(primary_guest)
 
@@ -203,8 +193,7 @@ def spreadsheet_to_json(primary_guest_name):
         return output_dict;
 
     # Return error to user if there is no matching row
-    if not found_row:
-      raise Exception(NOT_FOUND_ERROR)
+    raise Exception(NOT_FOUND_ERROR)
 
   except HttpError as err:
     print(err)
@@ -255,18 +244,15 @@ def json_to_primary_guest(d):
 def update_guest_row(primary_guest):
   """Updates the given primary guest's row in the spreadsheet."""
   try:
-    sheet, values, values_dict = _read_spreadsheet()
+    sheet, values = _read_spreadsheet()
     assert values, NO_DATA_FOUND_ERROR
 
     # TODO: Validate that the values for Primary Guest are unique
     # TODO: Throw error if primary_guest is not in spreadsheet
 
-    found_row = False
     for idx, row in enumerate(values):
       if row[PRIMARY_GUEST_COLUMN] == primary_guest.name:
-        current_row = None
-        if values_dict.__contains__(primary_guest.name):
-          current_row = values_dict[primary_guest.name]
+        current_row = row
 
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -299,8 +285,7 @@ def update_guest_row(primary_guest):
 
         return {"success": ("Successfully updated guest row for " + primary_guest.name)};
 
-    if not found_row:
-      raise Exception(NOT_FOUND_ERROR)
+    raise Exception(NOT_FOUND_ERROR)
 
   except HttpError as err:
     print(err)
