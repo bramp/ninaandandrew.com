@@ -24,7 +24,7 @@ RSVP_PROVIDED_COLUMN = 8
 CREATE_TIME_COLUMN = 9
 MAX_GUESTS = 10
 MAIN_COLUMNS = 17
-MAX_COLUMN = MAIN_COLUMNS + (MAX_GUESTS * 5)
+MAX_COLUMNS = MAIN_COLUMNS + (MAX_GUESTS * 5)
 
 
 NOT_FOUND_ERROR = "Please enter the primary guest's full name, as it appeared in the email."
