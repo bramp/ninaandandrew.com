@@ -50,6 +50,8 @@ NO_DATA_FOUND_ERROR = "No data found."
 # Return success + error JSON objects
 # Display error messages - return json with error + message "error: "" "
 
+class NotFoundException(Exception):
+  pass
 
 class Guest:
   def __init__(self, name, ceremony, reception):
@@ -145,7 +147,7 @@ def spreadsheet_to_json(primary_guest_name):
   Raises an exception if the primary guest is not found."""
   
   if not primary_guest_name:
-    raise Exception(NOT_FOUND_ERROR)
+    raise NotFoundException(NOT_FOUND_ERROR)
 
   try:
     sheet, values = _read_spreadsheet()
@@ -204,10 +206,9 @@ def spreadsheet_to_json(primary_guest_name):
         return output_dict;
 
     # Return error to user if there is no matching row
-    raise Exception(NOT_FOUND_ERROR)
+    raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    print(err)
     raise Exception(INTERNAL_ERROR)
 
 
@@ -296,10 +297,9 @@ def update_guest_row(primary_guest):
 
         return {"success": ("Successfully updated guest row for " + primary_guest.name)};
 
-    raise Exception(NOT_FOUND_ERROR)
+    raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    print(err)
     raise Exception(INTERNAL_ERROR)
 
 def main():

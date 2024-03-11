@@ -2,7 +2,29 @@ import traceback
 import functions_framework
 import rsvp
 
-import os.path
+allow_origin_list = ['https://www.ninaandandrew.com', 'http://localhost:8000', 'http://127.0.0.1:8000']
+
+demo_data = {
+    "ceremony": True,
+    "reception": True,
+    "comments": "King Bob!!!",
+    "guests": [
+        {
+            "ceremony": True,
+            "email": "bob@example.com",
+            "name": "King Bob",
+            "phone": "",
+            "reception": False
+        },
+        {
+            "ceremony": False,
+            "email": "",
+            "name": "John Smith",
+            "phone": "+1 123 567 890",
+            "reception": True
+        },
+    ],
+}
 
 @functions_framework.http
 def rsvp_http(request):
@@ -17,10 +39,15 @@ def rsvp_http(request):
     """
 
     try:
+      headers = {}
+
       # Set CORS headers for the main request
-      headers = {
-         "Access-Control-Allow-Origin": "https://www.ninaandandrew.com/"
-      }
+      allowed_origin = (request.environ['HTTP_ORIGIN']
+                        if 'HTTP_ORIGIN' in request.environ and request.environ['HTTP_ORIGIN'] in allow_origin_list
+                        else allow_origin_list[0])
+      headers.update({
+        "Access-Control-Allow-Origin": allowed_origin
+      })
 
       # Set CORS headers for the preflight request
       if request.method == "OPTIONS":
@@ -36,7 +63,19 @@ def rsvp_http(request):
         return ("", 204, headers)
 
       if request.method == "GET":
-        data = rsvp.spreadsheet_to_json(request.args.get('primary_guest'));
+        # If they haven't provided the correct info, redirect them to the main page
+        if ('primary_guest' not in request.args):
+          headers.update({
+            "Location": "https://www.NinaAndAndrew.com/"
+          })
+          return ({'error': 'nothing to see here'}, 200, headers)
+
+        primary_guest = request.args.get('primary_guest')
+
+        if primary_guest == 'King Bob':
+          data = demo_data
+        else:
+          data = rsvp.spreadsheet_to_json(primary_guest)
         
         return (data, 200, headers)
 
@@ -44,7 +83,10 @@ def rsvp_http(request):
         data = rsvp.spreadsheet_to_json("Andrew")
         return (data, 200, headers)
 
+    except rsvp.NotFoundException as e:
+      traceback.print_exc()
+      return ({'error': str(e)}, 404, headers)
+
     except Exception as e:
-      print(e)
       traceback.print_exc()
       return ({'error': str(e)}, 500, headers)
