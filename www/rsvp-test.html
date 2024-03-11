@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nina ♥️ Andrew</title>
+
+    <link rel="stylesheet" href="/css/site.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+
+    <!-- TODO Remove the parts of the font we don't need -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Raleway:ital,wght@0,100..900;1,100..900&family=Carattere&family=Hurricane&family=Oooh+Baby&display=swap"
+        rel="stylesheet">
+
+    <script src="/js/rsvp.js"></script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1KTQJJZ0VC"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-1KTQJJZ0VC');
+    </script>
+</head>
+
+<body>
+    <div id=header>
+        <div id=logo>
+            <a href="https://www.NinaAndAndrew.com/" class=active>
+                Nina <small>♥️</small> Andrew <small>.com</small>
+            </a>
+        </div>
+        <div id=nav>
+            <ul>
+                <li><a href="#about-us">About Us</a></li>
+                <li><a href="#schedule">Schedule</a></li>
+                <li class="hide-rsvp"><a href="#rsvp">RSVP</a></li>
+                <li><a href="#registry">Registry</a></li>
+                <li><a href="#faq">FAQs</a></li>
+            </ul>
+        </div>
+    </div>
+    <!--<img src="images/peacock-light.webp" class="peacock2 flip" />-->
+
+    <div id=outer>
+        <div id=container>
+
+            <section id="rsvp" class="hide-rsvp">
+                <!-- Répondez S'il Vous Plaît -->
+                <h1>RSVP</h1>
+
+                <p><b>Please RSVP by 31<sup>st</sup> June 2024</b>.</p>
+
+                <p>To receive updates, please provide your email or text numbers. The latest information will always be
+                    available on this site.</p>
+
+                <template id="guest-row">
+                    <tbody class="guest-row">
+                        <tr>
+                            <td rowspan="3">
+                                <span class="row-label"></span><br/>
+                                <span class="remove-row"><a href="#">(remove)</a></span>
+                            </td>
+
+                            <td><label for="name">Name:</label></td>
+                            <td><input type="text" name="name" value="" required autocomplete="name"></td>
+
+                            <td rowspan="3">
+                                Attending:<br/>
+
+                                <label for="ceremony">
+                                <input type="checkbox" name="ceremony"> Ceremony</label><br/>
+
+                                <label for="reception">
+                                <input type="checkbox" name="reception"> Reception</label><br/>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td><label for="email">Email:</label><br/><small>(optional)</small></td>
+                            <td><input type="email" name="email" value="" autocomplete="email">
+                                
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td><label for="phone">Phone:</label><br/><small>(optional)</small></td>
+                            <td><input type="tel" name="phone" value="" autocomplete="tel">
+                            </td>
+                        </tr>
+
+                        <!-- Empty -->
+                        <tr>
+                            <td colspan=4><hr/></td>
+                        </tr>
+                    </tbody>
+                </template>
+
+                <div class="fancy-border">
+                    <div class="error hide">
+                        <p class="error-message"></p>
+                        <p>Contact Nina and Andrew if you are having issues.</p>
+                    </div>
+                    <form action="">
+                        <table id="rsvp-form" width=100%>
+                            
+                            <tfoot>
+                                <tr>
+                                    <td colspan=4 class="right-align">
+                                        <button type="button" id="add-row-button">+ add guest</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+
+                        </table>
+                        
+                        <p>
+                            Anything else you want to say:<br/>
+                            <textarea name="comments" rows="4" cols="50"></textarea>
+                        </p>
+
+                        <!-- TODO Ensure the form validates -->
+                        <button type="button" onclick="to_json()">Confirm</button>
+                        <!--input type="submit" value="Submit"-->
+                    </form>
+                </div>
+            </section>
+
+
+            <div id="footer">
+                <!--
+        <br/>
+        <img src="/images/pillayar_suli.svg" width="24" />
+      -->
+                <p>Designed by Nina and Andrew</p>
+            </div>
+        </div>
+        <img src="images/peacock-light.webp" class="peacock1" />
+    </div>
+
+</body>
+
+</html>
