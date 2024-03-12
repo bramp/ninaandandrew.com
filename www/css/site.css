@@ -18,7 +18,6 @@
 
       #about-us {
         text-align: justify;
-        margin: 1.5em;
       }
 
       #header,
@@ -67,7 +66,9 @@
         margin-bottom: 0;
         color: #4e2e14;
         font-weight: 400;
-        padding: 1em;
+        /*padding: 1em;*/
+        margin: 1em;
+
         text-align: center;
         display: inline-block;
       }
@@ -83,10 +84,10 @@
       }
 
       #faq h1 {
-          font-family: cursive;
-          font-size: 3.5em;
+        /* Different font, because FAQ doesn't look good in the regular font */
+        font-family: cursive;
+        font-size: 3.5em;
       }
-
 
       .flip {
         transform: scaleX(-1);
@@ -104,7 +105,7 @@
         margin: auto;
         top: 0;
         width: 100%;
-        height: 3em;
+        /*height: 3em;*/
         background-color: #fef3ea;
         border: rgb(229 231 235);
         box-shadow: -2px 4px 12px #00000026;
@@ -112,8 +113,8 @@
 
       #logo {
         float: left;
+        display: flex;
         justify-content: left;
-        margin: 10px;
       }
 
       #nav {
@@ -122,14 +123,14 @@
         justify-content: right;
       }
 
-      #nav ul {
+      #header ul {
         display: flex;
         list-style: none;
         margin: 10px;
         padding-left: 0;
       }
 
-      #nav li {
+      #header li {
         margin-left: 10px;
         margin-right: 10px;
       }
@@ -144,6 +145,29 @@
         margin-top: 4em;
         padding-bottom: 1em;
         border-bottom: 1px solid #4e2e1430;
+      }
+
+      @media (width <= 720px) {
+        section {
+          /* Ensure there is space for the nav bar */
+          scroll-margin-top: 8em;
+          scroll-snap-margin-top: 8em;
+        }
+
+        #container {
+          margin-top: 4em;
+        }
+
+        #logo {
+          float: unset;
+          justify-content: center;
+        }
+
+        #nav {
+          float: unset;
+          justify-content: center;
+        }
+
       }
 
       a {
@@ -165,7 +189,7 @@
       #header a {
         display: block;
         position: relative;
-        padding: 0.2em 0;
+
         text-decoration: none;
       }
 
@@ -195,7 +219,17 @@
         transform-origin: center;
       }
 
-      #header a:hover::after,
+      /* On devices (with mouse cursor, not touch screens) enable hover effects */
+      @media (hover: hover) {
+        #header a:hover::after {
+          /* Fade in/out */
+          opacity: 1;
+
+          /* Expand */
+          transform: scale(1);
+        }
+      }
+
       #header a.active::after {
         /* Fade in/out */
         opacity: 1;
@@ -269,6 +303,7 @@
 
       #faq ul {
         list-style-type: none;
+        padding-left: 0;
       }
 
       #faq li {

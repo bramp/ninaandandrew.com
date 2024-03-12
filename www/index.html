@@ -18,7 +18,7 @@
     <!-- TODO Remove the parts of the font we don't need -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Raleway:ital,wght@0,100..900;1,100..900&family=Carattere&family=Hurricane&family=Oooh+Baby&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Carattere&display=swap" rel="stylesheet">
 
     <script src="/js/rsvp.js"></script>
 
@@ -35,9 +35,13 @@
   <body>
     <div id=header>
       <div id=logo>
-        <a href="https://www.NinaAndAndrew.com/" class=active>
-          Nina <span class=and>&</span> &nbsp;Andrew <small>.com</small>
-        </a>
+        <ul>
+          <li>
+            <a href="https://www.NinaAndAndrew.com/" class=active>
+              Nina <span class=and>&</span> &nbsp;Andrew <small>.com</small>
+            </a>
+          </li>
+        </ul>
       </div>
       <div id=nav>
         <ul>
@@ -63,18 +67,17 @@
         </p>
 
         <p>
-        Andrew grew up in England, close to Nottingham (which you may know from Robin Hood). From a young age, he always enjoyed working on various software and mechanical projects, inside and outside of school / work. He moved to the U.S. in 2010, and also joined Google in 2014. 
+        <a href="https://bramp.net">Andrew</a> grew up in England, <a href=https://en.wikipedia.org/wiki/Castle_Donington>close to Nottingham</a> (which you may know from Robin Hood). From a young age, he always enjoyed working on various software and mechanical projects, inside and outside of university / work. He moved to the U.S. in 2010, and joined Google in 2014.
         </p>
 
         <p>
         The couple met in 2019, at Google. Thanks to many shared interests in tech, they grew to become close friends over the years, working on various projects, playing games, hiking etc. This very naturally and organically grew into something more, and the rest is history.
         </p>
+      </section>
 
       <section id=gallery>
         <h1>Gallery</h1>
         <p>Coming soon...</p>
-      </section>
-
       </section>
 
       <section id=schedule class="hide-rsvp">
@@ -268,7 +271,7 @@
         </div>
       </section>
 
-
+      <!-- TODO Maybe drop this section -->
       <section id=registry>
         <h1>Registry</h1>
         <p>Coming soon...</p>
@@ -281,15 +284,13 @@
                       <p><span class=emojii>🥻</span></p>
             <b>What to wear? </b>
             <p>
-              Ceremony: festive Indian attire
+              <i>Ceremony:</i> Festive Indian attire
             </p>
 
 
             <p>
-               Reception: festive Indian or cocktail attire
+              <i>Reception:</i> Festive Indian or Cocktail Attire
             </p>
-
-
           </li>
           <li>
             <p><span class=emojii>🏨</span></p>
@@ -297,9 +298,9 @@
 
             <p>We have no dedicated room blocks, or preferred hotels.</p>
 
-            <p>The ceremony and reception take place within 10 miles of each other, around the city of Livermore. There are numerous suitable hotels there. However, if you wish to enjoy the sights, San Francisco is appropriately an hour drive away, with Fremont or Hayward being mid-points.
+            <p>The ceremony and reception take place within 10 miles of each other, around the city of <a href="https://maps.app.goo.gl/LUSkdLYHz2rT8G2J6">Livermore</a>. There are numerous suitable hotels there. However, if you wish to enjoy the sights, San Francisco is appropriately an hour drive away, with Fremont or Hayward being mid-points.
 
-            <p>If you’d rather stay in the peninsula, Andrew highly recommends Redwood City.</p>
+            <p>If you’d rather stay in the peninsula, Andrew highly recommends <a href="https://maps.app.goo.gl/u93DKb11soL6JwpeA">Redwood City</a>.</p>
           </li>
 
           <li>
@@ -343,7 +344,7 @@
         scrollSpy('#header', {
           sectionClass: 'section',
           menuActiveTarget: 'a',
-          offset: 100,
+          offset: 150,
 
           // smooth scroll
           smoothScroll: false,
