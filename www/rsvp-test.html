@@ -75,32 +75,39 @@
                                 <span class="remove-row"><a href="#">(remove)</a></span>
                             </td>
 
-                            <td><label for="name">Name:</label></td>
-                            <td><input type="text" name="name" value="" required autocomplete="name"></td>
+                            <td><label for="rsvp_name_">Name:</label></td>
+                            <td><input type="text" name="rsvp_name_" value="" required autocomplete="name" size="28"></td>
 
                             <td rowspan="3">
-                                Attending:<br/>
 
-                                <label for="ceremony">
-                                <input type="checkbox" name="ceremony"> Ceremony</label><br/>
+                                <div style="text-align: left">
+                                    <label><input type="radio" name="rsvp_attending_" value="yes" checked>Attending</label>
+                                </div>
 
-                                <label for="reception">
-                                <input type="checkbox" name="reception"> Reception</label><br/>
+                                <div class="hide-ceremony">
+                                    <label for="rsvp_ceremony_">
+                                    <input type="checkbox" name="rsvp_ceremony_"> Ceremony</label><br/>
+
+                                    <label for="rsvp_reception_">
+                                    <input type="checkbox" name="rsvp_reception_"> Reception</label><br/>
+                                </div>
+
+                                <br/>
+
+                                <div style="text-align: left">
+                                    <label><input type="radio" name="rsvp_attending_" value="no">Not Attending</label>
+                                </div>
                             </td>
-
                         </tr>
 
                         <tr>
-                            <td><label for="email">Email:</label><br/><small>(optional)</small></td>
-                            <td><input type="email" name="email" value="" autocomplete="email">
-                                
-                            </td>
+                            <td><label for="rsvp_email_">Email:</label><br/><small>(optional)</small></td>
+                            <td><input type="email" name="rsvp_email_" value="" autocomplete="email" size="28"></td>
                         </tr>
 
                         <tr>
-                            <td><label for="phone">Phone:</label><br/><small>(optional)</small></td>
-                            <td><input type="tel" name="phone" value="" autocomplete="tel">
-                            </td>
+                            <td><label for="rsvp_phone_">Phone:</label><br/><small>(optional)</small></td>
+                            <td><input type="tel" name="rsvp_phone_" value="" autocomplete="tel" size="28"></td>
                         </tr>
 
                         <!-- Empty -->
@@ -111,41 +118,45 @@
                 </template>
 
                 <div class="fancy-border">
-                    <div class="error hide">
-                        <p class="error-message"></p>
-                        <p>Contact Nina and Andrew if you are having issues.</p>
-                    </div>
                     <form action="">
-                        <table id="rsvp-form" width=100%>
-                            
-                            <tfoot>
-                                <tr>
-                                    <td colspan=4 class="right-align">
-                                        <button type="button" id="add-row-button">+ add guest</button>
-                                    </td>
-                                </tr>
-                            </tfoot>
+                        <div id="rsvp-form">
+                            <table width=100%>
+                                <!-- tbody will go here -->
+                                <tfoot>
+                                    <tr>
+                                        <td colspan=4 class="right-align">
+                                            <button type="button" id="add-row-button">+ add guest</button>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
 
-                        </table>
-                        
-                        <p>
-                            Anything else you want to say:<br/>
-                            <textarea name="comments" rows="4" cols="50"></textarea>
-                        </p>
+                            <p>
+                                Anything else you want to say:<br/>
+                                <textarea name="rsvp_comments" rows="4" cols="50"></textarea>
+                            </p>
+                        </div>
+
+                        <div class="error hide">
+                            <p class="error-message"></p>
+                            <p>Contact Nina and Andrew if you are having issues.</p>
+                        </div>
+
+                        <div class="success hide">
+                            <p class="success-message"></p>
+                        </div>
+
+                        <div class="loading hide">
+                            <div class="lds-heart"><div></div></div>
+                        </div>
 
                         <!-- TODO Ensure the form validates -->
-                        <button type="button" onclick="to_json()">Confirm</button>
-                        <!--input type="submit" value="Submit"-->
+                        <input id=rsvp_submit type="submit"></button>
                     </form>
                 </div>
             </section>
 
-
             <div id="footer">
-                <!--
-        <br/>
-        <img src="/images/pillayar_suli.svg" width="24" />
-      -->
                 <p>Designed by Nina and Andrew</p>
             </div>
         </div>

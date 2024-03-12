@@ -4,8 +4,9 @@ import rsvp
 
 allow_origin_list = ['https://www.ninaandandrew.com', 'http://localhost:8000', 'http://127.0.0.1:8000']
 
+
 demo_data = {
-    "ceremony": True,
+    "ceremony": False,
     "reception": True,
     "comments": "King Bob!!!",
     "guests": [
@@ -46,7 +47,8 @@ def rsvp_http(request):
                         if 'HTTP_ORIGIN' in request.environ and request.environ['HTTP_ORIGIN'] in allow_origin_list
                         else allow_origin_list[0])
       headers.update({
-        "Access-Control-Allow-Origin": allowed_origin
+        "Access-Control-Allow-Origin": allowed_origin,
+        "Content-Type": "application/json",
       })
 
       # Set CORS headers for the preflight request
@@ -80,8 +82,14 @@ def rsvp_http(request):
         return (data, 200, headers)
 
       if request.method == "POST":
-        data = rsvp.spreadsheet_to_json("Andrew")
-        return (data, 200, headers)
+        # Capture this, so we can recover from logs if we need to.
+        print("POST", request.json);
+
+        data = rsvp.json_to_primary_guest(request.json)
+
+        response = rsvp.update_guest_row(data)
+
+        return (response, 200, headers)
 
     except rsvp.NotFoundException as e:
       traceback.print_exc()
@@ -89,4 +97,5 @@ def rsvp_http(request):
 
     except Exception as e:
       traceback.print_exc()
-      return ({'error': str(e)}, 500, headers)
+      return ({'error': "An internal error occurred. " + str(e)}, 500, headers)
+

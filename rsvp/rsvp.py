@@ -1,14 +1,8 @@
 import datetime
 import google.auth
-#import json
-#import os.path
-#from google.auth.transport.requests import Request
-#from google.oauth2.credentials import Credentials
-#from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 
-# If modifying these scopes, delete the file token.json.
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 # The ID and range of a sample spreadsheet.
@@ -27,8 +21,8 @@ MAIN_COLUMNS = 17
 MAX_COLUMNS = MAIN_COLUMNS + (MAX_GUESTS * 5)
 
 
-NOT_FOUND_ERROR = "Please enter the primary guest's full name, as it appeared in the email."
-INTERNAL_ERROR = "An internal error occurred. Please try again later."
+NOT_FOUND_ERROR = "Your name isn't found. Please use the url as it appeared in the email."
+BACKEND_ERROR = "Backend error. Please try again later."
 NO_DATA_FOUND_ERROR = "No data found."
 
 
@@ -56,8 +50,8 @@ class NotFoundException(Exception):
 class Guest:
   def __init__(self, name, ceremony, reception):
     self.name = name   # string - guest name, required
-    self.ceremony = ceremony # bool - attending?, required
-    self.reception = reception # bool - attending?, required
+    self.ceremony = ceremony # bool or None - attending?,
+    self.reception = reception # bool or None - attending?
     self.email = "" # string - guest email, optional
     self.phone = "" # string - guest phone, optional
 
@@ -113,6 +107,29 @@ def _get_creds():
   creds, project_id = google.auth.default(scopes=SCOPES, quota_project_id=QUOTA_PROJECT_ID)
   return creds
 
+def strToBool(value):
+  """Returns True, False, or None depending on if value is "TRUE", "FALSE", or not set"""
+  if value is None:
+    return None
+
+  value = value.strip().upper();
+  if value == "":
+    return None
+
+  if (value == "TRUE") or (value == "YES"):
+    return True
+
+  return False
+
+def boolToStr(value):
+  """Returns "TRUE", "FALSE", or "" depending on if value is True, False, or None"""
+  if (value is None) or (value == ""):
+    return ""
+
+  if value == True:
+    return "TRUE"
+
+  return "FALSE"
 
 def _read_spreadsheet():
   '''Reads the entire spreadsheet and returns the sheet, values, and each row
@@ -151,7 +168,7 @@ def spreadsheet_to_json(primary_guest_name):
 
   try:
     sheet, values = _read_spreadsheet()
-    assert values, NO_DATA_FOUND_ERROR
+    assert values, "_read_spreadsheet returned nothing"
 
     output_dict = {}
     found_row = False
@@ -169,9 +186,9 @@ def spreadsheet_to_json(primary_guest_name):
         if (current_row[12]): primary_guest['email'] = current_row[12]
         if (current_row[13]): primary_guest['phone'] = current_row[13]
         if (current_row[14]):
-          primary_guest['ceremony'] = True if current_row[14] == "TRUE" else False  # ATTENDING WEDDING
+          primary_guest['ceremony'] = strToBool(current_row[14]) # ATTENDING WEDDING
         if (current_row[15]):
-          primary_guest['reception'] = True if current_row[15] == "TRUE" else False # ATTENDING RECEPTION
+          primary_guest['reception'] = strToBool(current_row[15]) # ATTENDING RECEPTION
         guest_list.append(primary_guest)
 
         output_dict["comments"] = current_row[16] # GUEST COMMENTS
@@ -194,9 +211,9 @@ def spreadsheet_to_json(primary_guest_name):
             if (remaining_guests[j+1]): guest['email'] = remaining_guests[j+1]
             if (remaining_guests[j+2]): guest['phone'] = remaining_guests[j+2]
             if (remaining_guests[j+3]): 
-              guest['ceremony'] = True if remaining_guests[j+3] == "TRUE" else False  # ATTENDING WEDDING
+              guest['ceremony'] = strToBool(remaining_guests[j+3])  # ATTENDING WEDDING
             if (remaining_guests[j+4]): 
-              guest['reception'] = True if remaining_guests[j+4] == "TRUE" else False # ATTENDING RECEPTION
+              guest['reception'] = strToBool(remaining_guests[j+4]) # ATTENDING RECEPTION
             guest_list.append(guest)
             j += 5
 
@@ -209,7 +226,8 @@ def spreadsheet_to_json(primary_guest_name):
     raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    raise Exception(INTERNAL_ERROR)
+    print(err)
+    raise Exception(BACKEND_ERROR)
 
 
 def json_to_primary_guest(d):
@@ -260,7 +278,6 @@ def update_guest_row(primary_guest):
     assert values, NO_DATA_FOUND_ERROR
 
     # TODO: Validate that the values for Primary Guest are unique
-    # TODO: Throw error if primary_guest is not in spreadsheet
 
     for idx, row in enumerate(values):
       if row[PRIMARY_GUEST_COLUMN] == primary_guest.name:
@@ -278,8 +295,8 @@ def update_guest_row(primary_guest):
         stuff_to_write.append(primary_guest.name)            # L
         stuff_to_write.append(primary_guest.email)           # M
         stuff_to_write.append("'" + primary_guest.phone)     # N
-        stuff_to_write.append(primary_guest.ceremony)        # O
-        stuff_to_write.append(primary_guest.reception)       # P
+        stuff_to_write.append(boolToStr(primary_guest.ceremony))  # O
+        stuff_to_write.append(boolToStr(primary_guest.reception)) # P
         stuff_to_write.append(primary_guest.comments)        # Q
         for guest in primary_guest.guests:
           stuff_to_write.append(guest.name)                  # R --->
@@ -300,7 +317,8 @@ def update_guest_row(primary_guest):
     raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    raise Exception(INTERNAL_ERROR)
+    print(err)
+    raise Exception(BACKEND_ERROR)
 
 def main():
 
