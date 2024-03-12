@@ -31,6 +31,7 @@ Some deps
 npm install --global gulp-cli
 npm install http-server -g
 brew install webp
+brew install vnu # Nu Markup Checker: command-line and server HTML validator
 
 alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 ```
@@ -61,6 +62,8 @@ npm install --save-dev --save-exact prettier
 
 npx stylelint "www/css/*.css"
 npx prettier www --check
+
+vnu www/*.html
 ```
 
 

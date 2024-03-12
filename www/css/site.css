@@ -329,6 +329,10 @@
         text-align: center;
       }
 
+      #rsvp table {
+        width: 100%;
+      }
+
       #rsvp table,tr,th,td {
          border-spacing: 10px;
       }
