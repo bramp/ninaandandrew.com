@@ -43,7 +43,7 @@
         <ul>
           <li><a href="#about-us">About Us</a></li>
           <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#schedule">Schedule</a></li>
+          <li class="hide-rsvp"><a href="#schedule">Schedule</a></li>
           <li class="hide-rsvp"><a href="#rsvp">RSVP</a></li>
           <li><a href="#registry">Registry</a></li>
           <li><a href="#faq">FAQs</a></li>
@@ -77,7 +77,7 @@
 
       </section>
 
-      <section id=schedule>
+      <section id=schedule class="hide-rsvp">
         <h1>Schedule</h1>
 
         <div class=parent>
@@ -170,65 +170,103 @@
         <!-- Répondez S'il Vous Plaît -->
         <h1>RSVP</h1>
 
-        <p><b>Please RSVP by 31st Jun 2024</b>.</p>
+        <p><b>Please RSVP by 31<sup>st</sup> June 2024</b>.</p>
 
-        <p>To receive updates, please provide your email or text numbers. The latest information will always be available on this site.</p>
+        <p>To receive updates, please provide your email or text numbers. The latest information will always be
+            available on this site.</p>
 
         <template id="guest-row">
-          <tr>
-            <td class="right-align"><label for="name"></label></td>
-            <td><input type="text" name="name" value="" required></td>
-            <td><input type="email" name="email" value=""></td>
-            <td><input type="tel" name="phone" value=""></td>
+            <tbody class="guest-row">
+                <tr>
+                    <td rowspan="3">
+                        <span class="row-label"></span><br/>
+                        <span class="remove-row"><a href="#">(remove)</a></span>
+                    </td>
 
-            <td class=ceremony><input type="checkbox" name="ceremony"></td>
-            <td><input type="checkbox" name="reception"></td>
+                    <td><label for="rsvp_name_">Name:</label></td>
+                    <td><input type="text" name="rsvp_name_" value="" required autocomplete="name" size="28"></td>
 
-            <td class="remove-row">
-              <a href="#" onclick="remove_row();" data-row>(remove guest)</a>
-            </td>
-          </tr>
+                    <td rowspan="3">
+
+                        <div style="text-align: left">
+                            <label><input type="radio" name="rsvp_attending_" value="yes" checked>Attending</label>
+                        </div>
+
+                        <div class="hide-ceremony">
+                            <label for="rsvp_ceremony_">
+                            <input type="checkbox" name="rsvp_ceremony_"> Ceremony</label><br/>
+
+                            <label for="rsvp_reception_">
+                            <input type="checkbox" name="rsvp_reception_"> Reception</label><br/>
+                        </div>
+
+                        <br/>
+
+                        <div style="text-align: left">
+                            <label><input type="radio" name="rsvp_attending_" value="no">Not Attending</label>
+                        </div>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td><label for="rsvp_email_">Email:</label><br/><small>(optional)</small></td>
+                    <td><input type="email" name="rsvp_email_" value="" autocomplete="email" size="28"></td>
+                </tr>
+
+                <tr>
+                    <td><label for="rsvp_phone_">Phone:</label><br/><small>(optional)</small></td>
+                    <td><input type="tel" name="rsvp_phone_" value="" autocomplete="tel" size="28"></td>
+                </tr>
+
+                <!-- Empty -->
+                <tr>
+                    <td colspan=4><hr/></td>
+                </tr>
+            </tbody>
         </template>
 
         <div class="fancy-border">
-          <form action="">
+            <div id="status-box">
+                <div class="error hide">
+                    <p class="error-message"></p>
+                    <p>Contact Nina and Andrew if you are having issues.</p>
+                </div>
 
-            <table id="rsvp-form">
-              <thead>
-                <tr>
-                  <td></td><td></td><td></td><td></td>
-                  <td colspan=2 class="colspan-hack">Attending</td></tr>
-                <tr>
-                  <td></td>
-                  <td>Name</td>
-                  <td>Email (optional)</td>
-                  <td>Phone (optional)</td>
-                  <td class=ceremony>Ceremony</td>
-                  <td>Reception</td>
+                <div class="success hide">
+                    <p class="success-message"></p>
+                </div>
 
-                  <td></td>
-                </tr>
-              </thead>
-              <tbody> 
-              </tbody>
-              <tfooter>
-               <tr>
-                  <td colspan=4></td>
-                  <td colspan=2 class="colspan-hack">
-                    <button type="button" id="add-row-button" onclick="add_row()">+ add guest</button>
-                  </td>
-                  <td></td>
-                </tr>
-              </tfooter>
+                <div class="loading">
+                    <div class="lds-heart"><div></div></div>
+                    <p>Loading</p>
+                </div>
+            </div>
 
-              </table>
-              <br>
-            <!-- TODO Ensure the form validates -->
-            <button type="button" onclick="to_json()">Confirm</button>
-            <!--input type="submit" value="Submit"-->
-          </form>
+            <form action="" class="hide">
+                <div id="rsvp-form">
+                    <table width=100%>
+                        <!-- tbody will go here -->
+                        <tfoot>
+                            <tr>
+                                <td colspan=4 class="right-align">
+                                    <button type="button" id="add-row-button">+ add guest</button>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <p>
+                        Anything else you want to say:<br/>
+                        <textarea name="rsvp_comments" rows="4" cols="50"></textarea>
+                    </p>
+                </div>
+
+                <!-- Move the status box here -->
+
+                <input id=rsvp_submit type="submit" />
+            </form>
         </div>
-    </section>
+      </section>
 
 
     <section id=registry>
