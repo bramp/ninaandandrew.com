@@ -34,21 +34,28 @@ const data = {
 */
 
 async function get_data(primary_guest) {
-  const url = new URL(base_url);
-  url.searchParams.append("primary_guest", primary_guest);
+  try {
+    const url = new URL(base_url);
+    url.searchParams.append("primary_guest", primary_guest);
 
-  const response = await fetch(url.href);
-  const data = await response.json();
+    const response = await fetch(url.href);
+    const data = await response.json();
 
-  // Set some defaults
-  data.error ??= null;
-  data.comments ??= '';
+    // Set some defaults
+    data.error ??= null;
+    data.comments ??= '';
 
-  // Not invited (by default)
-  data.ceremony ??= false;
-  data.reception ??= false;
+    // Not invited (by default)
+    data.ceremony ??= false;
+    data.reception ??= false;
 
-  return data;
+    return data;
+
+  } catch (e) {
+    return {
+      'error': "Unexpected error: " + e,
+    }
+  }
 }
 
 async function post_data(data) {
@@ -65,7 +72,7 @@ async function post_data(data) {
 
   } catch (e) {
     return {
-      'error': "Unexpected error: " + response.status,
+      'error': "Unexpected error: " + e,
     }
   }
 }
@@ -230,7 +237,7 @@ function render_error(message) {
   document.querySelector('#rsvp .success').classList.add('hide');
 
   document.querySelector('#rsvp .error').classList.remove('hide');
-  document.querySelector('#rsvp .error-message').innerText = 'Error:\n' + message;
+  document.querySelector('#rsvp .error-message').innerText = message;
 }
 
 function render_success(message) {
@@ -266,18 +273,17 @@ async function submit_rsvp() {
 }
 
 function render_rsvp(data) {
-  // Unhide RSVP
-  for (const e of document.querySelectorAll('.hide-rsvp')) {
-    e.classList.remove('hide-rsvp');
-  };
-
   if (data.error) {
     render_error(data.error);
     document.querySelector('#rsvp-form').classList.add('hide');
     return;
   }
 
-  document.querySelector('#add-row-button').addEventListener('click', function(event) {
+  document.querySelector('#rsvp form').classList.remove('hide');
+
+  const addButton = document.querySelector('#add-row-button');
+
+  addButton.addEventListener('click', function(event) {
     add_row(null);
 
     if (rsvp.ceremony) {
@@ -294,6 +300,12 @@ function render_rsvp(data) {
   }
 
   document.querySelector('#rsvp textarea[name="rsvp_comments"]').value = data.comments;
+
+  // Move the status box above the button
+  const statusBox = document.querySelector('#status-box');
+  const submitButton = document.querySelector('#rsvp_submit');
+
+  submitButton.before(statusBox);
 
   document.querySelector('#rsvp form').addEventListener('submit', function (e) {
     e.preventDefault();
@@ -344,7 +356,20 @@ window.addEventListener("load", async function () {
     return;
   }
 
-  rsvp = await get_data(primary_guest);
-  render_rsvp(rsvp);
+  // Unhide RSVP
+  for (const e of document.querySelectorAll('.hide-rsvp')) {
+    e.classList.remove('hide-rsvp');
+  };
+
+  document.querySelector("#rsvp .loading").classList.remove('hide');
+
+  try {
+    rsvp = await get_data(primary_guest);
+    render_rsvp(rsvp);
+
+  } finally {
+    document.querySelector("#rsvp .loading").classList.add('hide');
+  }
+
 });
  

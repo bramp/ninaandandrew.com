@@ -118,7 +118,23 @@
                 </template>
 
                 <div class="fancy-border">
-                    <form action="">
+                    <div id="status-box">
+                        <div class="error hide">
+                            <p class="error-message"></p>
+                            <p>Contact Nina and Andrew if you are having issues.</p>
+                        </div>
+
+                        <div class="success hide">
+                            <p class="success-message"></p>
+                        </div>
+
+                        <div class="loading">
+                            <div class="lds-heart"><div></div></div>
+                            <p>Loading</p>
+                        </div>
+                    </div>
+
+                    <form action="" class="hide">
                         <div id="rsvp-form">
                             <table width=100%>
                                 <!-- tbody will go here -->
@@ -137,20 +153,8 @@
                             </p>
                         </div>
 
-                        <div class="error hide">
-                            <p class="error-message"></p>
-                            <p>Contact Nina and Andrew if you are having issues.</p>
-                        </div>
+                        <!-- Move the status box here -->
 
-                        <div class="success hide">
-                            <p class="success-message"></p>
-                        </div>
-
-                        <div class="loading hide">
-                            <div class="lds-heart"><div></div></div>
-                        </div>
-
-                        <!-- TODO Ensure the form validates -->
                         <input id=rsvp_submit type="submit"></button>
                     </form>
                 </div>

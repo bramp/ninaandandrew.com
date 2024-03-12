@@ -297,7 +297,7 @@
         display: none;
       }
 
-      /* Hidden until RSVP is loaded */
+      /* Hide RSVP if not invited */
       .hide-rsvp {
         display: none;
       }
@@ -317,6 +317,10 @@
         color: red;
       }
 
+      .loading {
+        font-weight: bold;
+        color: red;
+      }
 
       .fancy-border {
         border-image: url('/images/border-rsvp.svg') round;
