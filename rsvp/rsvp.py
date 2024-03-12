@@ -2,15 +2,18 @@ import datetime
 import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import os
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
+QUOTA_PROJECT_ID = os.environ.get('QUOTA_PROJECT_ID', "ninaandandrew-com")
+
 # The ID and range of a sample spreadsheet.
-SPREADSHEET_ID = "1e7fIMg8PamT-jH8UH_v2kUKqzwz79UGIkXdP24wILm0"
-SHEET_RANGE_NAME = "Sheet1!A3:BO"
+#SPREADSHEET_ID = "1e7fIMg8PamT-jH8UH_v2kUKqzwz79UGIkXdP24wILm0" # Test sheet
+#SPREADSHEET_ID = "1FuYiyuTqO6AS461sbtw_dre7TWPIkflfPqKAxsQNuuc" # Real sheet
+SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID')
 
-QUOTA_PROJECT_ID = "ninaandandrew-com"
-
+SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', "Sheet1!A3:BO")
 START_ROW = 3
 
 PRIMARY_GUEST_COLUMN = 11
@@ -25,6 +28,8 @@ NOT_FOUND_ERROR = "Your name isn't found. Please use the url as it appeared in t
 BACKEND_ERROR = "Backend error. Please try again later."
 NO_DATA_FOUND_ERROR = "No data found."
 
+if (SPREADSHEET_ID is None):
+  raise Exception("SPREADSHEET_ID is not set")
 
 #### TODOS
 # Make real spreadsheet look like test spreadsheet, and add column ACLs

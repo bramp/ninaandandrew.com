@@ -4,29 +4,6 @@ import rsvp
 
 allow_origin_list = ['https://www.ninaandandrew.com', 'http://localhost:8000', 'http://127.0.0.1:8000']
 
-
-demo_data = {
-    "ceremony": False,
-    "reception": True,
-    "comments": "King Bob!!!",
-    "guests": [
-        {
-            "ceremony": True,
-            "email": "bob@example.com",
-            "name": "King Bob",
-            "phone": "",
-            "reception": False
-        },
-        {
-            "ceremony": False,
-            "email": "",
-            "name": "John Smith",
-            "phone": "+1 123 567 890",
-            "reception": True
-        },
-    ],
-}
-
 @functions_framework.http
 def rsvp_http(request):
     """HTTP Cloud Function.
@@ -74,10 +51,7 @@ def rsvp_http(request):
 
         primary_guest = request.args.get('primary_guest')
 
-        if primary_guest == 'King Bob':
-          data = demo_data
-        else:
-          data = rsvp.spreadsheet_to_json(primary_guest)
+        data = rsvp.spreadsheet_to_json(primary_guest)
         
         return (data, 200, headers)
 
