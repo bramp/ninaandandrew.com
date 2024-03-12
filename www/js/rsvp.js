@@ -263,6 +263,11 @@ async function submit_rsvp() {
   document.querySelector("#rsvp_submit").classList.add('hide');
   document.querySelector("#rsvp .loading").classList.remove('hide');
 
+  // Hide previous success/error
+  document.querySelector('#rsvp .error').classList.add('hide');
+  document.querySelector('#rsvp .success').classList.add('hide');
+
+
   const resp = await post_data(to_json());
   if (resp.error) {
     render_error(resp.error);
