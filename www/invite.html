@@ -64,7 +64,8 @@
           <div class="normal">Pleasanton, CA, USA</div>
         </div>
         <div class=footer>
-          <button type="button" class="btn">RSVP</button>
+          <button type="button" class="btn hide">RSVP</button>
+
           <div class="normal divider">━━━━━━ ◦ ◈❖◈ ◦ ━━━━━━</div>
           <div class="small">With best compliments from</div>
           <div class="normal">
@@ -85,5 +86,28 @@
         </clipPath>
       </defs>
     </svg>
+    <script>
+      window.onload = function () {
+          const urlParams = new URLSearchParams(window.location.search);
+          const primary_guest = urlParams.get('primary_guest');
+
+          if (!primary_guest) {
+            return;
+          }
+
+          // Unhide the button and make it link to the right place.
+          const button = document.querySelector("#invite button");
+          button.classList.remove('hide');
+          button.addEventListener('click', function () {
+
+            const url = new URL('https://NinaAndAndrew.com/');
+            url.searchParams.append("primary_guest", primary_guest);
+            url.hash = 'rsvp';
+
+            window.location.href = url.href ;
+          });
+
+      }
+    </script>
   </body>
 </html>

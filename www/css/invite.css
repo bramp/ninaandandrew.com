@@ -26,6 +26,10 @@ body {
   transform: scaleX(-1);
 }
 
+.hide {
+  display: none;
+}
+
 #invite-wrapper {
   background-color: #b51111;
   padding: 0.5rem;
