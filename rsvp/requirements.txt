@@ -1,5 +1,5 @@
 # pip install -r requirements.txt
 functions-framework==3.*
-google-api-python-client==2.118.0 
-google-auth==2.28.0
+google-api-python-client==2.122.0
+google-auth==2.28.2
 google-cloud-logging==3.9.0
