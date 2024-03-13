@@ -6,8 +6,9 @@ var rsvp = {
 
 const max_guests = 10;
 
-const base_url = 'http://localhost:8080/';
-//const base_url = 'https://us-central1-ninaandandrew-com.cloudfunctions.net/rsvp-func-test';
+//const base_url = 'http://localhost:8080/';
+// TODO Move to prod
+const base_url = 'https://us-central1-ninaandandrew-com.cloudfunctions.net/rsvp-func-test';
 //const base_url = 'https://rsvp.ninaandandrew.com/';
 
 
