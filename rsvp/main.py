@@ -1,8 +1,14 @@
-import traceback
 import functions_framework
+import logging
 import rsvp
+import traceback
+from google.cloud.logging.handlers import StructuredLogHandler
+from google.cloud.logging_v2.handlers import setup_logging
 
 allow_origin_list = ['https://www.ninaandandrew.com', 'http://localhost:8000', 'http://127.0.0.1:8000']
+
+# Initialize the Google Cloud logging client (and use StructuredLogHandler to stdout)
+setup_logging(StructuredLogHandler())
 
 @functions_framework.http
 def rsvp_http(request):
@@ -57,7 +63,7 @@ def rsvp_http(request):
 
       if request.method == "POST":
         # Capture this, so we can recover from logs if we need to.
-        print("POST", request.json);
+        logging.info("Received post", extra={"json_fields": {'post': request.json}})
 
         data = rsvp.json_to_primary_guest(request.json)
 
@@ -66,10 +72,12 @@ def rsvp_http(request):
         return (response, 200, headers)
 
     except rsvp.NotFoundException as e:
-      traceback.print_exc()
+      logging.warning("Primary guest %s not found", request.args.get('primary_guest'));
+
       return ({'error': str(e)}, 404, headers)
 
     except Exception as e:
-      traceback.print_exc()
+      logging.exception("Exception handling request");
+
       return ({'error': "An internal error occurred. " + str(e)}, 500, headers)
 

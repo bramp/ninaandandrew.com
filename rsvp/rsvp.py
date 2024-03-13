@@ -1,7 +1,8 @@
-import datetime
-import google.auth
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import datetime
+import google.auth
+import logging
 import os
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
@@ -143,7 +144,7 @@ def _read_spreadsheet():
   is invalid.'''
   creds = _get_creds()
 
-  service = build("sheets", "v4", credentials=creds)
+  service = build("sheets", "v4", credentials=creds, cache_discovery=False)
 
   # Call the Sheets API
   sheet = service.spreadsheets()
@@ -231,7 +232,7 @@ def spreadsheet_to_json(primary_guest_name):
     raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    print(err)
+    logging.exception("Exception making sheets call")
     raise Exception(BACKEND_ERROR)
 
 
@@ -322,7 +323,7 @@ def update_guest_row(primary_guest):
     raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    print(err)
+    logging.exception("Exception making sheets call")
     raise Exception(BACKEND_ERROR)
 
 def main():
