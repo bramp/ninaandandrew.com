@@ -259,7 +259,9 @@ function show_ceremony() {
   }
 }
 
-async function submit_rsvp() {
+async function submit_rsvp(e) {
+  e.preventDefault();
+
   // Disable submit button
   document.querySelector("#rsvp_submit").classList.add('hide');
   document.querySelector("#rsvp .loading").classList.remove('hide');
@@ -278,6 +280,8 @@ async function submit_rsvp() {
 
   document.querySelector("#rsvp_submit").classList.remove('hide');
   document.querySelector("#rsvp .loading").classList.add('hide');
+
+  return false;
 }
 
 function render_rsvp(data) {
@@ -315,13 +319,7 @@ function render_rsvp(data) {
 
   submitButton.before(statusBox);
 
-  document.querySelector('#rsvp form').addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    submit_rsvp();
-
-    return false;
-  });
+  document.querySelector('#rsvp form').addEventListener('submit', submit_rsvp);
 
 }
 
