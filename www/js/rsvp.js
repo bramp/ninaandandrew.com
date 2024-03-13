@@ -11,11 +11,12 @@ const base_url = 'http://localhost:8080/';
 //const base_url = 'https://rsvp.ninaandandrew.com/';
 
 
-/*
 // Example data
-const data = {
+/*
+rsvp = {
   "ceremony": true,
   "reception": true,
+  "comments": '',
   "guests": [
     {
       "name": "John",
@@ -90,8 +91,8 @@ function row_name(row_id) {
 
 function fix_row_ids() {
   // renumber all the guests
-  const table = document.querySelector("#rsvp-form table");
-  const rows = table.querySelectorAll('tbody.guest-row');
+  const table = document.querySelector("#rsvp-guests");
+  const rows = table.querySelectorAll('.guest-row');
 
   var row_id = 0;
   for (const row of rows) {
@@ -133,9 +134,9 @@ function fix_row_ids() {
 // Adds a empty row to the RSVP form
 function add_row(guest) {
   const template = document.querySelector("#guest-row");
-  const table = document.querySelector("#rsvp-form table");
+  const table = document.querySelector("#rsvp-guests");
 
-  const rows = table.querySelectorAll('tbody.guest-row');
+  const rows = table.querySelectorAll('.guest-row');
   const row_id = rows.length;
 
   const row = template.content.cloneNode(true);
@@ -185,8 +186,7 @@ function add_row(guest) {
   }
 
   // Finally insert into the DOM
-  tfoot = table.querySelector('tfoot');
-  table.insertBefore(row, tfoot);
+  table.appendChild(row);
 
   fix_row_ids();
 
@@ -196,7 +196,7 @@ function add_row(guest) {
 // Called when a "Attending / Not Attending" radio is selected
 function rsvp_radio(event) {
   const radio = event.target;
-  const row = radio.closest('tbody.guest-row');
+  const row = radio.closest('.guest-row');
 
   const checkedRadio = row.querySelector('input[name^="rsvp_attending_"]:checked');
 
@@ -208,7 +208,7 @@ function rsvp_radio(event) {
 // Called when a "Reception" or "Ceremony" Checkbox is selected
 function rsvp_checked(event) {
   const check = event.target;
-  const row = check.closest('tbody.guest-row');
+  const row = check.closest('.guest-row');
 
   const ceremony = row.querySelector('input[name^="rsvp_ceremony_"]').checked;
   const reception = row.querySelector('input[name^="rsvp_reception_"]').checked;
@@ -224,7 +224,7 @@ function remove_row(event) {
   event.preventDefault();
 
   const btn = event.target;
-  const row = btn.closest('tbody.guest-row');
+  const row = btn.closest('.guest-row');
 
   // Animate away the row
   row.classList.add('transition-hide');
@@ -326,7 +326,7 @@ function render_rsvp(data) {
 
 function to_json() {
   const table = document.querySelector("#rsvp");
-  const rows = table.querySelectorAll('tbody.guest-row');
+  const rows = table.querySelectorAll('.guest-row');
 
   let guests = [];
   for (const row of rows) {

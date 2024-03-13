@@ -268,14 +268,20 @@
 
 
       @media (width <= 1000px) {
-        .peacock {
-          display: none;
+        .peacock1 {
+          position: unset;
+          width: 100%;
         }
       }
 
       #schedule .map iframe {
         border: rgb(229 231 235);
         box-shadow: -2px 4px 12px #00000026;
+
+        min-width: min(400px, 100%);
+        max-width: 400px;
+        height: 300px;
+        border: 0;
       }
 
       #schedule .definition {
@@ -284,6 +290,13 @@
         grid-gap: 1em;
         margin-top: 2em;
         margin-bottom: 2em;
+      }
+
+      @media (width <= 480px) {
+        #schedule .definition {
+
+          grid-template-columns: 1fr 3fr;
+        }
       }
 
       #schedule .definition .title {
@@ -330,6 +343,12 @@
         display: none;
       }
 
+      @media (width <= 480px) {
+        .hide-mobile {
+          display: none;
+        }
+      }
+
       .error {
         font-weight: bold;
         color: red;
@@ -370,6 +389,103 @@
 
       #rsvp table,tr,th,td {
          border-spacing: 10px;
+      }
+
+      .div2 {
+        
+      }
+
+      #rsvp ul {
+        padding: 0;
+        list-style-type: none;
+      }
+
+      #rsvp ul ul {
+        padding: 0.5em;
+        padding-left: 1em;
+      }
+
+
+      input.rsvp_name, input.rsvp_email, input.rsvp_phone {
+        width: 17em;
+      }
+
+      .guest-row {
+        display: grid;
+        grid-template-columns: 110px auto auto auto;
+        grid-template-rows: 1fr 1fr 1fr 10px;
+        column-gap: 0px;
+        row-gap: 5px;
+
+        align-items: center;
+      }
+
+      /* left */
+      .div1 { grid-area: 1 / 1 / 4 / 2; }
+
+      /* right */
+      .div2 { 
+        grid-area: 1 / 4 / 4 / 5; 
+        text-align: left;
+      }
+
+      /* middle */
+      .div3 { grid-area: 1 / 2 / 2 / 3; }
+      .div4 { grid-area: 1 / 3 / 2 / 4; }
+
+      .div5 { grid-area: 2 / 2 / 3 / 3; }
+      .div6 { grid-area: 2 / 3 / 3 / 4; }
+
+      .div7 { grid-area: 3 / 2 / 4 / 3; }
+      .div8 { grid-area: 3 / 3 / 4 / 4; }
+
+      /* hr */
+      .div9 { grid-area: 4 / 1 / 5 / 5; }
+
+      .row-label::after {
+        /* add new line */
+        content: "";
+        display: block;
+      }
+
+      @media (width <= 480px) {
+        input.rsvp_name, input.rsvp_email, input.rsvp_phone {
+          width: 12em;
+        }
+
+        .guest-row {
+          display: grid;
+          grid-template-columns: repeat(2, auto);
+          grid-template-rows: 1fr 1fr 1fr 1fr auto 10px;
+          grid-column-gap: 0.5em;
+          grid-row-gap: 0px;
+        }
+
+        .div1 { grid-area: 1 / 1 / 2 / 3; }
+        .div2 {
+          grid-area: 5 / 1 / 6 / 3; 
+          margin: auto;
+        }
+        .div3 { grid-area: 2 / 1 / 3 / 2; }
+        .div4 { grid-area: 2 / 2 / 3 / 3; }
+        .div5 { grid-area: 3 / 1 / 4 / 2; }
+        .div6 { grid-area: 3 / 2 / 4 / 3; }
+        .div7 { grid-area: 4 / 1 / 5 / 2; }
+        .div8 { grid-area: 4 / 2 / 5 / 3; }
+        .div9 { grid-area: 6 / 1 / 7 / 3; }
+
+        .row-label {
+          font-weight: bold;
+        }
+        .row-label::after {
+          content: none;
+        }
+      }
+
+
+      #add-row-button {
+        margin: 1em;
+        margin-right: 5% /* 5% to align with text box below that is 90% wide) */
       }
 
 
