@@ -42,6 +42,12 @@ function timeout(ms) {
                 fullPage: true,
                 type: 'webp',
             });
+
+            await page.screenshot({
+                path: 'www/invite/' + filename + '-' + width + '.png',
+                fullPage: true,
+                type: 'png',
+            });
         }
     }
 

@@ -50,7 +50,7 @@ gulp
 
 # Create the screenshots
 http-server -p 8000 -c-1 www &
-node create-invite-jpg.js
+node ./create-invite-jpg.js
 
 ```
 
