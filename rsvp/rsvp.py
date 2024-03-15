@@ -2,6 +2,7 @@ from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import datetime
 import google.auth
+import json
 import logging
 import os
 
@@ -17,13 +18,27 @@ SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID')
 SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', "Sheet1!A3:BO")
 START_ROW = 3
 
-PRIMARY_GUEST_COLUMN = 11
-RSVP_PROVIDED_COLUMN = 8
-CREATE_TIME_COLUMN = 9
-MAX_GUESTS = 10
-MAIN_COLUMNS = 17
-MAX_COLUMNS = MAIN_COLUMNS + (MAX_GUESTS * 5)
+COLUMN_MAP = {
+ "CATEGORY" : 0,             # A
+ "EXPECTED_HEADCOUNT" : 1,   # B
+ "NAMES" : 2,                # C
+ "ADDRESSES" : 3,            # D
+ "INVITED_TO_WEDDING" : 4,   # E
+ "INVITED_TO_RECEPTION" : 5, # F
+ "INVITE_SENT" : 6,          # G
+ "DATE_SENT"   : 7,          # H
+ "RSVP_PROVIDED" : 8,        # I
+ "RSVP_CREATED" : 9,         # J
+ "RSVP_MODIFIED" : 10,       # K
+ "PRIMARY_GUEST" : 11,       # L
+}
 
+MAX_GUESTS = 10
+
+NUM_PRIMARY_GUEST_COLUMNS = 6
+NUM_GUEST_COLUMNS = 5
+MAIN_COLUMNS = COLUMN_MAP["PRIMARY_GUEST"] + NUM_PRIMARY_GUEST_COLUMNS
+MAX_COLUMNS = MAIN_COLUMNS + (MAX_GUESTS * NUM_GUEST_COLUMNS)
 
 NOT_FOUND_ERROR = "Your name isn't found. Please use the name as it appeared in the invitation."
 BACKEND_ERROR = "Backend error. Please try again later."
@@ -179,7 +194,7 @@ def spreadsheet_to_json(primary_guest_name):
     output_dict = {}
     found_row = False
     for idx, row in enumerate(values):
-      if row[PRIMARY_GUEST_COLUMN] == primary_guest_name:
+      if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
         current_row = row
         assert len(current_row) >= MAIN_COLUMNS
 
@@ -236,9 +251,14 @@ def spreadsheet_to_json(primary_guest_name):
     raise Exception(BACKEND_ERROR)
 
 
-def json_to_primary_guest(d):
+def json_to_primary_guest(input_file):
   """Takes the provided map, and returns a PrimaryGuest object."""
   p = None
+
+  with open(input_file) as json_file:
+    d = json.load(json_file)
+
+  assert d is not None
 
   if not d.__contains__("guests"):
     # RSVP not filled out yet
@@ -286,7 +306,7 @@ def update_guest_row(primary_guest):
     # TODO: Validate that the values for Primary Guest are unique
 
     for idx, row in enumerate(values):
-      if row[PRIMARY_GUEST_COLUMN] == primary_guest.name:
+      if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest.name:
         current_row = row
 
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -295,7 +315,7 @@ def update_guest_row(primary_guest):
         # START AT COLUMN J
         stuff_to_write = []
         stuff_to_write.append("YES")                         # I - RSVP provided?
-        create_time = current_row[CREATE_TIME_COLUMN] if current_row[RSVP_PROVIDED_COLUMN] == "YES" else now
+        create_time = current_row[COLUMN_MAP["RSVP_CREATED"]] if current_row[COLUMN_MAP["RSVP_PROVIDED"]] == "YES" else now
         stuff_to_write.append(create_time)                   # J
         stuff_to_write.append(now)                           # K - last modified
         stuff_to_write.append(primary_guest.name)            # L
@@ -331,25 +351,32 @@ def main():
   # TESTING WRITE TO SPREADSHEET
   print("WRITING TO SPREADSHEET")
   primary_guest = json_to_primary_guest("input.json")
-  #primary_guest.PrettyPrint()
+  # primary_guest.PrettyPrint()
   success_write_result = update_guest_row(primary_guest)
   print(success_write_result)
+  print("----------------------------------------")
 
   hacker = json_to_primary_guest("hacker.json")
-  fail_write_result = update_guest_row(hacker)
-  print("HACKER THWARTED!!!")
-  print(fail_write_result)
+  try:
+    fail_write_result = update_guest_row(hacker)
+  except NotFoundException as err:
+    print(repr(err))
 
+  print("HACKER THWARTED!!!")
   print("----------------------------------------")
 
   # TESTING READ FROM SPREADSHEET AND WRITE TO JSON
   print("READING FROM SPREADSHEET, WRITING TO JSON")
   #spreadsheet_to_json("Arun Tirumalai")
-  success_read_result = spreadsheet_to_json("John Smith")
+  success_read_result = spreadsheet_to_json("King Bob")
   print(success_read_result)
-  fail_read_result = spreadsheet_to_json("Muahahahaha I'm a hacker")
+  print("----------------------------------------")
+
+  try:
+    fail_read_result = spreadsheet_to_json("Muahahahaha I'm a hacker")
+  except NotFoundException as err:
+    print(repr(err))
   print("MUAHAHAHA I'M A HACKER ISN'T INVITED!!!")
-  print(fail_read_result)
 
 if __name__ == "__main__":
   main()
