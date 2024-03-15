@@ -32,6 +32,7 @@ npm install --global gulp-cli
 npm install http-server -g
 brew install webp
 brew install vnu # Nu Markup Checker: command-line and server HTML validator
+brew install oxipng
 
 alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 ```
@@ -69,4 +70,7 @@ vnu www/*.html
 
 # Compress everything files
 
-cwebp input.webp -o output.webp
+```shell
+cwebp todo.webp -o todo.webp
+oxipng -o max -s www/invite/*.png
+```

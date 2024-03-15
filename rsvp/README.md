@@ -3,7 +3,7 @@
 # Testing locally
 
 ```shell
-cd wedding
+cd rsvp
 
 # Setup local env
 python3.12 -m venv .venv
@@ -15,8 +15,8 @@ pip install -r requirements.txt
 # Setup auth (for testing)
 gcloud auth application-default login --scopes=https://www.googleapis.com/auth/spreadsheets
 
-# Run the server
-functions-framework --target=rsvp_http
+# Run the server (with given spreadsheet id)
+SPREADSHEET_ID=1e7fIMg8PamT-jH8UH_v2kUKqzwz79UGIkXdP24wILm0 functions-framework --target=rsvp_http
 
 # Now visit http://localhost:8080/?primary_guest=John%20Smith
 ```
