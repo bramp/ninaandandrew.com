@@ -63,6 +63,11 @@ npm install --save-dev --save-exact prettier
 
 npx stylelint "www/css/*.css"
 npx prettier www --check
+npx prettier www -w
+
+npx prettier --check --parser html invite/*.html.template
+npx prettier --w --parser html invite/*.html.template
+
 
 vnu www/*.html
 ```
@@ -71,6 +76,9 @@ vnu www/*.html
 # Compress everything files
 
 ```shell
-cwebp todo.webp -o todo.webp
-oxipng -o max -s www/invite/*.png
+for f in www/invite/*.webp; do
+  cwebp $f -o ${f%.*}.webp;
+done
+
+oxipng -o max --strip safe www/invite/*.png
 ```
