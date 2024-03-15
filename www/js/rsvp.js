@@ -287,11 +287,11 @@ async function submit_rsvp(e) {
 function render_rsvp(data) {
   if (data.error) {
     render_error(data.error);
-    document.querySelector('#rsvp-form').classList.add('hide');
+    document.querySelector('#rsvp-input').classList.add('hide');
     return;
   }
 
-  document.querySelector('#rsvp form').classList.remove('hide');
+  document.querySelector('#rsvp-form').classList.remove('hide');
 
   const addButton = document.querySelector('#add-row-button');
 
@@ -319,7 +319,7 @@ function render_rsvp(data) {
 
   submitButton.before(statusBox);
 
-  document.querySelector('#rsvp form').addEventListener('submit', submit_rsvp);
+  document.querySelector('#rsvp-form').addEventListener('submit', submit_rsvp);
 
 }
 
@@ -361,6 +361,8 @@ window.addEventListener("load", async function () {
   if (!primary_guest) {
     return;
   }
+
+  document.querySelector("#lookup").classList.add('hide');
 
   // Unhide RSVP
   for (const e of document.querySelectorAll('.hide-rsvp')) {

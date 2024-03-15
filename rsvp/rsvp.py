@@ -25,7 +25,7 @@ MAIN_COLUMNS = 17
 MAX_COLUMNS = MAIN_COLUMNS + (MAX_GUESTS * 5)
 
 
-NOT_FOUND_ERROR = "Your name isn't found. Please use the url as it appeared in the invite."
+NOT_FOUND_ERROR = "Your name isn't found. Please use the name as it appeared in the invitation."
 BACKEND_ERROR = "Backend error. Please try again later."
 NO_DATA_FOUND_ERROR = "No data found."
 
