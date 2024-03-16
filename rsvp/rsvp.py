@@ -46,7 +46,7 @@ NUM_GUEST_COLUMNS = 5
 MAIN_COLUMNS = COLUMN_MAP["PRIMARY_GUEST"] + NUM_PRIMARY_GUEST_COLUMNS
 MAX_COLUMNS = MAIN_COLUMNS + (MAX_GUESTS * NUM_GUEST_COLUMNS)
 
-NOT_FOUND_ERROR = "Your name isn't found. Please use the name as it appeared in the invitation."
+NOT_FOUND_ERROR = "Your name isn't found. Please use the url from the invitation."
 BACKEND_ERROR = "Backend error. Please try again later."
 NO_DATA_FOUND_ERROR = "No data found."
 

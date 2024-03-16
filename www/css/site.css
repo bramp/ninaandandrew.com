@@ -81,7 +81,7 @@ h2 {
   text-shadow: black 1px 0 1px;
 }
 
-#faq h1 {
+#rsvp h1, #faq h1 {
   /* Different font, because FAQ doesn't look good in the regular font */
   font-family: cursive;
   font-size: 3.5em;
