@@ -257,14 +257,9 @@ def spreadsheet_to_json(primary_guest_name):
     raise Exception(BACKEND_ERROR)
 
 
-def json_to_primary_guest(input_file):
+def json_to_primary_guest(d):
   """Takes the provided map, and returns a PrimaryGuest object."""
-  p = None
-
-  with open(input_file) as json_file:
-    d = json.load(json_file)
-
-  assert d is not None
+  p = None  
 
   if not d.__contains__("guests"):
     # RSVP not filled out yet
@@ -356,13 +351,19 @@ def main():
 
   # TESTING WRITE TO SPREADSHEET
   print("WRITING TO SPREADSHEET")
-  primary_guest = json_to_primary_guest("input.json")
+  with open("input.json") as json_file:
+    d = json.load(json_file)
+  assert d is not None
+  primary_guest = json_to_primary_guest(d)
   # primary_guest.PrettyPrint()
   success_write_result = update_guest_row(primary_guest)
   print(success_write_result)
   print("----------------------------------------")
 
-  hacker = json_to_primary_guest("hacker.json")
+  with open("hacker.json") as json_file:
+    h = json.load(json_file)
+  assert h is not None
+  hacker = json_to_primary_guest(h)
   try:
     fail_write_result = update_guest_row(hacker)
   except NotFoundException as err:
