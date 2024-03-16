@@ -15,22 +15,28 @@ QUOTA_PROJECT_ID = os.environ.get('QUOTA_PROJECT_ID', "ninaandandrew-com")
 #SPREADSHEET_ID = "1FuYiyuTqO6AS461sbtw_dre7TWPIkflfPqKAxsQNuuc" # Real sheet
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID')
 
-SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', "Sheet1!A3:BO")
+SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', "Sheet1!A3:BP")
 START_ROW = 3
 
 COLUMN_MAP = {
- "CATEGORY" : 0,             # A
- "EXPECTED_HEADCOUNT" : 1,   # B
- "NAMES" : 2,                # C
- "ADDRESSES" : 3,            # D
- "INVITED_TO_WEDDING" : 4,   # E
- "INVITED_TO_RECEPTION" : 5, # F
- "INVITE_SENT" : 6,          # G
- "DATE_SENT"   : 7,          # H
- "RSVP_PROVIDED" : 8,        # I
- "RSVP_CREATED" : 9,         # J
- "RSVP_MODIFIED" : 10,       # K
- "PRIMARY_GUEST" : 11,       # L
+ "CATEGORY" : 0,                 # A
+ "EXPECTED_HEADCOUNT" : 1,       # B
+ "NAMES" : 2,                    # C
+ "ADDRESSES" : 3,                # D
+ "INVITED_TO_WEDDING" : 4,       # E
+ "INVITED_TO_RECEPTION" : 5,     # F
+ "WHICH_INVITE" : 6,             # G
+ "INVITE_SENT" : 7,              # H
+ "DATE_SENT"   : 8,              # I
+ "RSVP_PROVIDED" : 9,            # J
+ "RSVP_CREATED" : 10,            # K
+ "RSVP_MODIFIED" : 11,           # L
+ "PRIMARY_GUEST" : 12,           # M
+ "PRIMARY_GUEST_EMAIL" : 13,     # N
+ "PRIMARY_GUEST_PHONE" : 14,     # O
+ "PRIMARY_GUEST_CEREMONY" : 15,  # P
+ "PRIMARY_GUEST_RECEPTION" : 16, # Q
+ "PRIMARY_GUEST_COMMENTS" : 17,  # R
 }
 
 MAX_GUESTS = 10
@@ -203,30 +209,30 @@ def spreadsheet_to_json(primary_guest_name):
 
         guest_list = []
         primary_guest = {}
-        primary_guest['name'] = current_row[11]
-        if (current_row[12]): primary_guest['email'] = current_row[12]
-        if (current_row[13]): primary_guest['phone'] = current_row[13]
-        if (current_row[14]):
-          primary_guest['ceremony'] = strToBool(current_row[14]) # ATTENDING WEDDING
-        if (current_row[15]):
-          primary_guest['reception'] = strToBool(current_row[15]) # ATTENDING RECEPTION
+        primary_guest['name'] = current_row[COLUMN_MAP["PRIMARY_GUEST"]]
+        if (current_row[COLUMN_MAP["PRIMARY_GUEST_EMAIL"]]): primary_guest['email'] = current_row[COLUMN_MAP["PRIMARY_GUEST_EMAIL"]]
+        if (current_row[COLUMN_MAP["PRIMARY_GUEST_PHONE"]]): primary_guest['phone'] = current_row[COLUMN_MAP["PRIMARY_GUEST_PHONE"]]
+        if (current_row[COLUMN_MAP["PRIMARY_GUEST_CEREMONY"]]):
+          primary_guest['ceremony'] = strToBool(current_row[COLUMN_MAP["PRIMARY_GUEST_CEREMONY"]]) # ATTENDING WEDDING
+        if (current_row[COLUMN_MAP["PRIMARY_GUEST_RECEPTION"]]):
+          primary_guest['reception'] = strToBool(current_row[COLUMN_MAP["PRIMARY_GUEST_RECEPTION"]]) # ATTENDING RECEPTION
         guest_list.append(primary_guest)
 
-        output_dict["comments"] = current_row[16] # GUEST COMMENTS
+        output_dict["comments"] = current_row[COLUMN_MAP["PRIMARY_GUEST_COMMENTS"]] # GUEST COMMENTS
 
         if (len(current_row) > MAIN_COLUMNS):
           remaining_guests = current_row[MAIN_COLUMNS:]
 
           # Pad in case the last guest doesn't have a reception value,
           # for easier iteration over the remaining guests
-          mod = len(remaining_guests) % 5
+          mod = len(remaining_guests) % NUM_GUEST_COLUMNS
           if (mod > 0):
-            for i in range(5 - mod):
+            for i in range(NUM_GUEST_COLUMNS - mod):
               remaining_guests.append("")
 
           j = 0
           while j < len(remaining_guests):
-            # Due to the padding, we know each guest has 5 entries
+            # Due to the padding, we know each guest has NUM_GUEST_COLUMNS entries
             guest = {}
             guest['name'] = remaining_guests[j]
             if (remaining_guests[j+1]): guest['email'] = remaining_guests[j+1]
@@ -314,26 +320,26 @@ def update_guest_row(primary_guest):
         # This code depends on the format of the spreadsheet!!!
         # START AT COLUMN J
         stuff_to_write = []
-        stuff_to_write.append("YES")                         # I - RSVP provided?
+        stuff_to_write.append("YES")                         # J - RSVP provided?
         create_time = current_row[COLUMN_MAP["RSVP_CREATED"]] if current_row[COLUMN_MAP["RSVP_PROVIDED"]] == "YES" else now
-        stuff_to_write.append(create_time)                   # J
-        stuff_to_write.append(now)                           # K - last modified
-        stuff_to_write.append(primary_guest.name)            # L
-        stuff_to_write.append(primary_guest.email)           # M
-        stuff_to_write.append("'" + primary_guest.phone)     # N
-        stuff_to_write.append(boolToStr(primary_guest.ceremony))  # O
-        stuff_to_write.append(boolToStr(primary_guest.reception)) # P
-        stuff_to_write.append(primary_guest.comments)        # Q
+        stuff_to_write.append(create_time)                   # K
+        stuff_to_write.append(now)                           # L - last modified
+        stuff_to_write.append(primary_guest.name)            # M
+        stuff_to_write.append(primary_guest.email)           # N
+        stuff_to_write.append("'" + primary_guest.phone)     # O
+        stuff_to_write.append(boolToStr(primary_guest.ceremony))  # P
+        stuff_to_write.append(boolToStr(primary_guest.reception)) # Q
+        stuff_to_write.append(primary_guest.comments)        # R
         for guest in primary_guest.guests:
-          stuff_to_write.append(guest.name)                  # R --->
-          stuff_to_write.append(guest.email)                 # S --->
-          stuff_to_write.append("'" + guest.phone)           # T --->
-          stuff_to_write.append(guest.ceremony)              # U --->
-          stuff_to_write.append(guest.reception)             # V --->
+          stuff_to_write.append(guest.name)                  # S --->
+          stuff_to_write.append(guest.email)                 # T --->
+          stuff_to_write.append("'" + guest.phone)           # U --->
+          stuff_to_write.append(guest.ceremony)              # V --->
+          stuff_to_write.append(guest.reception)             # W --->
 
         sheet.values().update(
           spreadsheetId=SPREADSHEET_ID, 
-          range=f"Sheet1!I{START_ROW+idx}:BO{START_ROW+idx}",
+          range=f"Sheet1!J{START_ROW+idx}:BP{START_ROW+idx}",
           valueInputOption="USER_ENTERED",
           body={"values": [stuff_to_write]}
         ).execute()
