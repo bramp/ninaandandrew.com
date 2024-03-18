@@ -389,11 +389,6 @@ def main():
   print(success_read_result)
   print("----------------------------------------")
 
-  try:
-    fail_read_result = spreadsheet_to_json("Muahahahaha I'm a hacker")
-  except NotFoundException as err:
-    print(repr(err))
-  print("MUAHAHAHA I'M A HACKER ISN'T INVITED!!!")
 
 if __name__ == "__main__":
   main()
