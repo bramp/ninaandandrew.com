@@ -15,36 +15,10 @@ QUOTA_PROJECT_ID = os.environ.get('QUOTA_PROJECT_ID', "ninaandandrew-com")
 #SPREADSHEET_ID = "1FuYiyuTqO6AS461sbtw_dre7TWPIkflfPqKAxsQNuuc" # Real sheet
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID')
 
-SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', "Sheet1!A3:BP")
-START_ROW = 3
-
-COLUMN_MAP = {
- "CATEGORY" : 0,                 # A
- "EXPECTED_HEADCOUNT" : 1,       # B
- "NAMES" : 2,                    # C
- "ADDRESSES" : 3,                # D
- "INVITED_TO_WEDDING" : 4,       # E
- "INVITED_TO_RECEPTION" : 5,     # F
- "WHICH_INVITE" : 6,             # G
- "INVITE_SENT" : 7,              # H
- "DATE_SENT"   : 8,              # I
- "RSVP_PROVIDED" : 9,            # J
- "RSVP_CREATED" : 10,            # K
- "RSVP_MODIFIED" : 11,           # L
- "PRIMARY_GUEST" : 12,           # M
- "PRIMARY_GUEST_EMAIL" : 13,     # N
- "PRIMARY_GUEST_PHONE" : 14,     # O
- "PRIMARY_GUEST_CEREMONY" : 15,  # P
- "PRIMARY_GUEST_RECEPTION" : 16, # Q
- "PRIMARY_GUEST_COMMENTS" : 17,  # R
-}
+SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', "Sheet1!A2:BP")
+START_ROW = 3 # TODO What is this for?
 
 MAX_GUESTS = 10
-
-NUM_PRIMARY_GUEST_COLUMNS = 6
-NUM_GUEST_COLUMNS = 5
-MAIN_COLUMNS = COLUMN_MAP["PRIMARY_GUEST"] + NUM_PRIMARY_GUEST_COLUMNS
-MAX_COLUMNS = MAIN_COLUMNS + (MAX_GUESTS * NUM_GUEST_COLUMNS)
 
 NOT_FOUND_ERROR = "Your name isn't found. Please use the url from the invitation."
 BACKEND_ERROR = "Backend error. Please try again later."
@@ -79,6 +53,7 @@ class Guest:
     self.reception = reception # bool or None - attending?
     self.email = "" # string - guest email, optional
     self.phone = "" # string - guest phone, optional
+    self.comments = "" # string - freeform input, optional
 
   def PrettyPrint(self):
     print(f'    Guest name: {self.name}')
@@ -173,7 +148,7 @@ def boolToStr(value):
   return "FALSE"
 
 def _read_spreadsheet():
-  '''Reads the entire spreadsheet and returns the values.
+  '''Reads the entire spreadsheet and returns the header row, and values.
   May raise an HttpError on a SpreadsheetService issue, or Exception if the data
   is invalid.'''
 
@@ -186,15 +161,57 @@ def _read_spreadsheet():
   if not values:
     raise Exception(NO_DATA_FOUND_ERROR)
 
+  header = values[0]
+  data = values[1:]
+
+  return header, data
+
+def _pad_row(header, row):
   # Empty trailing values will not be included, so pad each values
   # with empty cell values for easier processing.
-  for row in values:
-    while len(row) < MAIN_COLUMNS:
-      row.append("")
+  while len(row) < len(header):
+    row.append("")
 
-  print(values)
+  return row
 
-  return values
+def create_column_map(header_row):
+  """Reads the header row and returns a map of columns to offsets"""
+  try:
+    mapping = {
+     "INVITED_TO_WEDDING" : "Wedding?",
+     "INVITED_TO_RECEPTION" : "Reception?",
+     "WHICH_INVITE" : "Which Invite?",
+     "INVITE_SENT" : "Invite Sent?",
+     "DATE_SENT"   : "Date Sent",
+     "RSVP_PROVIDED" : "RSVP provided?",
+     "RSVP_CREATED" : "RSVP Created",
+     "RSVP_MODIFIED" :"RSVP Modified",
+     "COMMENTS" : "Comments",
+
+     "PRIMARY_GUEST" : "Primary Guest Name",
+     "PRIMARY_GUEST_EMAIL" :"Primary Guest Email",
+     "PRIMARY_GUEST_PHONE" : "Primary Guest Phone",
+     "PRIMARY_GUEST_CEREMONY" : "Primary Guest Ceremony",
+     "PRIMARY_GUEST_RECEPTION" : "Primary Guest Reception",
+    }
+
+    # All the other guests
+    for i in range(2, MAX_GUESTS + 1):
+      mapping[f"GUEST{i}"] = f"Guest{i} Name"
+      mapping[f"GUEST{i}_EMAIL"] = f"Guest{i} Email"
+      mapping[f"GUEST{i}_PHONE"] = f"Guest{i} Phone"
+      mapping[f"GUEST{i}_CEREMONY"] = f"Guest{i} Ceremony"
+      mapping[f"GUEST{i}_RECEPTION"] = f"Guest{i} Reception"
+
+    results = {}
+    for key, value in mapping.items():
+      results[key] = header_row.index(value)
+
+    return results
+
+  except ValueError as e:
+    raise Exception("Column not found in header row: " + str(e))
+
 
 def spreadsheet_to_json(primary_guest_name):
   """Returns a invite for the give primary guest from the spreadsheet.
@@ -204,60 +221,47 @@ def spreadsheet_to_json(primary_guest_name):
     raise NotFoundException(NOT_FOUND_ERROR)
 
   try:
-    values = _read_spreadsheet()
-    assert values, "_read_spreadsheet returned nothing"
+    header, data = _read_spreadsheet()
+    COLUMN_MAP = create_column_map(header)
 
-    output_dict = {}
-    found_row = False
-    for idx, row in enumerate(values):
+    result = {}
+    for idx, row in enumerate(data):
+      assert(len(row) > COLUMN_MAP["PRIMARY_GUEST"])
+
       if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
-        current_row = row
-        assert len(current_row) >= MAIN_COLUMNS
+        row = _pad_row(header, row)
 
-        output_dict["ceremony"] = True if current_row[4] == "TRUE" else False  # INVITED TO WEDDING
-        output_dict["reception"] = True if current_row[5] == "TRUE" else False # INVITED TO RECEPTION
+        result["ceremony"] = True if row[COLUMN_MAP["INVITED_TO_WEDDING"]] == "TRUE" else False
+        result["reception"] = True if row[COLUMN_MAP["INVITED_TO_RECEPTION"]] == "TRUE" else False
+        result["comments"] = row[COLUMN_MAP["COMMENTS"]] # GUEST COMMENTS
 
         guest_list = []
-        primary_guest = {}
-        primary_guest['name'] = current_row[COLUMN_MAP["PRIMARY_GUEST"]]
-        if (current_row[COLUMN_MAP["PRIMARY_GUEST_EMAIL"]]): primary_guest['email'] = current_row[COLUMN_MAP["PRIMARY_GUEST_EMAIL"]]
-        if (current_row[COLUMN_MAP["PRIMARY_GUEST_PHONE"]]): primary_guest['phone'] = current_row[COLUMN_MAP["PRIMARY_GUEST_PHONE"]]
-        if (current_row[COLUMN_MAP["PRIMARY_GUEST_CEREMONY"]]):
-          primary_guest['ceremony'] = strToBool(current_row[COLUMN_MAP["PRIMARY_GUEST_CEREMONY"]]) # ATTENDING WEDDING
-        if (current_row[COLUMN_MAP["PRIMARY_GUEST_RECEPTION"]]):
-          primary_guest['reception'] = strToBool(current_row[COLUMN_MAP["PRIMARY_GUEST_RECEPTION"]]) # ATTENDING RECEPTION
-        guest_list.append(primary_guest)
 
-        output_dict["comments"] = current_row[COLUMN_MAP["PRIMARY_GUEST_COMMENTS"]] # GUEST COMMENTS
+        guest = {}
+        guest['name'] = row[COLUMN_MAP["PRIMARY_GUEST"]]
+        guest['email'] = row[COLUMN_MAP["PRIMARY_GUEST_EMAIL"]]
+        guest['phone'] = row[COLUMN_MAP["PRIMARY_GUEST_PHONE"]]
+        guest['ceremony'] = strToBool(row[COLUMN_MAP["PRIMARY_GUEST_CEREMONY"]]) # ATTENDING WEDDING
+        guest['reception'] = strToBool(row[COLUMN_MAP["PRIMARY_GUEST_RECEPTION"]]) # ATTENDING RECEPTION
 
-        if (len(current_row) > MAIN_COLUMNS):
-          remaining_guests = current_row[MAIN_COLUMNS:]
+        guest_list.append(guest)
 
-          # Pad in case the last guest doesn't have a reception value,
-          # for easier iteration over the remaining guests
-          mod = len(remaining_guests) % NUM_GUEST_COLUMNS
-          if (mod > 0):
-            for i in range(NUM_GUEST_COLUMNS - mod):
-              remaining_guests.append("")
+        for i in range(2, MAX_GUESTS + 1):
+          if (row[COLUMN_MAP[f"GUEST{i}"]] == ""): break
 
-          j = 0
-          while j < len(remaining_guests):
-            # Due to the padding, we know each guest has NUM_GUEST_COLUMNS entries
-            guest = {}
-            guest['name'] = remaining_guests[j]
-            if (remaining_guests[j+1]): guest['email'] = remaining_guests[j+1]
-            if (remaining_guests[j+2]): guest['phone'] = remaining_guests[j+2]
-            if (remaining_guests[j+3]): 
-              guest['ceremony'] = strToBool(remaining_guests[j+3])  # ATTENDING WEDDING
-            if (remaining_guests[j+4]): 
-              guest['reception'] = strToBool(remaining_guests[j+4]) # ATTENDING RECEPTION
-            guest_list.append(guest)
-            j += 5
+          guest = {}
+          guest['name'] = row[COLUMN_MAP[f"GUEST{i}"]]
+          guest['email'] = row[COLUMN_MAP[f"GUEST{i}_EMAIL"]]
+          guest['phone'] = row[COLUMN_MAP[f"GUEST{i}_PHONE"]]
+          guest['ceremony'] = strToBool(row[COLUMN_MAP[f"GUEST{i}_CEREMONY"]]) # ATTENDING WEDDING
+          guest['reception'] = strToBool(row[COLUMN_MAP[f"GUEST{i}_RECEPTION"]]) # ATTENDING RECEPTION
 
-        output_dict["guests"] = guest_list
+          guest_list.append(guest)
+
+        result["guests"] = guest_list
 
         # TODO: Validate there's only one matching row
-        return output_dict;
+        return result;
 
     # Return error to user if there is no matching row
     raise NotFoundException(NOT_FOUND_ERROR)
@@ -311,22 +315,20 @@ def json_to_primary_guest(d):
 def update_guest_row(primary_guest):
   """Updates the given primary guest's row in the spreadsheet."""
   try:
-    values = _read_spreadsheet()
-    assert values, NO_DATA_FOUND_ERROR
+    header, data = _read_spreadsheet()
+    COLUMN_MAP = create_column_map(header)
 
     # TODO: Validate that the values for Primary Guest are unique
 
     for idx, row in enumerate(values):
       if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest.name:
-        current_row = row
-
         now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # This code depends on the format of the spreadsheet!!!
         # START AT COLUMN J
         stuff_to_write = []
         stuff_to_write.append("YES")                         # J - RSVP provided?
-        create_time = current_row[COLUMN_MAP["RSVP_CREATED"]] if current_row[COLUMN_MAP["RSVP_PROVIDED"]] == "YES" else now
+        create_time = row[COLUMN_MAP["RSVP_CREATED"]] if row[COLUMN_MAP["RSVP_PROVIDED"]] == "YES" else now
         stuff_to_write.append(create_time)                   # K
         stuff_to_write.append(now)                           # L - last modified
         stuff_to_write.append(primary_guest.name)            # M
