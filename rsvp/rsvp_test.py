@@ -1,5 +1,8 @@
 import unittest
 from unittest.mock import MagicMock
+from unittest.mock import patch
+import datetime
+
 import rsvp
 
 # Intentionally break the _service method so that we don't actually hit the Google Sheets API
@@ -12,7 +15,7 @@ rsvp._read_spreadsheet = MagicMock(return_value=(
 
     # Various guests
     [
-        # One guest
+        # One guest (previously responded)
         ['', '2', 'Felonious Gru', '', 'FALSE', 'TRUE', '', 'YES', '', 'YES', '2024-02-26 1:06:30', '2024-03-15 18:40:05', 'Gru', 'Gru@example.com', '+1 123 567 890', 'TRUE', 'FALSE', 'No comment'], 
 
         # Two Guests (with no response yet)
@@ -26,6 +29,14 @@ rsvp._read_spreadsheet = MagicMock(return_value=(
     ],
 ))
 
+class TestColumnName(unittest.TestCase):
+    def test_various(self):
+        self.assertEqual(rsvp.column_name(1), 'A')
+        self.assertEqual(rsvp.column_name(2), 'B')
+        self.assertEqual(rsvp.column_name(26), 'Z')
+        self.assertEqual(rsvp.column_name(27), 'AA')
+
+
 class TestCreateColumnMap(unittest.TestCase):
     def test_valid(self):
         header, _ = rsvp._read_spreadsheet()
@@ -36,7 +47,6 @@ class TestCreateColumnMap(unittest.TestCase):
             "WHICH_INVITE" : 6,             # G
             "INVITE_SENT" : 7,              # H
             "DATE_SENT"   : 8,              # I
-            "RSVP_PROVIDED" : 9,            # J
             "RSVP_CREATED" : 10,            # K
             "RSVP_MODIFIED" : 11,           # L
             "PRIMARY_GUEST" : 12,           # M
@@ -60,9 +70,9 @@ class TestCreateColumnMap(unittest.TestCase):
         self.assertEqual(got, want)
 
 
-class TestSpreadsheetToJson(unittest.TestCase):
+class TestLookup(unittest.TestCase):
     def test_valid(self):
-        got = rsvp.spreadsheet_to_json('King Bob')
+        got = rsvp.lookup('King Bob')
         self.assertEqual(got, {
             'ceremony': True,
             'reception': True,
@@ -83,7 +93,7 @@ class TestSpreadsheetToJson(unittest.TestCase):
         })
 
     def test_valid_single(self):
-        got = rsvp.spreadsheet_to_json('Gru')
+        got = rsvp.lookup('Gru')
         self.assertEqual(got, {
             'ceremony': False,
             'reception': True,
@@ -100,13 +110,47 @@ class TestSpreadsheetToJson(unittest.TestCase):
     def test_missing(self):
         """Not a valid guest"""
         with self.assertRaises(rsvp.NotFoundException):
-            rsvp.spreadsheet_to_json('Vector Perkins')
+            rsvp.lookup('Vector Perkins')
 
     def test_missing_2nd_guest(self):
         """A secondary guest"""
         with self.assertRaises(rsvp.NotFoundException):
-            rsvp.spreadsheet_to_json('Stuart')
+            rsvp.lookup('Stuart')
 
+class TestUpdate(unittest.TestCase):
+    def test_write_back_as_is(self):
+        with patch('rsvp.datetime') as mock_datetime:
+            mock_datetime.datetime.now.return_value = datetime.datetime(2010, 10, 8)
+
+            rsvp._write_spreadsheet = MagicMock(return_value=True)
+            data = rsvp.lookup('King Bob')
+            rsvp.update(data)
+
+            rsvp._write_spreadsheet.assert_called_with(
+                11, 4,
+                ['2010-10-08 00:00:00', '2010-10-08 00:00:00', 'King Bob', 'bob@example.com', '\'+1 123 567 890', 'TRUE', 'FALSE', 'King Bob!!!', 'Stuart', 'stuart@example.com', '\'+1 123 567 890', 'FALSE', 'TRUE'] + [''] * (8 * 5), 
+            )
+
+    def test_write_back_with_update_with_10_guests(self):
+        with patch('rsvp.datetime') as mock_datetime:
+            mock_datetime.datetime.now.return_value = datetime.datetime(2010, 10, 8)
+
+            rsvp._write_spreadsheet = MagicMock(return_value=True)
+            data = rsvp.lookup('David Brampton')
+            rsvp.update(data)
+
+            rsvp._write_spreadsheet.assert_called_with(
+                11, 5,
+                ['2024-03-11 22:28:42', '2010-10-08 00:00:00', 'David Brampton', 'super.dr.dood@gmail.com', '', 'TRUE', 'FALSE', 'David has too many guests', 'David\'s Guest', '', '', 'TRUE', 'FALSE', '3', '', '', 'FALSE', 'FALSE', '4', '', '', 'FALSE', 'FALSE', '5', '', '', 'FALSE', 'FALSE', '6', '', '', 'FALSE', 'FALSE', '7', '', '', 'FALSE', 'FALSE', '8', '', '', 'FALSE', 'FALSE', '9', '', '', 'FALSE', 'FALSE', '10', '10@example.com', '\'1234', 'TRUE', 'TRUE',]
+            )
+
+    def test_missing(self):
+        """Not a valid guest"""
+        data = rsvp.lookup('King Bob')
+        data['guests'][0]['name'] = 'Vector Perkins'
+
+        with self.assertRaises(rsvp.NotFoundException):
+            rsvp.update(data)
 
 if __name__ == '__main__':
     unittest.main()

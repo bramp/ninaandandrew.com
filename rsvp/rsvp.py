@@ -15,8 +15,9 @@ QUOTA_PROJECT_ID = os.environ.get('QUOTA_PROJECT_ID', "ninaandandrew-com")
 #SPREADSHEET_ID = "1FuYiyuTqO6AS461sbtw_dre7TWPIkflfPqKAxsQNuuc" # Real sheet
 SPREADSHEET_ID = os.environ.get('SPREADSHEET_ID')
 
-SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', "Sheet1!A2:BP")
-START_ROW = 3 # TODO What is this for?
+SHEET = 'Sheet1'
+START_ROW = 2
+SHEET_RANGE_NAME = os.environ.get('SHEET_RANGE_NAME', f"{SHEET}!A{START_ROW}:BP")
 
 MAX_GUESTS = 10
 
@@ -45,44 +46,6 @@ NO_DATA_FOUND_ERROR = "No data found."
 
 class NotFoundException(Exception):
   pass
-
-class Guest:
-  def __init__(self, name, ceremony, reception):
-    self.name = name   # string - guest name, required
-    self.ceremony = ceremony # bool or None - attending?,
-    self.reception = reception # bool or None - attending?
-    self.email = "" # string - guest email, optional
-    self.phone = "" # string - guest phone, optional
-    self.comments = "" # string - freeform input, optional
-
-  def PrettyPrint(self):
-    print(f'    Guest name: {self.name}')
-    print(f'    Guest attending ceremony: {self.ceremony}')
-    print(f'    Guest attending reception: {self.reception}')
-    if (self.email != ""):
-      print(f'    Guest email: {self.email}')
-    if (self.phone != ""):
-      print(f'    Guest phone: {self.phone}')    
-
-
-class PrimaryGuest(Guest):
-  def __init__(self, name, ceremony, reception):
-    super(PrimaryGuest, self).__init__(name, ceremony, reception)
-    self.comments = "" # string - freeform input, optional
-    self.guests = []
-
-  def PrettyPrint(self):
-    print(f'Primary Guest name: {self.name}')
-    print(f'Primary Guest attending ceremony: {self.ceremony}')
-    print(f'Primary Guest attending reception: {self.reception}')
-    if (self.email != ""):
-      print(f'Primary Guest email: {self.email}')
-    if (self.phone != ""):
-      print(f'Primary Guest phone: {self.phone}')
-    if (self.comments != ""):
-      print(f'Primary Guest comments: {self.comments}')
-    for guest in self.guests:
-      guest.PrettyPrint()
 
 def _get_creds():
   """Returns the default credentials for the application."""
@@ -166,10 +129,25 @@ def _read_spreadsheet():
 
   return header, data
 
-def _pad_row(header, row):
+def _write_spreadsheet(x, y, row):
+  """Writes the given row starting at x, y"""
+  col_start = column_name(x)
+  col_end = column_name(x + len(row))
+
+  row_idx = y
+
+  _service().values().update(
+    spreadsheetId=SPREADSHEET_ID, 
+    range=f"{SHEET}!{col_start}{row_idx}:{col_end}{row_idx}",
+    valueInputOption="USER_ENTERED",
+    body={"values": [row]}
+  ).execute()
+
+
+def _pad_row(row, length):
   # Empty trailing values will not be included, so pad each values
   # with empty cell values for easier processing.
-  while len(row) < len(header):
+  while len(row) < length:
     row.append("")
 
   return row
@@ -183,7 +161,6 @@ def create_column_map(header_row):
      "WHICH_INVITE" : "Which Invite?",
      "INVITE_SENT" : "Invite Sent?",
      "DATE_SENT"   : "Date Sent",
-     "RSVP_PROVIDED" : "RSVP provided?",
      "RSVP_CREATED" : "RSVP Created",
      "RSVP_MODIFIED" :"RSVP Modified",
      "COMMENTS" : "Comments",
@@ -213,7 +190,7 @@ def create_column_map(header_row):
     raise Exception("Column not found in header row: " + str(e))
 
 
-def spreadsheet_to_json(primary_guest_name):
+def lookup(primary_guest_name):
   """Returns a invite for the give primary guest from the spreadsheet.
   Raises an exception if the primary guest is not found."""
   
@@ -229,7 +206,7 @@ def spreadsheet_to_json(primary_guest_name):
       assert(len(row) > COLUMN_MAP["PRIMARY_GUEST"])
 
       if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
-        row = _pad_row(header, row)
+        row = _pad_row(row, len(header))
 
         result["ceremony"] = True if row[COLUMN_MAP["INVITED_TO_WEDDING"]] == "TRUE" else False
         result["reception"] = True if row[COLUMN_MAP["INVITED_TO_RECEPTION"]] == "TRUE" else False
@@ -267,130 +244,94 @@ def spreadsheet_to_json(primary_guest_name):
     raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    logging.exception("Exception making sheets call")
     raise Exception(BACKEND_ERROR)
 
+def _validate_rsvp(rsvp):
+  """Validates the row is valid and raises an exception otherwise."""
 
-def json_to_primary_guest(d):
-  """Takes the provided map, and returns a PrimaryGuest object."""
-  p = None  
-
-  if not d.__contains__("guests"):
+  if not rsvp.__contains__("guests"):
     # RSVP not filled out yet
-    return p
+    raise Exception("guests field is missing")
 
-  primary = True
-  for guest_input in d["guests"]:
-    if primary:
-      if not guest_input.__contains__("name") or not guest_input.__contains__("ceremony") or not guest_input.__contains__("reception"):
-        # incomplete RSVP, return
-        return p
-
-      p = PrimaryGuest(guest_input["name"], guest_input["ceremony"], guest_input["reception"])
-      if guest_input.__contains__("email"):
-        p.email = guest_input["email"]
-      if guest_input.__contains__("phone"):
-        p.phone = guest_input["phone"]
-      if d.__contains__("comments"):
-        p.comments = d["comments"]
-
-      primary = False
-    else:
-      assert p is not None, "We need to have a primary guest to have secondary guests"
-
-      if not guest_input.__contains__("name") or not guest_input.__contains__("ceremony") or not guest_input.__contains__("reception"):
-          # incomplete RSVP, return
-          return p
-
-      g = Guest(guest_input["name"], guest_input["ceremony"], guest_input["reception"])
-      if guest_input.__contains__("email"):
-        g.email = guest_input["email"]
-      if guest_input.__contains__("phone"):
-        g.phone = guest_input["phone"]
-      p.guests.append(g)
-
-  return p
+  guests = rsvp["guests"];
+  if not isinstance(guests, list):
+    raise Exception("guest field must be a list")
 
 
-def update_guest_row(primary_guest):
-  """Updates the given primary guest's row in the spreadsheet."""
+  if len(guests) < 1:
+    # RSVP not filled out yet
+    raise Exception("guests must contain atleast one guest")
+
+  for guest in guests:
+    if not guest.__contains__("name") or not guest.__contains__("ceremony") or not guest.__contains__("reception"):
+      raise Exception("guest is missing a required field")
+
+  if not guest.__contains__("email"): guest["email"] = ""
+  if not guest.__contains__("phone"): guest["phone"] = ""
+
+
+def column_name(index):
+  """Returns the column name for the given index. e.g 1 -> A, 26 -> Z, 27 -> AA"""
+  start_index = 1   #  it can start either at 0 or at 1
+  letter = ''
+  while index > 25 + start_index:   
+      letter += chr(65 + int((index-start_index)/26) - 1)
+      index = index - (int((index-start_index)/26))*26
+  letter += chr(65 - start_index + (int(index)))
+  return letter
+
+
+def update(rsvp):
+  """Updates the given primary guest's rsvp in the spreadsheet."""
+
+  _validate_rsvp(rsvp)
+
+  guests = rsvp['guests']
+  primary_guest_name = guests[0]['name']
+
   try:
     header, data = _read_spreadsheet()
     COLUMN_MAP = create_column_map(header)
 
     # TODO: Validate that the values for Primary Guest are unique
 
-    for idx, row in enumerate(values):
-      if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest.name:
-        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    for idx, row in enumerate(data):
+      if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
+        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") # TODO ALlow this to be mockable.
 
         # This code depends on the format of the spreadsheet!!!
         # START AT COLUMN J
-        stuff_to_write = []
-        stuff_to_write.append("YES")                         # J - RSVP provided?
-        create_time = row[COLUMN_MAP["RSVP_CREATED"]] if row[COLUMN_MAP["RSVP_PROVIDED"]] == "YES" else now
-        stuff_to_write.append(create_time)                   # K
-        stuff_to_write.append(now)                           # L - last modified
-        stuff_to_write.append(primary_guest.name)            # M
-        stuff_to_write.append(primary_guest.email)           # N
-        stuff_to_write.append("'" + primary_guest.phone)     # O
-        stuff_to_write.append(boolToStr(primary_guest.ceremony))  # P
-        stuff_to_write.append(boolToStr(primary_guest.reception)) # Q
-        stuff_to_write.append(primary_guest.comments)        # R
-        for guest in primary_guest.guests:
-          stuff_to_write.append(guest.name)                  # S --->
-          stuff_to_write.append(guest.email)                 # T --->
-          stuff_to_write.append("'" + guest.phone)           # U --->
-          stuff_to_write.append(guest.ceremony)              # V --->
-          stuff_to_write.append(guest.reception)             # W --->
+        stuff_to_write = _pad_row([], len(header))
 
-        _service().values().update(
-          spreadsheetId=SPREADSHEET_ID, 
-          range=f"Sheet1!J{START_ROW+idx}:BP{START_ROW+idx}",
-          valueInputOption="USER_ENTERED",
-          body={"values": [stuff_to_write]}
-        ).execute()
+        create_time = now if row[COLUMN_MAP["RSVP_CREATED"]] == "" else row[COLUMN_MAP["RSVP_CREATED"]]
+        stuff_to_write[COLUMN_MAP["RSVP_CREATED"]] = create_time  # K
+        stuff_to_write[COLUMN_MAP["RSVP_MODIFIED"]] = now         # L - last modified
+        stuff_to_write[COLUMN_MAP["COMMENTS"]] = rsvp['comments']    # R
 
-        return {"success": ("Successfully updated guest row for " + primary_guest.name)};
+        for i, guest in enumerate(guests):
+          key = f"GUEST{i + 1}" if i > 0 else "PRIMARY_GUEST"
+          stuff_to_write[COLUMN_MAP[key]] = guest['name']
+          stuff_to_write[COLUMN_MAP[f"{key}_EMAIL"]] = guest['email']
+          stuff_to_write[COLUMN_MAP[f"{key}_PHONE"]] = "" if guest['phone'] == "" else "'" + guest['phone']
+          stuff_to_write[COLUMN_MAP[f"{key}_CEREMONY"]] = boolToStr(guest['ceremony'])
+          stuff_to_write[COLUMN_MAP[f"{key}_RECEPTION"]] = boolToStr(guest['reception'])
+
+        # Remove all the empty values at the beginning
+        offset = 0
+        for i in range(len(stuff_to_write)):
+          if stuff_to_write[i] != "":
+            offset = i
+            break
+
+        stuff_to_write = stuff_to_write[offset:]
+
+        # START_ROW + 1 header row + idx data rows.
+        _write_spreadsheet(offset + 1, START_ROW + 1 + idx, stuff_to_write)
+
+        # success
+        return
 
     raise NotFoundException(NOT_FOUND_ERROR)
 
   except HttpError as err:
-    logging.exception("Exception making sheets call")
     raise Exception(BACKEND_ERROR)
-
-def main():
-
-  # TESTING WRITE TO SPREADSHEET
-  print("WRITING TO SPREADSHEET")
-  with open("input.json") as json_file:
-    d = json.load(json_file)
-  assert d is not None
-  primary_guest = json_to_primary_guest(d)
-  # primary_guest.PrettyPrint()
-  success_write_result = update_guest_row(primary_guest)
-  print(success_write_result)
-  print("----------------------------------------")
-
-  with open("hacker.json") as json_file:
-    h = json.load(json_file)
-  assert h is not None
-  hacker = json_to_primary_guest(h)
-  try:
-    fail_write_result = update_guest_row(hacker)
-  except NotFoundException as err:
-    print(repr(err))
-
-  print("HACKER THWARTED!!!")
-  print("----------------------------------------")
-
-  # TESTING READ FROM SPREADSHEET AND WRITE TO JSON
-  print("READING FROM SPREADSHEET, WRITING TO JSON")
-  #spreadsheet_to_json("Arun Tirumalai")
-  success_read_result = spreadsheet_to_json("King Bob")
-  print(success_read_result)
-  print("----------------------------------------")
-
-
-if __name__ == "__main__":
-  main()

@@ -12,6 +12,9 @@ source .venv/bin/activate
 # Install all the things
 pip install -r requirements.txt
 
+# Run the unit tests
+python rsvp_test.py
+
 # Setup auth (for testing)
 gcloud auth application-default login --scopes=https://www.googleapis.com/auth/spreadsheets
 

@@ -57,19 +57,19 @@ def rsvp_http(request):
 
         primary_guest = request.args.get('primary_guest')
 
-        data = rsvp.spreadsheet_to_json(primary_guest)
+        data = rsvp.lookup(primary_guest)
         
         return (data, 200, headers)
 
       if request.method == "POST":
+        data = request.json;
+
         # Capture this, so we can recover from logs if we need to.
-        logging.info("Received post", extra={"json_fields": {'post': request.json}})
+        logging.info("Received post", extra={"json_fields": {'post': data}})
 
-        data = rsvp.json_to_primary_guest(request.json)
+        rsvp.update(data)
 
-        response = rsvp.update_guest_row(data)
-
-        return (response, 200, headers)
+        return ({"success": "Successfully updated guest row"}, 200, headers)
 
     except rsvp.NotFoundException as e:
       logging.warning("Primary guest %s not found", request.args.get('primary_guest'));
