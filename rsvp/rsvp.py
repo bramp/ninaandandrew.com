@@ -50,8 +50,6 @@ NOT_FOUND_ERROR = "Your name isn't found. Please use the url from the invitation
 BACKEND_ERROR = "Backend error. Please try again later."
 NO_DATA_FOUND_ERROR = "No data found."
 
-if (SPREADSHEET_ID is None):
-  raise Exception("SPREADSHEET_ID is not set")
 
 #### TODOS
 # Make real spreadsheet look like test spreadsheet, and add column ACLs
@@ -112,6 +110,8 @@ class PrimaryGuest(Guest):
       guest.PrettyPrint()
 
 def _get_creds():
+  """Returns the default credentials for the application."""
+
 #   creds = None
 #   # The file token.json stores the user's access and refresh tokens, and is
 #   # created automatically when the authorization flow completes for the first
@@ -133,6 +133,20 @@ def _get_creds():
 #   return creds
   creds, project_id = google.auth.default(scopes=SCOPES, quota_project_id=QUOTA_PROJECT_ID)
   return creds
+
+
+def _service():
+  """Returns the spreadsheets service. This is a singleton so its initialised on first used, and repeated calls return the same instance."""
+  if not hasattr(_service, "sheet"):
+    if (SPREADSHEET_ID is None):
+      raise Exception("SPREADSHEET_ID is not set")
+
+    creds = _get_creds()
+    service = build("sheets", "v4", credentials=creds, cache_discovery=False)
+    _service.sheet = service.spreadsheets()
+
+  return _service.sheet
+
 
 def strToBool(value):
   """Returns True, False, or None depending on if value is "TRUE", "FALSE", or not set"""
@@ -159,18 +173,12 @@ def boolToStr(value):
   return "FALSE"
 
 def _read_spreadsheet():
-  '''Reads the entire spreadsheet and returns the sheet, values, and each row
-  indexed by primary_guest column.
+  '''Reads the entire spreadsheet and returns the values.
   May raise an HttpError on a SpreadsheetService issue, or Exception if the data
   is invalid.'''
-  creds = _get_creds()
 
-  service = build("sheets", "v4", credentials=creds, cache_discovery=False)
-
-  # Call the Sheets API
-  sheet = service.spreadsheets()
   result = (
-      sheet.values()
+      _service().values()
       .get(spreadsheetId=SPREADSHEET_ID, range=SHEET_RANGE_NAME)
       .execute()
   )
@@ -184,17 +192,19 @@ def _read_spreadsheet():
     while len(row) < MAIN_COLUMNS:
       row.append("")
 
-  return (sheet, values)
+  print(values)
+
+  return values
 
 def spreadsheet_to_json(primary_guest_name):
-  """Returns a row of the spreadsheet for the given primary guest.
+  """Returns a invite for the give primary guest from the spreadsheet.
   Raises an exception if the primary guest is not found."""
   
   if not primary_guest_name:
     raise NotFoundException(NOT_FOUND_ERROR)
 
   try:
-    sheet, values = _read_spreadsheet()
+    values = _read_spreadsheet()
     assert values, "_read_spreadsheet returned nothing"
 
     output_dict = {}
@@ -301,7 +311,7 @@ def json_to_primary_guest(d):
 def update_guest_row(primary_guest):
   """Updates the given primary guest's row in the spreadsheet."""
   try:
-    sheet, values = _read_spreadsheet()
+    values = _read_spreadsheet()
     assert values, NO_DATA_FOUND_ERROR
 
     # TODO: Validate that the values for Primary Guest are unique
@@ -332,7 +342,7 @@ def update_guest_row(primary_guest):
           stuff_to_write.append(guest.ceremony)              # V --->
           stuff_to_write.append(guest.reception)             # W --->
 
-        sheet.values().update(
+        _service().values().update(
           spreadsheetId=SPREADSHEET_ID, 
           range=f"Sheet1!J{START_ROW+idx}:BP{START_ROW+idx}",
           valueInputOption="USER_ENTERED",
