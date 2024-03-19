@@ -44,9 +44,9 @@ class TestCreateColumnMap(unittest.TestCase):
         want = {
             "INVITED_TO_WEDDING" : 4,       # E
             "INVITED_TO_RECEPTION" : 5,     # F
-            "WHICH_INVITE" : 6,             # G
-            "INVITE_SENT" : 7,              # H
-            "DATE_SENT"   : 8,              # I
+            # "WHICH_INVITE" : 6,             # G
+            # "INVITE_SENT" : 7,              # H
+            # "DATE_SENT"   : 8,              # I
             "RSVP_CREATED" : 10,            # K
             "RSVP_MODIFIED" : 11,           # L
             "PRIMARY_GUEST" : 12,           # M

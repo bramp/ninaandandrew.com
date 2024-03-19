@@ -158,9 +158,12 @@ def create_column_map(header_row):
     mapping = {
      "INVITED_TO_WEDDING" : "Wedding?",
      "INVITED_TO_RECEPTION" : "Reception?",
-     "WHICH_INVITE" : "Which Invite?",
-     "INVITE_SENT" : "Invite Sent?",
-     "DATE_SENT"   : "Date Sent",
+
+     # These three aren't needed
+     #"WHICH_INVITE" : "Which Invite?",
+     #"INVITE_SENT" : "Invite Sent?",
+     #"DATE_SENT"   : "Date Sent",
+
      "RSVP_CREATED" : "RSVP Created",
      "RSVP_MODIFIED" :"RSVP Modified",
      "COMMENTS" : "Comments",
