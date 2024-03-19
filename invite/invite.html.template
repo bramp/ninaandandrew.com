@@ -38,13 +38,7 @@
   <body>
     <div
       id="invite-wrapper"
-      @@if
-      (ceremony=""
-      =""
-      ="false)"
-      {
-      class="reception-only"
-      }
+      @@if (ceremony === false) { class="reception-only" }
     >
       <div id="invite" class="gold gold-text">
         <div class="left">
