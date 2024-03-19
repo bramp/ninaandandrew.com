@@ -79,15 +79,15 @@
 
         @@if (parents === 'friends') {
         <a
-          href="https://www.ninaandandrew.com/invite.html?primary_guest={Primary Guest Name}"
+          href="https://www.ninaandandrew.com/invite.html?primary_guest={{Primary Guest Name}}"
           >View on the web here</a
         >)} @@if (parents === 'amma') {
         <a
-          href="https://www.ninaandandrew.com/invite-amma.html?primary_guest={Primary Guest Name}"
+          href="https://www.ninaandandrew.com/invite-amma.html?primary_guest={{Primary Guest Name}}"
           >View on the web here</a
         >)} @@if (parents === 'appa') {
         <a
-          href="https://www.ninaandandrew.com/invite-appa.html?primary_guest={Primary Guest Name}"
+          href="https://www.ninaandandrew.com/invite-appa.html?primary_guest={{Primary Guest Name}}"
           >View on the web here</a
         >)}
       </p>
@@ -96,11 +96,11 @@
         <tr>
           <td width="100%" height="100%" bgcolor="#b51111">
             <center>
-              <p class="large">{External Names},</p>
+              <p class="large">{{External Names}},</p>
               <p>
                 We're excited to celebrate our wedding with you! Please
                 <a
-                  href="https://www.ninaandandrew.com/?primary_guest={Primary Guest Name}#rsvp"
+                  href="https://www.ninaandandrew.com/?primary_guest={{Primary Guest Name}}#rsvp"
                   style="color: #fee1a9; text-decoration: none"
                 >
                   RSVP
@@ -109,7 +109,7 @@
               </p>
 
               <a
-                href="https://www.ninaandandrew.com/?primary_guest={Primary Guest Name}#rsvp"
+                href="https://www.ninaandandrew.com/?primary_guest={{Primary Guest Name}}#rsvp"
               >
                 <img
                   src="https://www.ninaandandrew.com/invite/invite-400-00-00.png"
@@ -202,7 +202,7 @@ Suparna & Arun, Manisha, and Vikram"
 
               <div class="btn">
                 <a
-                  href="https://www.ninaandandrew.com/?primary_guest={Primary Guest Name}#rsvp"
+                  href="https://www.ninaandandrew.com/?primary_guest={{Primary Guest Name}}#rsvp"
                   style="color: #fee1a9; text-decoration: none"
                 >
                   RSVP
