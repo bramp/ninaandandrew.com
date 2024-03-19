@@ -53,6 +53,13 @@ async function get_data(primary_guest) {
     data.ceremony ??= false;
     data.reception ??= false;
 
+    data.guests ??= [];
+    for (guest of data.guests) {
+      // By default they accept the invite.
+      guest.ceremony ??= true;
+      guest.reception ??= true;
+    }
+
     return data;
   } catch (e) {
     return {
