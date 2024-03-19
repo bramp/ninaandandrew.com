@@ -74,16 +74,9 @@ def _get_creds():
 
 
 def _service():
-  """Returns the spreadsheets service. This is a singleton so its initialised on first used, and repeated calls return the same instance."""
-  if not hasattr(_service, "sheet"):
-    if (SPREADSHEET_ID is None):
-      raise Exception("SPREADSHEET_ID is not set")
-
-    creds = _get_creds()
-    service = build("sheets", "v4", credentials=creds, cache_discovery=False)
-    _service.sheet = service.spreadsheets()
-
-  return _service.sheet
+  """Returns the spreadsheets service."""
+  creds = _get_creds()
+  return build("sheets", "v4", credentials=creds, cache_discovery=False)
 
 
 def strToBool(value):
@@ -110,13 +103,21 @@ def boolToStr(value):
 
   return "FALSE"
 
-def _read_spreadsheet():
+def _read_spreadsheet(service=None):
   '''Reads the entire spreadsheet and returns the header row, and values.
   May raise an HttpError on a SpreadsheetService issue, or Exception if the data
   is invalid.'''
 
+  if (SPREADSHEET_ID is None):
+    raise Exception("SPREADSHEET_ID is not set")
+
+  if service is None:
+    service = _service()
+
   result = (
-      _service().values()
+      service
+      .spreadsheets()
+      .values()
       .get(spreadsheetId=SPREADSHEET_ID, range=SHEET_RANGE_NAME)
       .execute()
   )
@@ -129,19 +130,23 @@ def _read_spreadsheet():
 
   return header, data
 
-def _write_spreadsheet(x, y, row):
+def _write_spreadsheet(x, y, row, service=None):
   """Writes the given row starting at x, y"""
+
+  if service is None:
+    service = _service()
+
   col_start = column_name(x)
   col_end = column_name(x + len(row))
 
   row_idx = y
 
-  _service().values().update(
-    spreadsheetId=SPREADSHEET_ID, 
-    range=f"{SHEET}!{col_start}{row_idx}:{col_end}{row_idx}",
-    valueInputOption="USER_ENTERED",
-    body={"values": [row]}
-  ).execute()
+  return service.spreadsheets().values().update(
+      spreadsheetId=SPREADSHEET_ID,
+      range=f"{SHEET}!{col_start}{row_idx}:{col_end}{row_idx}",
+      valueInputOption="USER_ENTERED",
+      body={"values": [row]}
+    ).execute()
 
 
 def _pad_row(row, length):
@@ -201,47 +206,48 @@ def lookup(primary_guest_name):
     raise NotFoundException(NOT_FOUND_ERROR)
 
   try:
-    header, data = _read_spreadsheet()
-    COLUMN_MAP = create_column_map(header)
+    with _service() as service:
+      header, data = _read_spreadsheet(service=service)
+      COLUMN_MAP = create_column_map(header)
 
-    result = {}
-    for idx, row in enumerate(data):
-      assert(len(row) > COLUMN_MAP["PRIMARY_GUEST"])
+      result = {}
+      for idx, row in enumerate(data):
+        assert(len(row) > COLUMN_MAP["PRIMARY_GUEST"])
 
-      if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
-        row = _pad_row(row, len(header))
+        if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
+          row = _pad_row(row, len(header))
 
-        result["ceremony"] = True if row[COLUMN_MAP["INVITED_TO_WEDDING"]] == "TRUE" else False
-        result["reception"] = True if row[COLUMN_MAP["INVITED_TO_RECEPTION"]] == "TRUE" else False
-        result["comments"] = row[COLUMN_MAP["COMMENTS"]] # GUEST COMMENTS
+          result["ceremony"] = True if row[COLUMN_MAP["INVITED_TO_WEDDING"]] == "TRUE" else False
+          result["reception"] = True if row[COLUMN_MAP["INVITED_TO_RECEPTION"]] == "TRUE" else False
+          result["comments"] = row[COLUMN_MAP["COMMENTS"]] # GUEST COMMENTS
 
-        guest_list = []
-
-        guest = {}
-        guest['name'] = row[COLUMN_MAP["PRIMARY_GUEST"]]
-        guest['email'] = row[COLUMN_MAP["PRIMARY_GUEST_EMAIL"]]
-        guest['phone'] = row[COLUMN_MAP["PRIMARY_GUEST_PHONE"]]
-        guest['ceremony'] = strToBool(row[COLUMN_MAP["PRIMARY_GUEST_CEREMONY"]]) # ATTENDING WEDDING
-        guest['reception'] = strToBool(row[COLUMN_MAP["PRIMARY_GUEST_RECEPTION"]]) # ATTENDING RECEPTION
-
-        guest_list.append(guest)
-
-        for i in range(2, MAX_GUESTS + 1):
-          if (row[COLUMN_MAP[f"GUEST{i}"]] == ""): break
+          guest_list = []
 
           guest = {}
-          guest['name'] = row[COLUMN_MAP[f"GUEST{i}"]]
-          guest['email'] = row[COLUMN_MAP[f"GUEST{i}_EMAIL"]]
-          guest['phone'] = row[COLUMN_MAP[f"GUEST{i}_PHONE"]]
-          guest['ceremony'] = strToBool(row[COLUMN_MAP[f"GUEST{i}_CEREMONY"]]) # ATTENDING WEDDING
-          guest['reception'] = strToBool(row[COLUMN_MAP[f"GUEST{i}_RECEPTION"]]) # ATTENDING RECEPTION
+          guest['name'] = row[COLUMN_MAP["PRIMARY_GUEST"]]
+          guest['email'] = row[COLUMN_MAP["PRIMARY_GUEST_EMAIL"]]
+          guest['phone'] = row[COLUMN_MAP["PRIMARY_GUEST_PHONE"]]
+          guest['ceremony'] = strToBool(row[COLUMN_MAP["PRIMARY_GUEST_CEREMONY"]]) # ATTENDING WEDDING
+          guest['reception'] = strToBool(row[COLUMN_MAP["PRIMARY_GUEST_RECEPTION"]]) # ATTENDING RECEPTION
 
           guest_list.append(guest)
 
-        result["guests"] = guest_list
+          for i in range(2, MAX_GUESTS + 1):
+            if (row[COLUMN_MAP[f"GUEST{i}"]] == ""): break
 
-        # TODO: Validate there's only one matching row
-        return result;
+            guest = {}
+            guest['name'] = row[COLUMN_MAP[f"GUEST{i}"]]
+            guest['email'] = row[COLUMN_MAP[f"GUEST{i}_EMAIL"]]
+            guest['phone'] = row[COLUMN_MAP[f"GUEST{i}_PHONE"]]
+            guest['ceremony'] = strToBool(row[COLUMN_MAP[f"GUEST{i}_CEREMONY"]]) # ATTENDING WEDDING
+            guest['reception'] = strToBool(row[COLUMN_MAP[f"GUEST{i}_RECEPTION"]]) # ATTENDING RECEPTION
+
+            guest_list.append(guest)
+
+          result["guests"] = guest_list
+
+          # TODO: Validate there's only one matching row
+          return result;
 
     # Return error to user if there is no matching row
     raise NotFoundException(NOT_FOUND_ERROR)
@@ -293,46 +299,47 @@ def update(rsvp):
   primary_guest_name = guests[0]['name']
 
   try:
-    header, data = _read_spreadsheet()
-    COLUMN_MAP = create_column_map(header)
+    with _service() as service:
+      header, data = _read_spreadsheet(service=service)
+      COLUMN_MAP = create_column_map(header)
 
-    # TODO: Validate that the values for Primary Guest are unique
+      # TODO: Validate that the values for Primary Guest are unique
 
-    for idx, row in enumerate(data):
-      if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
-        now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") # TODO ALlow this to be mockable.
+      for idx, row in enumerate(data):
+        if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
+          now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S") # TODO ALlow this to be mockable.
 
-        # This code depends on the format of the spreadsheet!!!
-        # START AT COLUMN J
-        stuff_to_write = _pad_row([], len(header))
+          # This code depends on the format of the spreadsheet!!!
+          # START AT COLUMN J
+          stuff_to_write = _pad_row([], len(header))
 
-        create_time = now if row[COLUMN_MAP["RSVP_CREATED"]] == "" else row[COLUMN_MAP["RSVP_CREATED"]]
-        stuff_to_write[COLUMN_MAP["RSVP_CREATED"]] = create_time  # K
-        stuff_to_write[COLUMN_MAP["RSVP_MODIFIED"]] = now         # L - last modified
-        stuff_to_write[COLUMN_MAP["COMMENTS"]] = rsvp['comments']    # R
+          create_time = now if row[COLUMN_MAP["RSVP_CREATED"]] == "" else row[COLUMN_MAP["RSVP_CREATED"]]
+          stuff_to_write[COLUMN_MAP["RSVP_CREATED"]] = create_time  # K
+          stuff_to_write[COLUMN_MAP["RSVP_MODIFIED"]] = now         # L - last modified
+          stuff_to_write[COLUMN_MAP["COMMENTS"]] = rsvp['comments']    # R
 
-        for i, guest in enumerate(guests):
-          key = f"GUEST{i + 1}" if i > 0 else "PRIMARY_GUEST"
-          stuff_to_write[COLUMN_MAP[key]] = guest['name']
-          stuff_to_write[COLUMN_MAP[f"{key}_EMAIL"]] = guest['email']
-          stuff_to_write[COLUMN_MAP[f"{key}_PHONE"]] = "" if guest['phone'] == "" else "'" + guest['phone']
-          stuff_to_write[COLUMN_MAP[f"{key}_CEREMONY"]] = boolToStr(guest['ceremony'])
-          stuff_to_write[COLUMN_MAP[f"{key}_RECEPTION"]] = boolToStr(guest['reception'])
+          for i, guest in enumerate(guests):
+            key = f"GUEST{i + 1}" if i > 0 else "PRIMARY_GUEST"
+            stuff_to_write[COLUMN_MAP[key]] = guest['name']
+            stuff_to_write[COLUMN_MAP[f"{key}_EMAIL"]] = guest['email']
+            stuff_to_write[COLUMN_MAP[f"{key}_PHONE"]] = "" if guest['phone'] == "" else "'" + guest['phone']
+            stuff_to_write[COLUMN_MAP[f"{key}_CEREMONY"]] = boolToStr(guest['ceremony'])
+            stuff_to_write[COLUMN_MAP[f"{key}_RECEPTION"]] = boolToStr(guest['reception'])
 
-        # Remove all the empty values at the beginning
-        offset = 0
-        for i in range(len(stuff_to_write)):
-          if stuff_to_write[i] != "":
-            offset = i
-            break
+          # Remove all the empty values at the beginning
+          offset = 0
+          for i in range(len(stuff_to_write)):
+            if stuff_to_write[i] != "":
+              offset = i
+              break
 
-        stuff_to_write = stuff_to_write[offset:]
+          stuff_to_write = stuff_to_write[offset:]
 
-        # START_ROW + 1 header row + idx data rows.
-        _write_spreadsheet(offset + 1, START_ROW + 1 + idx, stuff_to_write)
+          # START_ROW + 1 header row + idx data rows.
+          _write_spreadsheet(offset + 1, START_ROW + 1 + idx, stuff_to_write, service=service)
 
-        # success
-        return
+          # success
+          return
 
     raise NotFoundException(NOT_FOUND_ERROR)
 
