@@ -212,7 +212,9 @@ def lookup(primary_guest_name):
 
       result = {}
       for idx, row in enumerate(data):
-        assert(len(row) > COLUMN_MAP["PRIMARY_GUEST"])
+        if len(row) <= COLUMN_MAP["PRIMARY_GUEST"]:
+          # No primary guest for this row.
+          continue
 
         if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
           row = _pad_row(row, len(header))
