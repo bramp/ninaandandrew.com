@@ -12,9 +12,25 @@ source .venv/bin/activate
 # Install all the things
 pip install -r requirements.txt
 
+# Dev things
+pip install black
+pip install flake8
+```
+
+```shell
+# Format
+black *.py
+
+# Linting (ignore line length as that's fixed the best it can be by black)
+flake8 --max-line-length 999 *.py
+
 # Run the unit tests
 python rsvp_test.py
 
+# TODO Add some tests around the cloud function, instead of the rsvp library. We can most likely just move some of the unit tests.
+```
+
+```shell
 # Setup auth (for testing)
 gcloud auth application-default login --scopes=https://www.googleapis.com/auth/spreadsheets
 
