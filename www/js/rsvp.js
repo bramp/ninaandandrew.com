@@ -6,10 +6,7 @@ var rsvp = {
 
 const max_guests = 10;
 
-//const base_url = 'http://localhost:8080/';
-// TODO Move to prod
-const base_url = 'https://us-central1-ninaandandrew-com.cloudfunctions.net/rsvp-func-test';
-//const base_url = 'https://rsvp.ninaandandrew.com/';
+const base_url = choose_rsvp_url();
 
 
 // Example data
@@ -36,6 +33,19 @@ rsvp = {
   ]
 };
 */
+
+function choose_rsvp_url() {
+  //const base_url = 'https://us-central1-ninaandandrew-com.cloudfunctions.net/rsvp-func-test';
+  //const base_url = 'https://rsvp.ninaandandrew.com/';
+
+  // If we are in prod, use the prod url
+  if (window.location.hostname == "ninaandandrew.com" || window.location.hostname == "www.ninaandandrew.com") {
+    return "https://rsvp.ninaandandrew.com/";
+  }
+
+  // Otherwise use the local dev url
+  return "http://localhost:8080/";
+}
 
 async function get_data(primary_guest) {
   try {
