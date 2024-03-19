@@ -8,7 +8,6 @@ const max_guests = 10;
 
 const base_url = choose_rsvp_url();
 
-
 // Example data
 /*
 rsvp = {
@@ -39,7 +38,10 @@ function choose_rsvp_url() {
   //const base_url = 'https://rsvp.ninaandandrew.com/';
 
   // If we are in prod, use the prod url
-  if (window.location.hostname == "ninaandandrew.com" || window.location.hostname == "www.ninaandandrew.com") {
+  if (
+    window.location.hostname == "ninaandandrew.com" ||
+    window.location.hostname == "www.ninaandandrew.com"
+  ) {
     return "https://rsvp.ninaandandrew.com/";
   }
 
