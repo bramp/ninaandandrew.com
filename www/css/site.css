@@ -286,7 +286,7 @@ a:hover {
   margin-bottom: 2em;
 }
 
-@media (width <= 480px) {
+@media (width <= 720px) {
   #schedule .definition {
     grid-template-columns: 1fr 3fr;
   }
@@ -334,7 +334,7 @@ a:hover {
   display: none;
 }
 
-@media (width <= 480px) {
+@media (width <= 600px) {
   .hide-mobile {
     display: none;
   }
@@ -453,7 +453,7 @@ input.rsvp_phone {
   display: block;
 }
 
-@media (width <= 480px) {
+@media (width <= 720px) {
   input.rsvp_name,
   input.rsvp_email,
   input.rsvp_phone {
@@ -651,7 +651,7 @@ input[type="submit"] {
   grid-area: 1 / 2 / 2 / 3;
 }
 
-@media (width <= 480px) {
+@media (width <= 720px) {
   #about-us .grid {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto;
