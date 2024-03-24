@@ -321,6 +321,10 @@ def update(rsvp):
             # TODO: Validate that the values for Primary Guest are unique
 
             for idx, row in enumerate(data):
+                if len(row) <= COLUMN_MAP["PRIMARY_GUEST"]:
+                    # No primary guest for this row.
+                    continue
+
                 if row[COLUMN_MAP["PRIMARY_GUEST"]] == primary_guest_name:
                     now = datetime.datetime.now().strftime(
                         "%Y-%m-%d %H:%M:%S"
