@@ -48,6 +48,7 @@ Build the invites
 ```shell
 # Build the HTML
 gulp
+npx prettier www -w
 
 # Create the screenshots
 http-server -p 8000 -c-1 www &
