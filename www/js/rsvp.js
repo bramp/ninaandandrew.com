@@ -319,8 +319,6 @@ async function submit_rsvp(e) {
   document.querySelector("#rsvp .error").classList.add("hide");
   document.querySelector("#rsvp .success").classList.add("hide");
 
-  console.log("here");
-
   const resp = await post_data(to_json());
   if (resp.error) {
     render_error(resp.error);
