@@ -77,9 +77,16 @@ vnu www/*.html
 # Compress everything files
 
 ```shell
-for f in www/invite/*.webp; do
-  cwebp $f -o ${f%.*}.webp;
+for f in $(find www -type f -name \*.webp); do
+  cwebp $f -o $f;
 done
 
-oxipng -o max --strip safe www/invite/*.png
+for f in $(find www -type f -name \*.jpg); do
+  jpegtran -outfile $f $f;
+done
+
+for f in $(find www -type f -name \*.png); do
+  oxipng -o max --strip safe $f;
+done
+
 ```
