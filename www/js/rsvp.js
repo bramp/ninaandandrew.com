@@ -46,7 +46,10 @@ function choose_rsvp_url() {
   }
 
   // Otherwise use the local dev url
-  return "http://localhost:8080/";
+  //return "http://localhost:8080/";
+
+  // Default to prod
+  return "https://rsvp.ninaandandrew.com/";
 }
 
 async function get_data(primary_guest) {
