@@ -383,6 +383,9 @@ tr,
 th,
 td {
   border-spacing: 10px;
+
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 #rsvp ul {
