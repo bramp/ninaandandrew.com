@@ -409,7 +409,7 @@ function to_json() {
   };
 }
 
-window.addEventListener("load", async function () {
+document.addEventListener( 'DOMContentLoaded', async function() {
   const urlParams = new URLSearchParams(window.location.search);
   const primary_guest = urlParams.get("primary_guest");
 
