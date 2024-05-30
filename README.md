@@ -25,7 +25,7 @@ Examples
 
 # Development
 
-Some deps
+## Some deps
 
 ```shell
 npm install --global gulp-cli
@@ -37,13 +37,13 @@ brew install oxipng
 alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 ```
 
-Run a local web server
+## Run a local web server
 
 ```shell
 http-server -p 8000 -c-1 www
 ```
 
-Build the invites
+## Build everything
 
 ```shell
 # Build the HTML
