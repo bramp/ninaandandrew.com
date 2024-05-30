@@ -56,6 +56,18 @@ node ./create-invite-jpg.js
 
 ```
 
+### Create engagement photo album
+
+```shell
+magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.jpg
+
+magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.webp
+```
+
+
+
 # Lint
 
 ```shell

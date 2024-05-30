@@ -25,6 +25,8 @@
 
     <script src="/js/rsvp.js"></script>
 
+    <link rel="stylesheet" href="/css/splide.min.css">
+
     <!-- Google tag (gtag.js) -->
     <script
       async
@@ -113,7 +115,52 @@
 
         <section id="gallery">
           <h1>Gallery</h1>
-          <p>Coming soon...</p>
+          <div class="splide" aria-label="Photo gallery">
+            <div class="splide__track">
+              <ul class="splide__list">
+                <li class="splide__slide" style="width: 260px">
+                  <picture>
+                      <source src="engagement/image_00.webp" srcset="engagement/image_2x_00.webp 2x" type="image/webp">
+                      <img    src="engagement/image_00.jpg" srcset="engagement/image_2x_00.jpg 2x"  type="image/jpeg">
+                  </picture>
+                </li>
+
+                <li class="splide__slide" style="width: 580px" data-splide-hash="engagement01">
+                  <picture>
+                    <source src="engagement/image_01.webp" srcset="engagement/image_2x_01.webp 2x" type="image/webp">
+                    <img    src="engagement/image_01.jpg" srcset="engagement/image_2x_01.jpg 2x"  type="image/jpeg">
+                  </picture>
+                </li>
+
+                <li class="splide__slide" style="width: 260px" data-splide-hash="engagement02">
+                  <picture>
+                    <source src="engagement/image_02.webp" srcset="engagement/image_2x_02.webp 2x" type="image/webp">
+                    <img    src="engagement/image_02.jpg" srcset="engagement/image_2x_02.jpg 2x"  type="image/jpeg">
+                  </picture>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <script src="/js/splide.min.js"></script>
+          <script src="/js/splide-extension-url-hash.min.js"></script>
+          <script type="text/javascript">
+            document.addEventListener( 'DOMContentLoaded', function() {
+              var splide = new Splide( '.splide', {
+                type   : 'loop',
+                padding: '5rem',
+                heightRatio: 2/3,
+                focus    : 'center',
+                trimSpace: false,
+                autoWidth: true,
+                gap: '0.5em',
+              });
+
+              splide.mount(
+                window.splide.Extensions
+              );
+            });
+          </script>
         </section>
 
         <section id="schedule" class="hide-rsvp">
