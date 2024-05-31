@@ -1,0 +1,343 @@
+/*
+ * Custom CSS
+ */
+
+:root {
+  /*  --bs-body-bg: #b51111; */
+  --bs-box-shadow: 0.5rem 0.5rem 0.5rem rgb(255 255 255 / 10%);
+}
+
+@font-face {
+  font-family: "Apple Chancery";
+  src:
+    url("/fonts/AppleChancery.woff2") format("woff2"),
+    url("/fonts/AppleChancery.woff") format("woff");
+  font-weight: normal;
+  font-style: italic;
+  font-display: swap;
+}
+
+body {
+  margin: 0;
+  background-color: #b51111;
+}
+
+.flip {
+  transform: scaleX(-1);
+}
+
+.hide {
+  display: none;
+}
+
+#invite-wrapper {
+  background-color: #b51111;
+  padding: 0.5rem;
+
+  /* If the page is too wide, center it all */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.img-fluid {
+  max-width: 100%;
+  height: auto;
+}
+
+#invite {
+  display: grid;
+  grid-template-rows: auto auto auto auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 0;
+  padding: 1em;
+  font-family: "Apple Chancery", cursive;
+
+  /*  
+  font-family: cursive;
+  font-family: "Charm", cursive;
+  font-family: "Carattere", cursive;
+  font-family: "Dancing Script", cursive;
+  font-family: 'Times New Roman', Georgia, Garamond, serif;
+  font-family: Georgia, Garamond, serif;
+  font-family: Garamond, serif;
+  */
+  font-weight: normal;
+  font-style: normal;
+  border-image: url("/images/border.svg") round;
+  border-image-slice: 33%;
+  border-image-width: 10em;
+  border-image-repeat: stretch;
+  text-align: center;
+  white-space: nowrap;
+  font-size: min(2vw, 20px);
+  min-width: 300px;
+  max-width: 960px;
+  margin: auto;
+}
+
+#invite > * {
+  place-self: center center;
+}
+
+.peacock {
+  padding-top: 3em;
+}
+
+.reception-only .peacock {
+  padding-top: 0;
+}
+
+.tiny {
+  font-size: 0.8em;
+  line-height: 1.2;
+}
+
+.small {
+  font-size: 1em;
+  line-height: 1.2;
+}
+
+.normal {
+  font-size: 1.1em;
+  line-height: 1.2;
+}
+
+.medium {
+  font-size: 2em;
+  line-height: 1.2;
+}
+
+.large {
+  font-size: 3em;
+  line-height: 1.2;
+}
+
+.larger {
+  font-size: 3.5em;
+  line-height: 1.2;
+}
+
+.bottom .medium {
+  font-size: 1.5em;
+}
+
+/* Desktop */
+
+/* <row-start> / <column-start> / <row-end> / <column-end> */
+.left {
+  grid-area: 1 / 1 / 4 / 2;
+  padding: 0;
+}
+
+.right {
+  grid-area: 1 / 3 / 4 / 4;
+  padding: 0;
+}
+
+.top {
+  grid-area: 1 / 2 / 2 / 3;
+  padding: 1em;
+  margin-left: -10vw;
+  margin-right: -10vw;
+}
+
+.middle {
+  grid-area: 2 / 2 / 3 / 3;
+  padding: 1em;
+  padding-bottom: 0;
+
+  /* Allow the middle to spill into the sides if they need to */
+  margin-left: -5vw;
+  margin-right: -5vw;
+}
+
+.bottom {
+  grid-area: 3 / 2 / 4 / 3;
+  margin-left: -5vw;
+  margin-right: -5vw;
+}
+
+.footer {
+  grid-area: 4 / 1 / 5 / 4;
+  padding: 0 2em 1em;
+  white-space: normal;
+}
+
+.reception-only .ceremony {
+  display: none;
+  visibility: hidden;
+}
+
+.reception-only .left {
+  padding-top: 150px;
+}
+
+.reception-only .right {
+  padding-top: 150px;
+}
+
+/* Mobile */
+@media (width <= 480px) {
+  /* <row-start> / <column-start> / <row-end> / <column-end> */
+  .left {
+    grid-area: 2 / 1 / 3 / 2;
+  }
+  .right {
+    grid-area: 2 / 3 / 3 / 4;
+  }
+  .top {
+    grid-area: 1 / 1 / 2 / 4;
+  }
+  .middle {
+    grid-area: 2 / 2 / 3 / 3;
+  }
+  .bottom {
+    grid-area: 3 / 1 / 4 / 4;
+  }
+  .footer {
+    grid-area: 4 / 1 / 5 / 4;
+  }
+
+  #invite {
+    grid-template-columns: 100px 1fr 100px;
+    font-size: 3vw;
+  }
+
+  .reception-only .left {
+    padding-top: unset;
+  }
+
+  .reception-only .right {
+    padding-top: unset;
+  }
+
+  .reception-only .medium {
+    font-size: 1.5em;
+    line-height: 1.2;
+  }
+
+  .reception-only .larger {
+    font-size: 2.5em;
+    line-height: 1.2;
+  }
+
+  .peacock {
+    padding-top: 0;
+  }
+}
+
+#invite a {
+  color: inherit;
+  text-decoration: underline #f3eaa740;
+}
+
+#invite a:hover {
+  text-decoration: underline #f3eaa780;
+}
+
+sup {
+  font-size: 0.5em;
+}
+
+#invite button {
+  margin: 1em;
+  margin-bottom: 0.5em;
+  font-size: 1.5em;
+  font-family: "Times New Roman", serif;
+}
+
+@media print {
+  #invite button {
+    display: none;
+  }
+}
+
+.pillayar-suli {
+  width: 1.5em;
+  height: 1.5em;
+  margin: auto;
+  background: linear-gradient(to right, #c1ac51, #f7eead, #c1ac51);
+  clip-path: url("#pillayar-suli");
+}
+
+.gold {
+  color: #f3eaa7;
+  background: linear-gradient(to right bottom, #c1ac51, #f7eead, #c1ac51);
+}
+
+.gold-text {
+  color: transparent;
+  background-clip: text;
+}
+
+.divider {
+  font-family: serif;
+  padding: 1em;
+}
+
+.fancy {
+  font-family: Carattere, cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.btn {
+  color: #ffc107;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  background-color: transparent;
+  padding: 0.5rem 1rem;
+  font-size: 1.25rem;
+  box-shadow:
+    0 8px 16px 0 rgb(0 0 0 / 20%),
+    0 6px 20px 0 rgb(0 0 0 / 19%);
+  cursor: pointer;
+}
+
+.btn:hover {
+  color: #000;
+  background-color: #ffc107;
+  border-color: #ffc107;
+}
+
+.shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine::after {
+  content: "";
+  position: absolute;
+  top: -110%;
+  left: -210%;
+  width: 200%;
+  height: 200%;
+  opacity: 0;
+  transform: rotate(30deg);
+  background: rgb(255 255 255 / 13%);
+  background: linear-gradient(
+    to right,
+    rgb(255 255 255 / 13%) 0%,
+    rgb(255 255 255 / 13%) 77%,
+    rgb(255 255 255 / 50%) 92%,
+    rgb(255 255 255 / 0%) 100%
+  );
+}
+
+/* Hover state - trigger effect */
+
+.shine:hover::after {
+  opacity: 1;
+  top: -30%;
+  left: -30%;
+  transition-property: left, top, opacity;
+  transition-duration: 0.7s, 0.7s, 0.15s;
+  transition-timing-function: ease;
+}
+
+/* Active state */
+
+.shine:active::after {
+  opacity: 0;
+}

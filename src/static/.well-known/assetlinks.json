@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["lookalikes/allowlist"],
+    "target": { "namespace": "web", "site": "https://www.ninaandandrew.com/" }
+  },
+  {
+    "relation": ["lookalikes/allowlist"],
+    "target": {
+      "namespace": "web",
+      "site": "https://us-central1-ninaandandrew-com.cloudfunctions.net"
+    }
+  }
+]

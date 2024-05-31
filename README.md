@@ -40,6 +40,7 @@ alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chr
 ## Run a local web server
 
 ```shell
+gulp watch &
 http-server -p 8000 -c-1 www
 ```
 
@@ -48,22 +49,23 @@ http-server -p 8000 -c-1 www
 ```shell
 # Build the HTML
 gulp
-npx prettier www -w
 
 # Create the screenshots
 http-server -p 8000 -c-1 www &
 node ./create-invite-jpg.js
+
+# You then need to manually slice the screenshots for the emails.
 
 ```
 
 ### Create engagement photo album
 
 ```shell
-magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.jpg
-magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 720x480  src/static/engagement/image_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 1440x960  src/static/engagement/image_2x_%02d.jpg
 
-magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.webp
-magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 720x480  src/static/engagement/image_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 1440x960  src/static/engagement/image_2x_%02d.webp
 ```
 
 
@@ -74,13 +76,12 @@ magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d
 npm init stylelint
 npm install --save-dev --save-exact prettier
 
-npx stylelint "www/css/*.css"
-npx prettier www --check
-npx prettier www -w
+npx stylelint "src/static/css/*.css"
+npx prettier src/static --check
+npx prettier src/static -w
 
-npx prettier --check --parser html invite/*.html.template
-npx prettier --w --parser html invite/*.html.template
-
+npx prettier --check --parser html src/invite/*.html.template
+npx prettier --w --parser html src/invite/*.html.template
 
 vnu www/*.html
 ```

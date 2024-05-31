@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Nina ♥️ Andrew</title>
+
+    <link rel="stylesheet" href="/css/site.css" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- TODO Remove the parts of the font we don't need -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Raleway:ital,wght@0,100..900;1,100..900&family=Carattere&display=swap"
+      rel="stylesheet"
+    />
+
+    <script src="/js/rsvp.js"></script>
+
+    <link rel="stylesheet" href="/css/splide.min.css">
+
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-1KTQJJZ0VC"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-1KTQJJZ0VC");
+    </script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="logo">
+        <ul>
+          <li>
+            <a href="https://www.NinaAndAndrew.com/" class="active">
+              Nina <span class="and">&</span> &nbsp;Andrew <small>.com</small>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div id="nav">
+        <ul>
+          <li><a href="#about-us">About Us</a></li>
+          <li class="hide-mobile"><a href="#gallery">Gallery</a></li>
+          <li class="hide-rsvp"><a href="#schedule">Schedule</a></li>
+          <li><a href="#rsvp">RSVP</a></li>
+          <li class="hide-mobile"><a href="#registry">Registry</a></li>
+          <li><a href="#faq">FAQs</a></li>
+        </ul>
+      </div>
+    </div>
+    <!--<img src="images/peacock-light.webp" class="peacock2 flip" />-->
+
+    <div id="outer">
+      <div id="container">
+        <section id="about-us">
+          <h1>About Us</h1>
+
+          <div class="grid">
+            <picture class="image-cropper image-left">
+              <source srcset="images/nina.webp" type="image/webp" />
+              <source srcset="images/nina.jpg" type="image/jpeg" />
+
+              <img src="images/nina.jpg" alt="Photo of Nina Partha" />
+            </picture>
+            <p class="text-right">
+              Nina grew up in California with her loving parents, grandparents,
+              and younger sister. She has always held a passion for math and
+              science. After getting her electrical engineering and computer
+              science degree, she started working for Google in 2014.
+            </p>
+          </div>
+
+          <div class="grid">
+            <picture class="image-cropper image-right">
+              <source srcset="images/andrew.webp" type="image/webp" />
+              <source srcset="images/andrew.jpg" type="image/jpeg" />
+
+              <img src="images/andrew.jpg" alt="Photo of Andrew Brampton" />
+            </picture>
+            <p class="text-left">
+              <a href="https://bramp.net">Andrew</a> grew up in England,
+              <a href="https://en.wikipedia.org/wiki/Castle_Donington"
+                >close to Nottingham</a
+              >
+              (which you may know from Robin Hood). From a young age, he always
+              enjoyed working on various software and mechanical projects,
+              inside and outside of university / work. He moved to the U.S. in
+              2010, and joined Google in 2014.
+            </p>
+          </div>
+
+          <p>
+            The couple met in 2019, at Google. Thanks to many shared interests
+            in tech, they grew to become close friends over the years, working
+            on various projects, playing games, hiking etc. This very naturally
+            and organically grew into something more, and the rest is history.
+          </p>
+        </section>
+
+        <section id="gallery">
+          <h1>Gallery</h1>
+          <div class="splide" aria-label="Photo gallery">
+            <div class="splide__track">
+              <ul class="splide__list">
+                <li class="splide__slide" style="width: 260px">
+                  <picture>
+                      <source src="engagement/image_00.webp" srcset="engagement/image_2x_00.webp 2x" type="image/webp">
+                      <img    src="engagement/image_00.jpg" srcset="engagement/image_2x_00.jpg 2x"  type="image/jpeg">
+                  </picture>
+                </li>
+
+                <li class="splide__slide" style="width: 580px" data-splide-hash="engagement01">
+                  <picture>
+                    <source src="engagement/image_01.webp" srcset="engagement/image_2x_01.webp 2x" type="image/webp">
+                    <img    src="engagement/image_01.jpg" srcset="engagement/image_2x_01.jpg 2x"  type="image/jpeg">
+                  </picture>
+                </li>
+
+                <li class="splide__slide" style="width: 260px" data-splide-hash="engagement02">
+                  <picture>
+                    <source src="engagement/image_02.webp" srcset="engagement/image_2x_02.webp 2x" type="image/webp">
+                    <img    src="engagement/image_02.jpg" srcset="engagement/image_2x_02.jpg 2x"  type="image/jpeg">
+                  </picture>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <script src="/js/splide.min.js"></script>
+          <script src="/js/splide-extension-url-hash.min.js"></script>
+          <script type="text/javascript">
+            document.addEventListener( 'DOMContentLoaded', function() {
+              var splide = new Splide( '.splide', {
+                type   : 'loop',
+                padding: '5rem',
+                heightRatio: 2/3,
+                focus    : 'center',
+                trimSpace: false,
+                autoWidth: true,
+                gap: '0.5em',
+              });
+
+              splide.mount(
+                window.splide.Extensions
+              );
+            });
+          </script>
+        </section>
+
+        <section id="schedule" class="hide-rsvp">
+          <h1>Schedule</h1>
+
+          <div class="parent">
+            <div class="hide-ceremony">
+              <div>
+                <h2>Ceremony</h2>
+              </div>
+
+              <div class="map">
+                <iframe
+                  allowfullscreen=""
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d25250.220897504252!2d-121.75292908179593!3d37.71316109901957!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fe6d80927f9e5%3A0xa827d35be914878c!2sShiva-Vishnu%20Temple!5e0!3m2!1sen!2sus!4v1708382415656!5m2!1sen!2sus"
+                ></iframe>
+              </div>
+
+              <div>
+                <p>
+                  A private South Indian
+                  <a href="https://en.wikipedia.org/wiki/Iyengar">Iyengar</a>
+                  ceremony will be held with close family.
+                </p>
+
+                <div class="definition">
+                  <div class="title">When:</div>
+
+                  <div class="body">
+                    <time datetime="2024-08-23 07:00-0900"
+                      >Friday, 23<sup>rd</sup>August 2024</time
+                    ><br />
+                    (<a href="https://www.addevent.com/event/eG21627471" target="_blank">add to calendar</a>)
+
+                    <table style="margin: auto">
+                      <tr>
+                        <td>7:45 am</td>
+                        <td>Arrival</td>
+                      </tr>
+                      <tr>
+                        <td>8:15 am</td>
+                        <td>Breakfast</td>
+                      </tr>
+                      <tr>
+                        <td>10:00 am</td>
+                        <td>Muhurtham</td>
+                      </tr>
+                      <tr>
+                        <td>~noon</td>
+                        <td>Lunch</td>
+                      </tr>
+                      <tr>
+                        <td>1:30pm</td>
+                        <td>Wrap-up</td>
+                      </tr>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="definition">
+                  <div class="title">Where:</div>
+                  <div class="body">
+                    Akella Hall<br />
+                    <a
+                      href="https://www.google.com/maps/dir/?api=1&destination=Shiva-Vishnu%20Temple&destination_place_id=ChIJ5fknCdjmj4ARjIcU6VvTJ6g"
+                      target="_blank"
+                      >Shiva-Vishnu Temple, Livermore,<br />California, USA</a
+                    >
+                  </div>
+
+                  <div></div>
+                </div>
+              </div>
+
+              <div style="border-bottom: 1px solid #4e2e1430"></div>
+            </div>
+
+            <!-- Reception -->
+            <div>
+              <h2>Reception</h2>
+            </div>
+
+            <div class="map">
+              <iframe
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12635.628239124433!2d-121.81752189853873!3d37.651389011910815!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808fdd55857c2aab%3A0x2ffc930768c5ce0a!2sCasa%20Real%20at%20Ruby%20Hill!5e0!3m2!1sen!2sus!4v1708382491637!5m2!1sen!2sus"
+              ></iframe>
+            </div>
+
+            <div>
+              <p>
+                A festive wedding reception will be held with family and
+                friends.
+              </p>
+
+              <div class="definition">
+                <div class="title">When:</div>
+                <div class="body">
+                  <time datetime="2024-08-25 17:00-0900"
+                    >Sunday, 25<sup>th</sup> August 2024</time
+                  ><br />
+
+                  (<a href="https://www.addevent.com/event/JA21536848" target="_blank">add to calendar</a>)
+                </div>
+
+                <div class="title">Where:</div>
+                <div class="body">
+                  <a
+                    href="https://www.google.com/maps/dir/?api=1&destination=Casa%20Real%20at%20Ruby%20Hill&destination_place_id=ChIJqyp8hVXdj4ARCs7FaAeT_C8"
+                    target="_blank"
+                    >Casa Real at Ruby Hill,<br />
+                    California, USA</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="rsvp">
+          <!-- Répondez S'il Vous Plaît -->
+          <h1>RSVP</h1>
+
+          <p>
+            <b>Please RSVP by 23<sup>rd</sup> June 2024</b>.
+          </p>
+
+          <p>
+            To receive updates, please provide your email or text numbers. The
+            latest information will always be available on this site.
+          </p>
+
+          <template id="guest-row">
+            <div class="guest-row">
+              <!-- Left -->
+              <div class="div1">
+                <span class="row-label"></span>
+                <span class="remove-row"><a href="#">(remove)</a></span>
+              </div>
+
+              <!-- Right -->
+              <div class="div2">
+                <ul>
+                  <li>
+                    <label
+                      ><input
+                        type="radio"
+                        name="rsvp_attending_"
+                        value="yes"
+                        required
+                      />Attending</label
+                    >
+                    <ul class="hide-ceremony">
+                      <li>
+                        <label for="rsvp_ceremony_">
+                          <input type="checkbox" name="rsvp_ceremony_" />
+                          Ceremony
+                        </label>
+                      </li>
+                      <li>
+                        <label for="rsvp_reception_">
+                          <input type="checkbox" name="rsvp_reception_" />
+                          Reception
+                        </label>
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    <label
+                      ><input
+                        type="radio"
+                        name="rsvp_attending_"
+                        value="no"
+                        required
+                      />Not Attending</label
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Middle -->
+              <div class="div3">
+                <label for="rsvp_name_">Name:</label>
+              </div>
+              <div class="div4">
+                <input
+                  type="text"
+                  name="rsvp_name_"
+                  class="rsvp_name"
+                  value=""
+                  required
+                  autocomplete="name"
+                />
+              </div>
+
+              <div class="div5">
+                <td>
+                  <label for="rsvp_email_">Email:</label><br /><small
+                    >(optional)</small
+                  >
+                </td>
+              </div>
+              <div class="div6">
+                <input
+                  type="email"
+                  name="rsvp_email_"
+                  class="rsvp_email"
+                  value=""
+                  autocomplete="email"
+                />
+              </div>
+
+              <div class="div7">
+                <label for="rsvp_phone_">Phone:</label><br /><small
+                  >(optional)</small
+                >
+              </div>
+              <div class="div8">
+                <input
+                  type="tel"
+                  name="rsvp_phone_"
+                  class="rsvp_phone"
+                  value=""
+                  autocomplete="tel"
+                />
+              </div>
+
+              <!-- ruler -->
+              <div class="div9">
+                <hr />
+              </div>
+            </div>
+          </template>
+
+          <div class="fancy-border">
+            <form id="lookup" action="/#rsvp" method="get">
+              <p>
+                To look up your invitation, please enter the primary guest's
+                name:
+              </p>
+
+              <label for="rsvp_primary_guest">Name:</label>
+
+              <input
+                type="text"
+                id="rsvp_primary_guest"
+                name="primary_guest"
+                class="rsvp_name"
+                value=""
+                required
+                autocomplete="name"
+              />
+
+              <br /><br />
+
+              <input id="rsvp_lookup_submit" type="submit" />
+
+              <p>
+                Alternatively, please use the link in the original invite email.
+              </p>
+            </form>
+
+            <div id="status-box">
+              <div class="error hide">
+                <p class="error-message"></p>
+                <p>Contact Nina and Andrew if you are having issues.</p>
+              </div>
+
+              <div class="success hide">
+                <p class="success-message"></p>
+              </div>
+
+              <div class="loading hide">
+                <div class="lds-heart"><div></div></div>
+                <p>Loading</p>
+              </div>
+            </div>
+
+            <form id="rsvp-form" class="hide">
+              <div id="rsvp-input">
+                <!-- TODO Why do we have this ID seperate to the form above -->
+
+                <div id="rsvp-guests">
+                  <!-- All the guest rows go here -->
+                </div>
+
+                <div class="right-align">
+                  <button type="button" id="add-row-button">+ add guest</button>
+                </div>
+
+                <p>
+                  Anything else you want to say:<br />
+                  <textarea name="rsvp_comments" rows="4" cols="50"></textarea>
+                </p>
+              </div>
+
+              <!-- Move the status box here -->
+
+              <input id="rsvp_submit" type="submit" />
+            </form>
+          </div>
+        </section>
+
+        <!-- TODO Maybe drop this section -->
+        <section id="registry">
+          <h1>Registry</h1>
+          <p>Coming soon...</p>
+        </section>
+
+        <section id="faq">
+          <h1>FAQs</h1>
+          <ul>
+            <li>
+              <p><span class="emojii">🥻</span></p>
+              <b>What to wear? </b>
+              <p><i>Ceremony:</i> Festive Indian attire</p>
+
+              <p><i>Reception:</i> Festive Indian or Cocktail Attire</p>
+            </li>
+            <li>
+              <p><span class="emojii">🏨</span></p>
+              <b>Where can I stay? </b>
+
+              <p>We have no dedicated room blocks, or preferred hotels.</p>
+
+              <p>
+                The ceremony and reception take place within 10 miles of each
+                other, around the city of
+                <a href="https://maps.app.goo.gl/LUSkdLYHz2rT8G2J6">Livermore</a
+                >. There are numerous suitable hotels there. However, if you
+                wish to enjoy the sights, San Francisco is appropriately an hour
+                drive away, with Fremont or Hayward being mid-points.
+              </p>
+
+              <p>
+                If you’d rather stay in the peninsula, Andrew highly recommends
+                <a href="https://maps.app.goo.gl/u93DKb11soL6JwpeA"
+                  >Redwood City</a
+                >.
+              </p>
+            </li>
+
+            <li>
+              <p><span class="emojii">✈️</span></p>
+              <b>Where can I fly?</b>
+
+              <p>
+                <a href="https://www.flysfo.com/">San Francisco Airport (SFO)</a
+                >, <a href="https://www.flysanjose.com/">San Jose (SJC)</a>, and
+                <a href="https://www.oaklandairport.com/">Oakland (OAK)</a> are
+                all in the Bay Area and recommended airports to fly into.
+              </p>
+            </li>
+
+            <li>
+              <p><span class="emojii">📅</span></p>
+              <b>What's happening on Saturday?</b>
+
+              <p>
+                We will have family in town, but there are no organised events.
+              </p>
+            </li>
+
+            <li>
+              <p><span class="emojii">✉️</span></p>
+
+              <b>Have more questions?</b>
+              <p>
+                Contact us at
+                <a href="mailto:wedding@ninaandandrew.com"
+                  >wedding@ninaandandrew.com</a
+                >
+              </p>
+            </li>
+          </ul>
+        </section>
+
+        <div id="footer">
+          <p>Designed by <a href="mailto:wedding@NinaAndAndrew.com">Nina and Andrew</a></p>
+        </div>
+      </div>
+      <img
+        src="images/peacock-light.webp"
+        class="peacock1"
+        alt="A stylistic peacock"
+      />
+    </div>
+
+
+    <script src="/js/simple-scrollspy.min.js"></script>
+    <script>
+      window.onload = function () {
+        scrollSpy("#header", {
+          sectionClass: "section",
+          menuActiveTarget: "a",
+          offset: 160,
+
+          // smooth scroll
+          smoothScroll: false,
+          smoothScrollBehavior: function (element) {
+            console.log('run "smoothScrollBehavior"...', element);
+            element.scrollIntoView({ behavior: "smooth" }); // default behavior
+          },
+        });
+
+        // Trigger on load, incase we started half way down the page.
+        window.dispatchEvent(new CustomEvent("scroll"));
+      };
+    </script>
+  </body>
+</html>
