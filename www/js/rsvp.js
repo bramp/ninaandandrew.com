@@ -196,7 +196,8 @@ function add_row(guest) {
     row.querySelector('input[name^="rsvp_phone_"]').value = guest.phone ?? "";
 
     row.querySelector('input[name^="rsvp_ceremony_"]').checked = guest.ceremony;
-    row.querySelector('input[name^="rsvp_reception_"]').checked = guest.reception;
+    row.querySelector('input[name^="rsvp_reception_"]').checked =
+      guest.reception;
 
     // If either have been selected, then select the attending row.
     if (guest.ceremony === true || guest.reception == true) {
@@ -409,7 +410,7 @@ function to_json() {
   };
 }
 
-document.addEventListener( 'DOMContentLoaded', async function() {
+document.addEventListener("DOMContentLoaded", async function () {
   const urlParams = new URLSearchParams(window.location.search);
   const primary_guest = urlParams.get("primary_guest");
 
