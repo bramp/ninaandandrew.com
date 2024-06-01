@@ -1,8 +1,11 @@
 {
+  "type": "module",
   "devDependencies": {
+    "del": "^7.1.0",
     "glob": "^10.4.1",
     "gulp": "^5.0.0",
     "gulp-file-include": "^2.3.0",
+    "gulp-template": "^6.0.0",
     "prettier": "3.2.5",
     "stylelint": "^16.2.1",
     "stylelint-config-standard": "^36.0.0"
