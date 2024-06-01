@@ -49,6 +49,7 @@ http-server -p 8000 -c-1 www
 ```shell
 # Build the HTML
 gulp
+npx prettier www -w # TODO move into gulp
 
 # Create the screenshots
 http-server -p 8000 -c-1 www &
@@ -60,12 +61,13 @@ node ./create-invite-jpg.js
 
 ### Create engagement photo album
 
+# TODO Move below into gulp
 ```shell
-magick 'artwork/engagement/*.jpg' -resize 720x480  src/static/engagement/image_%02d.jpg
-magick 'artwork/engagement/*.jpg' -resize 1440x960  src/static/engagement/image_2x_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.jpg
 
-magick 'artwork/engagement/*.jpg' -resize 720x480  src/static/engagement/image_%02d.webp
-magick 'artwork/engagement/*.jpg' -resize 1440x960  src/static/engagement/image_2x_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.webp
 ```
 
 
@@ -89,6 +91,7 @@ vnu www/*.html
 
 # Compress everything files
 
+# TODO Move below into gulp
 ```shell
 for f in $(find www -type f -name \*.webp); do
   cwebp $f -o $f;
