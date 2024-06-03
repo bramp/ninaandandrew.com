@@ -40,8 +40,7 @@ alias google-chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chr
 ## Run a local web server
 
 ```shell
-gulp watch &
-http-server -p 8000 -c-1 www
+gulp watch
 ```
 
 ## Build everything
@@ -63,11 +62,11 @@ node ./create-invite-jpg.js
 
 # TODO Move below into gulp
 ```shell
-magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.jpg
-magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 720x480  src/www/engagement/image_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 1440x960  src/www/engagement/image_%02d_2x.jpg
 
-magick 'artwork/engagement/*.jpg' -resize 720x480  www/engagement/image_%02d.webp
-magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 720x480  src/www/engagement/image_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 1440x960  src/www/engagement/image_%02d_2x.webp
 ```
 
 
@@ -78,12 +77,14 @@ magick 'artwork/engagement/*.jpg' -resize 1440x960  www/engagement/image_2x_%02d
 npm init stylelint
 npm install --save-dev --save-exact prettier
 
-npx stylelint "src/static/css/*.css"
+npx stylelint "src/www/css/*.css"
 npx prettier src/static --check
 npx prettier src/static -w
 
 npx prettier --check --parser html src/invite/*.html.template
 npx prettier --w --parser html src/invite/*.html.template
+
+npx prettier src/www -w
 
 vnu www/*.html
 ```

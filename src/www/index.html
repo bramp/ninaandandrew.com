@@ -115,64 +115,39 @@
 
         <section id="gallery">
           <h1>Gallery</h1>
+
+          <p>Please enjoy photos from our engagement photo shoot at <a href="https://filoli.org/">Filoli gardens</a> in March 2024. Photos taken by <a href="https://www.dawidbilskiphotography.com/">Dawid Bilski Photography</a>.</p>
+
           <div class="splide" aria-label="Photo gallery">
             <div class="splide__track">
-              <ul class="splide__list">
-                <li class="splide__slide" style="width: 260px">
-                  <picture>
-                    <source
-                      src="engagement/image_00.webp"
-                      srcset="engagement/image_2x_00.webp 2x"
-                      type="image/webp"
-                    />
-                    <img
-                      src="engagement/image_00.jpg"
-                      srcset="engagement/image_2x_00.jpg 2x"
-                      type="image/jpeg"
-                    />
-                  </picture>
-                </li>
-
+              <ul class="splide__list"><% _.each(slides, function(slide, index) { %>
                 <li
                   class="splide__slide"
-                  style="width: 580px"
-                  data-splide-hash="engagement01"
+                  style="width: <%- slide.width %>px"
+                  <% if (index > 0) { %>
+                  data-splide-hash="<%- slide.base %>"
+                  <% } %>
                 >
                   <picture>
                     <source
-                      src="engagement/image_01.webp"
-                      srcset="engagement/image_2x_01.webp 2x"
+                      src="engagement/<%- slide.base %>.webp"
+                      srcset="engagement/<%- slide.base %>_2x.webp 2x"
                       type="image/webp"
                     />
                     <img
-                      src="engagement/image_01.jpg"
-                      srcset="engagement/image_2x_01.jpg 2x"
+                      src="engagement/<%- slide.base %>.jpg"
+                      srcset="engagement/<%- slide.base %>_2x.jpg 2x"
                       type="image/jpeg"
                     />
                   </picture>
-                </li>
-
-                <li
-                  class="splide__slide"
-                  style="width: 260px"
-                  data-splide-hash="engagement02"
-                >
-                  <picture>
-                    <source
-                      src="engagement/image_02.webp"
-                      srcset="engagement/image_2x_02.webp 2x"
-                      type="image/webp"
-                    />
-                    <img
-                      src="engagement/image_02.jpg"
-                      srcset="engagement/image_2x_02.jpg 2x"
-                      type="image/jpeg"
-                    />
-                  </picture>
-                </li>
+                </li><% }); %>
               </ul>
             </div>
           </div>
+
+          <p>
+            See more at <a href="https://photos.google.com/share/AF1QipNsUIDb0-RBhp0ZArx3YcVdK7s8m4BZl1ivZvX0PE-alOG8MAccYbYC6KReQWoN9Q">Google Photos</a>.
+          </p>
 
           <script src="/js/splide.min.js"></script>
           <script src="/js/splide-extension-url-hash.min.js"></script>
@@ -181,7 +156,6 @@
               var splide = new Splide(".splide", {
                 type: "loop",
                 padding: "5rem",
-                heightRatio: 2 / 3,
                 focus: "center",
                 trimSpace: false,
                 autoWidth: true,
@@ -509,12 +483,48 @@
         <!-- TODO Maybe drop this section -->
         <section id="registry">
           <h1>Registry</h1>
-          <p>Coming soon...</p>
+          <p>
+            Your presence is enough of a present to us! But for those of you who
+            are stubborn, we've put together a wish-list to help you out.
+          </p>
+
+          <ul>
+            <li>
+              <a href=https://withjoy.com/nina-andrew/registry/?pid=ffcd8f73-711b-4d4d-b26a-609d3ed51553>
+                <img src="https://withjoy.com/media/registry-items/597e361c-8560-57ca-8e3f-2b005e0a5ae6?rendition=small&product=true" width=200>
+                <br><b>🚀  Travel Fund</b>
+                <p class=description>Help us explore the world.</p>
+              </a>
+            </li>
+
+            <li>
+              <a href="https://withjoy.com/nina-andrew/registry/?pid=27ca8b45-9bc6-4679-81f4-3bf1b9ca8e8b">
+                <img src="https://withjoy.com/media/35ff4e0b-a104-5a74-b415-6234c8ebbdf2/fabcc650-1d41-11ef-928e-0ba040cd2432-claudio-carrozzo-QrEwqFHQ4Y0-unsplash.jpg?rendition=small&product=true" width=200>
+                <br><b>🏡 House Fund</b><br>
+                <p class=description>Help us have our dream home.</p>
+              </a>
+            </li>
+
+            <li>
+              <a href="https://withjoy.com/nina-andrew/registry/?pid=9cc0b38d-2a74-4bd4-b47a-090956f226ae">
+                <img src="https://withjoy.com/media/35ff4e0b-a104-5a74-b415-6234c8ebbdf2/580a1a30-1f70-11ef-b506-4b5206cc05f8-Unsplash_medias_emotiontech_HPEOsBTn8Ps.jpg?rendition=small&product=true" width=200>
+                <br><b>🏎️ Nerdy Projects</b><br>
+                <p class=description>Help us 3D print something we don't need.</p>
+              </a>
+            </li>
+          </ul>
+
+          <p>or any other gift you feel is appropriate.</p>
         </section>
 
         <section id="faq">
           <h1>FAQs</h1>
           <ul>
+            <li>
+              <p><span class="emojii">🎫</span></p>
+              <b>What events are there? </b>
+              <p>Friday morning will be a <i>private wedding ceremony</i> for close family only.</p><p>Sunday evening will be the <i>wedding reception</i>, where friends and family are all welcome.</p>
+            </li>
             <li>
               <p><span class="emojii">🥻</span></p>
               <b>What to wear? </b>

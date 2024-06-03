@@ -1,19 +1,21 @@
 {
   "type": "module",
   "devDependencies": {
+    "browser-sync": "^3.0.2",
     "del": "^7.1.0",
     "glob": "^10.4.1",
     "gulp": "^5.0.0",
     "gulp-file-include": "^2.3.0",
     "gulp-template": "^6.0.0",
+    "image-size": "^1.1.1",
     "prettier": "3.2.5",
+    "puppeteer": "^22.2.0",
     "stylelint": "^16.2.1",
     "stylelint-config-standard": "^36.0.0"
   },
   "dependencies": {
     "@splidejs/splide": "^4.1.4",
     "@splidejs/splide-extension-url-hash": "^0.3.0",
-    "puppeteer": "^22.2.0",
     "simple-scrollspy": "^2.4.2"
   }
 }

@@ -1,7 +1,14 @@
-import {src, dest, parallel, watch} from 'gulp';
-import template from 'gulp-template';
+"use strict";
+
+import browserSync from 'browser-sync';
 import fileinclude from 'gulp-file-include';
+import fs from 'fs';
+import sizeOf from 'image-size'
+import template from 'gulp-template';
 import {deleteAsync} from 'del';
+import {globSync} from 'glob';
+import {src, dest, parallel, series, watch} from 'gulp';
+
 
 const DEST = 'www';
 
@@ -24,11 +31,42 @@ export const invite = parallel(
     .pipe(dest(DEST + '/invite')),
 );
 
+function basename(filename) {
+  // Strip the ext
+  filename = filename.substr(0, filename.lastIndexOf('.') );
 
-export function engagement() {
-  return src('src/engagement/slide.template.html')
-    .pipe(template({name: 'Sindre'}))
-    .pipe(dest(DEST));
+  // Strip the 2x
+  if (filename.lastIndexOf('_2x') > 0) {
+    filename = filename.substr(0, filename.lastIndexOf('_2x') );
+  }
+
+  // Strip the path
+  return filename.split('/').reverse()[0];
+}
+
+// Returns a list of engagement photo slides.
+function slides() {
+  const files = {};
+
+  for (const slide of globSync('src/www/engagement/*.{jpg,webp}')) {
+    const d = sizeOf(slide);
+    const base = basename(slide);
+
+    if (base in files) {
+      files[base].width = Math.min(files[base].width, d.width);
+    } else {
+      files[base] = {
+        base: base,
+        width: d.width,
+      }
+    }
+  }
+
+  // Ensure each is unique
+  const slides = [...Object.values(files)];
+  slides.sort((a, b) => a.base.localeCompare(b.base)); 
+
+  return slides;
 }
 
 export function fonts(cb) {
@@ -75,7 +113,6 @@ export function images() {
     encoding: false,
   })
     //.pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
-    //.pipe(livereload(server))
     .pipe(dest(DEST));
 }
 
@@ -86,6 +123,9 @@ export function styles() {
 
 export function html() {
   return src('src/www/**/*.html')
+    .pipe(template({
+      slides: slides(),
+    }))
     .pipe(dest(DEST));
 }
 
@@ -108,18 +148,30 @@ export function deps(cb) {
   cb();
 }
 
-function watchFiles(cb) {
-  watch('node_modules', deps);
-  watch('src/www', www );
-  watch('src/invite', invite);
-  watch('src/engagement', engagement);
+const bs = browserSync.create();
 
-  cb();
-};
+const watchFiles = series(
+  parallel(deps, www, invite), 
+  function (cb) {
+    bs.init({
+        open: false,
+        server: {
+            baseDir: "www"
+        }
+    });
+
+    watch('node_modules', deps).on("change", bs.reload);
+    watch('src/www', www).on("change", bs.reload);
+    watch('src/invite', invite).on("change", bs.reload);
+
+    cb();
+  },
+);
+
 export { watchFiles as watch };
 
 export const clean = () => deleteAsync([ DEST ]);
 
-export default parallel(deps, www, invite, engagement);
+export default parallel(deps, www, invite);
 
 
