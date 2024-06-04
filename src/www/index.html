@@ -123,7 +123,7 @@
               <ul class="splide__list"><% _.each(slides, function(slide, index) { %>
                 <li
                   class="splide__slide"
-                  style="width: <%- slide.width %>px"
+                  style="width: <%- slide.width %>px;"
                   <% if (index > 0) { %>
                   data-splide-hash="<%- slide.base %>"
                   <% } %>
@@ -160,6 +160,7 @@
                 trimSpace: false,
                 autoWidth: true,
                 gap: "0.5em",
+                width: "90vw",
               });
 
               splide.mount(window.splide.Extensions);
