@@ -14,7 +14,7 @@ const DEST = 'www';
 
 /// Make the invite htmls
 export const invite = parallel(
-  // 1. Compile the invite htmls
+  // 1. Compile the fallback invite htmls
   () => src('src/invite/invite*.html')
     .pipe(fileinclude({
       prefix: '@@',
@@ -24,6 +24,14 @@ export const invite = parallel(
 
   // 2. Compile the invite email htmls
   () => src('src/invite/email*.html')
+    .pipe(fileinclude({
+      prefix: '@@',
+      basepath: '@file'
+    }))
+    .pipe(dest(DEST + '/invite')),
+
+  // 3. Compile the reminder email htmls
+  () => src('src/invite/reminder*.html')
     .pipe(fileinclude({
       prefix: '@@',
       basepath: '@file'
