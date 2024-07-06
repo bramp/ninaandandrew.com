@@ -34,7 +34,7 @@ const WHICH_EMAIL_COL = "Which Invite?";
 const WHICH_EMAIL_WEDDING_COL = "Wedding?";
 const WHICH_EMAIL_RECEPTION_COL = "Reception?";
 
-const dryRun = false;
+const limit = 10; // Stop after sending limit mails
 
 const headerRows = 2;
 
@@ -46,14 +46,19 @@ function onOpen() {
   const ui = SpreadsheetApp.getUi();
   ui.createMenu('Mail Merge')
       .addItem('Send Invite Emails', 'sendEmails')
+      .addItem('Send Invite Emails (Dry Run)', 'sendEmailsDryRun')
       .addToUi();
+}
+
+function sendEmailsDryRun(sheet=SpreadsheetApp.getActiveSheet()) {
+  return sendEmails(sheet, true);
 }
 
 /**
  * Sends emails from sheet data.
  * @param {Sheet} sheet to read data from
 */
-function sendEmails(sheet=SpreadsheetApp.getActiveSheet()) {
+function sendEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
   const emailTemplates = {
     // Type - Wedding - Receptioon
     'amma-true-true': getGmailTemplateFromDrafts_('email-amma-both.html'),
@@ -89,6 +94,10 @@ function sendEmails(sheet=SpreadsheetApp.getActiveSheet()) {
   // Loops through all the rows of data
   // Each iteration must push to `out`.
   obj.forEach(function(row, rowIdx){
+    if (count >= limit) {
+      return;
+    }
+
     // Only sends emails if email_sent cell is blank and not hidden by a filter
     if (row[EMAIL_SENT_COL] != '') {
       out.push([row[EMAIL_SENT_COL]]);
@@ -151,9 +160,11 @@ function sendEmails(sheet=SpreadsheetApp.getActiveSheet()) {
   }
 
   // Updates the sheet with new data
-  sheet.getRange(headerRows + 1, emailSentColIdx+1, out.length).setValues(out);
+  if (!dryRun) {
+    sheet.getRange(headerRows + 1, emailSentColIdx+1, out.length).setValues(out);
+  }
 
-  SpreadsheetApp.getUi().alert("Scanned " + out.length + " rows, and Sent " + count + " emails");
+  SpreadsheetApp.getUi().alert((dryRun ? 'DRY-RUN:' : '') + "Scanned " + out.length + " rows, and Sent " + count + " emails");
   
   function getGmailTemplateForRow(row) {
     const key = (row[WHICH_EMAIL_COL] + '-' + row[WHICH_EMAIL_WEDDING_COL] + '-' + row[WHICH_EMAIL_RECEPTION_COL]).toLowerCase();
