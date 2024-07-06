@@ -150,7 +150,7 @@
           </p>
 
           <script src="/js/splide.min.js"></script>
-          <script src="/js/splide-extension-url-hash.min.js"></script>
+          <!--script src="/js/splide-extension-url-hash.min.js"></script-->
           <script type="text/javascript">
             document.addEventListener("DOMContentLoaded", function () {
               var splide = new Splide(".splide", {
@@ -163,7 +163,8 @@
                 width: "90vw",
               });
 
-              splide.mount(window.splide.Extensions);
+              // Disabled the window.splide.Extensions because https://github.com/Splidejs/splide-extension-url-hash/issues/15
+              splide.mount(/*window.splide.Extensions*/);
             });
           </script>
         </section>
