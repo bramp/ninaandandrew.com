@@ -62,13 +62,12 @@ node ./create-invite-jpg.js
 
 # TODO Move below into gulp
 ```shell
-magick 'artwork/engagement/*.jpg' -resize 720x480  src/www/engagement/image_%02d.jpg
-magick 'artwork/engagement/*.jpg' -resize 1440x960  src/www/engagement/image_%02d_2x.jpg
+magick 'artwork/engagement/*.jpg' -resize 720x480  src/www/engagement/engagement_%02d.jpg
+magick 'artwork/engagement/*.jpg' -resize 1440x960  src/www/engagement/engagement_%02d_2x.jpg
 
-magick 'artwork/engagement/*.jpg' -resize 720x480  src/www/engagement/image_%02d.webp
-magick 'artwork/engagement/*.jpg' -resize 1440x960  src/www/engagement/image_%02d_2x.webp
+magick 'artwork/engagement/*.jpg' -resize 720x480  src/www/engagement/engagement_%02d.webp
+magick 'artwork/engagement/*.jpg' -resize 1440x960  src/www/engagement/engagement_%02d_2x.webp
 ```
-
 
 
 # Lint
@@ -94,15 +93,15 @@ vnu www/*.html
 
 # TODO Move below into gulp
 ```shell
-for f in $(find www -type f -name \*.webp); do
+for f in $(find src/www -type f -name \*.webp); do
   cwebp $f -o $f;
 done
 
-for f in $(find www -type f -name \*.jpg); do
-  jpegtran -outfile $f $f;
+for f in $(find src/www -type f -name \*.jpg); do
+  jpegtran -verbose -outfile $f $f;
 done
 
-for f in $(find www -type f -name \*.png); do
+for f in $(find src/www -type f -name \*.png); do
   oxipng -o max --strip safe $f;
 done
 
