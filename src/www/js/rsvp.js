@@ -430,6 +430,10 @@ document.addEventListener("DOMContentLoaded", async function () {
   try {
     rsvp = await get_data(primary_guest);
     render_rsvp(rsvp);
+
+    // The page may now jump around, so ensure we go back to our anchor
+    // document.getElementById(h).scrollIntoView();
+
   } finally {
     document.querySelector("#rsvp .loading").classList.add("hide");
   }
