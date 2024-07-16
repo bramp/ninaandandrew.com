@@ -14,6 +14,7 @@ function timeout(ms) {
         'http://localhost:8000/invite.html',
         'http://localhost:8000/invite-amma.html',
         'http://localhost:8000/invite-appa.html',
+        'http://localhost:8000/invite-wedding.html',
     ]) {
         const page = await browser.newPage();
         

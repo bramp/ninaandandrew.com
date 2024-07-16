@@ -52,7 +52,7 @@ npx prettier www -w # TODO move into gulp
 
 # Create the screenshots
 http-server -p 8000 -c-1 www &
-node ./create-invite-jpg.js
+node ./create-invite-jpg.cjs
 
 # You then need to manually slice the screenshots for the emails.
 
