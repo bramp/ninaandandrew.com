@@ -22,22 +22,31 @@ limitations under the License.
  * @OnlyCurrentDoc
 */
 
-function sendInviteEmailsDryRun(sheet=SpreadsheetApp.getActiveSheet()) {
-  return sendInviteEmails(sheet, true);
+function sendReminderEmailsDryRun(sheet=SpreadsheetApp.getActiveSheet()) {
+  return sendReminderEmails(sheet, true);
 }
 
 /**
  * Sends emails from sheet data.
  * @param {Sheet} sheet to read data from
 */
-function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
+function sendReminderEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
   const emailTemplates = {
-    // Type - Wedding - Receptioon
-    'amma-true-true': getGmailTemplateFromDrafts_('email-amma-both.html', "You are invited!"),
-    'appa-true-true': getGmailTemplateFromDrafts_('email-appa-both.html', "You are invited!"),
-    'friends-true-true': getGmailTemplateFromDrafts_('email-friends-both.html', "You are invited!"),
-    'friends-false-true': getGmailTemplateFromDrafts_('email-friends-reception.html', "You are invited!"),
-  }  
+    // Type - Wedding - Receptioon - RSVP'd
+
+    // No RSVP yet
+    'amma-true-true-': getGmailTemplateFromDrafts_('reminder-email-amma-both-no.html', "Nina and Andrew's wedding - Please RSVP"),
+    'appa-true-true-': getGmailTemplateFromDrafts_('reminder-email-appa-both-no.html', "Nina and Andrew's wedding - Please RSVP"),
+    'friends-true-true-': getGmailTemplateFromDrafts_('reminder-email-friends-both-no.html', "Nina and Andrew's wedding - Please RSVP"),
+    'friends-false-true-': getGmailTemplateFromDrafts_('reminder-email-friends-reception-no.html', "Nina and Andrew's wedding - Please RSVP"),
+
+    // Positive RSVP
+    'amma-true-true-true': getGmailTemplateFromDrafts_('reminder-email-amma-both-yes.html', "Nina and Andrew's wedding"),
+    'appa-true-true-true': getGmailTemplateFromDrafts_('reminder-email-appa-both-yes.html', "Nina and Andrew's wedding"),
+    'friends-true-true-true': getGmailTemplateFromDrafts_('reminder-email-friends-both-yes.html', "Nina and Andrew's wedding"),
+    'friends-false-true-true': getGmailTemplateFromDrafts_('reminder-email-friends-reception-yes.html', "Nina and Andrew's wedding"),
+  }
+
   // Gets the data from the passed sheet
   const dataRange = sheet.getRange("Sheet1!A2:BZ300"); // sheet.getDataRange();
 
@@ -51,7 +60,7 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
   
   // Gets the index of the column named 'Email Status' (Assumes header names are unique)
   // @see http://ramblings.mcpher.com/Home/excelquirks/gooscript/arrayfunctions
-  const inviteSentColIdx = heads.indexOf(INVITE_SENT_COL);
+  const emailSentColIdx = heads.indexOf(REMINDER_SENT_COL);
   
   // Converts 2d array into an object array
   // See https://stackoverflow.com/a/22917499/1027723
@@ -71,22 +80,29 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
     }
 
     // Only sends emails if email_sent cell is blank and not hidden by a filter
-    if (row[INVITE_SENT_COL] != '') {
-      out.push([row[INVITE_SENT_COL]]);
+    if (row[REMINDER_SENT_COL] != '') {
+      out.push([row[REMINDER_SENT_COL]]);
       return;
     }
 
     // Skip missing emails (or invalid looking emails)
     if (row[PRIMARY_GUEST_EMAIL_COL] == '' || row[PRIMARY_GUEST_EMAIL_COL].indexOf('@') == -1) {
-      out.push([row[INVITE_SENT_COL]]);
+      out.push([row[REMINDER_SENT_COL]]);
       return;
     }
 
     // Skip if the external name is missing
     if (row[EXTERNAL_NAMES_COL] == '') {
-      out.push([row[INVITE_SENT_COL]]);
+      out.push([row[REMINDER_SENT_COL]]);
       return;
     }
+
+    // Skip if the they responded no
+    if (row[RSVPD_COL] == 'FALSE') {
+      out.push([row[REMINDER_SENT_COL]]);
+      return;
+    }
+
 
     try {
       // Lookup which email they should get
@@ -94,23 +110,37 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
 
       const msgObj = fillInTemplateFromObject_(emailTemplate.message, row);
 
+      const cc = [
+        row[GUEST2_EMAIL_COL],
+        row[GUEST3_EMAIL_COL],
+        row[GUEST4_EMAIL_COL],
+        row[GUEST5_EMAIL_COL],
+        row[GUEST6_EMAIL_COL],
+        row[GUEST7_EMAIL_COL],
+        row[GUEST8_EMAIL_COL],
+        row[GUEST9_EMAIL_COL],
+        row[GUEST10_EMAIL_COL],
+      ].filter(isEmail).join(",");
+
       // See https://developers.google.com/apps-script/reference/gmail/gmail-app#sendEmail(String,String,String,Object)
       // See https://developers.google.com/apps-script/reference/mail
       // If you need to send emails with unicode/emoji characters change GmailApp for MailApp
       // Uncomment advanced parameters as needed (see docs for limitations)
-      // if (!dryRun) {
-      //   GmailApp.sendEmail(row[PRIMARY_GUEST_EMAIL_COL], msgObj.subject, msgObj.text, {
-      //     htmlBody: msgObj.html,
-      //     // bcc: 'a.bcc@email.com',
-      //     // cc: 'a.cc@email.com',
-      //     from: 'wedding@ninaandandrew.com',
-      //     name: 'Nina & Andrew',
-      //     // replyTo: 'a.reply@email.com',
-      //     // noReply: true, // if the email should be sent from a generic no-reply email address (not available to gmail.com users)
-      //     attachments: emailTemplate.attachments,
-      //     inlineImages: emailTemplate.inlineImages
-      //   });
-      // }
+      if (!dryRun) {
+        GmailApp.sendEmail(row[PRIMARY_GUEST_EMAIL_COL], msgObj.subject, msgObj.text, {
+          htmlBody: msgObj.html,
+          // bcc: 'a.bcc@email.com',
+          // a comma-separated list of email addresses to CC
+          // cc: 'a.cc@email.com',
+          cc: cc,
+          from: 'wedding@ninaandandrew.com',
+          name: 'Nina & Andrew',
+          // replyTo: 'a.reply@email.com',
+          // noReply: true, // if the email should be sent from a generic no-reply email address (not available to gmail.com users)
+          attachments: emailTemplate.attachments,
+          inlineImages: emailTemplate.inlineImages
+        });
+      }
 
       // Edits cell to record email sent date
       count++;
@@ -128,13 +158,13 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
 
   // Updates the sheet with new data
   if (!dryRun) {
-    sheet.getRange(headerRows + 1, inviteSentColIdx+1, out.length).setValues(out);
+    sheet.getRange(headerRows + 1, emailSentColIdx+1, out.length).setValues(out);
   }
 
   SpreadsheetApp.getUi().alert((dryRun ? 'DRY-RUN:' : '') + "Scanned " + out.length + " rows, and Sent " + count + " emails");
   
   function getGmailTemplateForRow(row) {
-    const key = (row[WHICH_EMAIL_COL] + '-' + row[WHICH_EMAIL_WEDDING_COL] + '-' + row[WHICH_EMAIL_RECEPTION_COL]).toLowerCase();
+    const key = (row[WHICH_EMAIL_COL] + '-' + row[WHICH_EMAIL_WEDDING_COL] + '-' + row[WHICH_EMAIL_RECEPTION_COL] + '-' + row[RSVPD_COL]).toLowerCase();
 
     if (key in emailTemplates) {
       return emailTemplates[key]
@@ -143,68 +173,6 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
     throw new Error('Unknown email template "' + key + '"');
   }
 
-  /**
-   * Get a Gmail draft message by matching the subject line.
-   * @param {string} subject_line to search for draft message
-   * @return {object} containing the subject, plain and html message body and attachments
-  */
-  function getGmailTemplateFromDrafts_(subject_line) {
-    try {
-      // get drafts
-      const drafts = GmailApp.getDrafts();
-      // filter the drafts that match subject line
-      const draft = drafts.filter(subjectFilter_(subject_line))[0];
-      // get the message object
-      const msg = draft.getMessage();
-
-      // Handles inline images and attachments so they can be included in the merge
-      // Based on https://stackoverflow.com/a/65813881/1027723
-      // Gets all attachments and inline image attachments
-      const allInlineImages = draft.getMessage().getAttachments({includeInlineImages: true,includeAttachments:false});
-      const attachments = draft.getMessage().getAttachments({includeInlineImages: false});
-      const htmlBody = msg.getBody(); 
-
-      // Creates an inline image object with the image name as key 
-      // (can't rely on image index as array based on insert order)
-      const img_obj = allInlineImages.reduce((obj, i) => (obj[i.getName()] = i, obj) ,{});
-
-      //Regexp searches for all img string positions with cid
-      const imgexp = RegExp('<img.*?src="cid:(.*?)".*?alt="(.*?)"[^\>]+>', 'g');
-      const matches = [...htmlBody.matchAll(imgexp)];
-
-      //Initiates the allInlineImages object
-      const inlineImagesObj = {};
-      // built an inlineImagesObj from inline image matches
-      matches.forEach(match => inlineImagesObj[match[1]] = img_obj[match[2]]);
-
-      return {
-        message: {
-          // TODO Read the subject from somewhere else
-          subject: "You are invited!",
-          text: msg.getPlainBody(),
-          html:htmlBody
-        }, 
-        attachments: attachments,
-        inlineImages: inlineImagesObj,
-      };
-    } catch(e) {
-      throw new Error("Oops - can't find Gmail draft: " + subject_line);
-    }
-
-    /**
-     * Filter draft objects with the matching subject linemessage by matching the subject line.
-     * @param {string} subject_line to search for draft message
-     * @return {object} GmailDraft object
-    */
-    function subjectFilter_(subject_line){
-      return function(element) {
-        if (element.getMessage().getSubject() === subject_line) {
-          return element;
-        }
-      }
-    }
-  }
-  
   /**
    * Fill template string with data object
    * @see https://stackoverflow.com/a/378000/1027723
