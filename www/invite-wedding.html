@@ -38,7 +38,7 @@
   <body>
     <div
       id="invite-wrapper"
-      @@if (reception === false || ceremony === false) { class="reception-only" }
+       class="reception-only" 
     >
       <div id="invite" class="gold gold-text">
         <div class="left">
@@ -60,23 +60,23 @@
           <div class="pillayar-suli"></div>
           <div class="tiny">Sri Ramajayam</div>
           <div style="height: 0.5em"></div>
-          <div class="medium">@@amma & @@appa</div>
+          <div class="medium">Vimala & Partha</div>
           <div class="normal">
             cordially invite you to the wedding of their daughter
           </div>
         </div>
 
         <div class="middle">
-          <div class="larger fancy">@@nina</div>
+          <div class="larger fancy">Nina Partha</div>
           <div class="normal">with</div>
-          <div class="larger fancy">@@andrew</div>
+          <div class="larger fancy">Andrew Brampton</div>
         </div>
 
         <div class="bottom">
-          <div class="normal">son of @@barbara & @@michael</div>
+          <div class="normal">son of Barbara & Michael</div>
           <br />
 
-          @@if (ceremony) {
+          
           <div class="ceremony">
             <div class="normal">Ceremony on</div>
             <div class="medium">Friday, 23<sup>rd</sup> August 2024</div>
@@ -92,21 +92,9 @@
 
             <br />
           </div>
-          }
+          
 
-          @@if (reception) {
-          <div class="normal">Reception on</div>
-          <div class="medium">Sunday, 25<sup>th</sup> August 2024</div>
-          <div class="small">at</div>
-          <div class="medium">
-            <a
-              href="https://www.google.com/maps/dir/?api=1&destination=Casa%20Real%20at%20Ruby%20Hill&destination_place_id=ChIJqyp8hVXdj4ARCs7FaAeT_C8"
-              target="_blank"
-              >Casa Real at Ruby Hill</a
-            >
-          </div>
-          <div class="normal">Pleasanton, CA, USA</div>
-          }
+          
         </div>
         <div class="footer">
           <button type="button" class="btn hide">RSVP</button>
