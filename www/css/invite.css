@@ -164,11 +164,6 @@ body {
   white-space: normal;
 }
 
-.reception-only .ceremony {
-  display: none;
-  visibility: hidden;
-}
-
 .reception-only .left {
   padding-top: 150px;
 }
