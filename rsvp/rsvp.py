@@ -13,7 +13,7 @@ QUOTA_PROJECT_ID = os.environ.get("QUOTA_PROJECT_ID", "ninaandandrew-com")
 # SPREADSHEET_ID = "1FuYiyuTqO6AS461sbtw_dre7TWPIkflfPqKAxsQNuuc" # Real sheet
 SPREADSHEET_ID = os.environ.get("SPREADSHEET_ID")
 
-SHEET = "Sheet1"
+SHEET = "Main"
 START_ROW = 2
 SHEET_RANGE_NAME = os.environ.get("SHEET_RANGE_NAME", f"{SHEET}!A{START_ROW}:BP")
 
