@@ -37,6 +37,14 @@ export const invite = parallel(
       basepath: '@file'
     }))
     .pipe(dest(DEST + '/invite')),
+
+  // 4. Compile the reminder email htmls
+  () => src('src/invite/final-reminder*.html')
+    .pipe(fileinclude({
+      prefix: '@@',
+      basepath: '@file'
+    }))
+    .pipe(dest(DEST + '/invite')),
 );
 
 function basename(filename) {
