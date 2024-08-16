@@ -101,8 +101,10 @@ export function other(cb) {
   ])
     .pipe(dest(DEST));
 
+  // Binary files go here
   src([
     'src/www/favicon.ico',
+    'src/www/wedding-brochure.pdf',
   ], {encoding: false})
     .pipe(dest(DEST));
 
