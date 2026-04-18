@@ -1,0 +1,43 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          npm ci
+          cd rsvp
+          python -m venv .venv
+          source .venv/bin/activate
+          pip install -r requirements.txt
+          pip install black flake8
+
+      - name: Analyze
+        run: |
+          make analyze
+
+      - name: Run tests
+        run: |
+          make test

@@ -1,0 +1,47 @@
+name: Deploy Cloud Function
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    environment: production
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.ref == 'refs/heads/main' &&
+       secrets.WIF_PROVIDER_NAME != '' &&
+       secrets.GCP_SERVICE_ACCOUNT != '' &&
+       secrets.GCP_PROJECT_ID != '' &&
+       secrets.SPREADSHEET_ID != '')
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: auth
+        name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.WIF_PROVIDER_NAME }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+      - name: Deploy Cloud Function
+        uses: google-github-actions/deploy-cloud-functions@v3
+        with:
+          name: rsvp-func
+          runtime: python312
+          region: us-central1
+          source_dir: rsvp/
+          entry_point: rsvp_http
+          generation: 2
+          env_vars: SPREADSHEET_ID=${{ secrets.SPREADSHEET_ID }}
