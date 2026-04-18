@@ -1,5 +1,3 @@
-
-
 # Testing locally
 
 ```shell

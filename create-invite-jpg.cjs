@@ -1,56 +1,56 @@
-const puppeteer = require('puppeteer');
+const puppeteer = require("puppeteer");
 
 const url = require("url");
 const path = require("path");
 
 function timeout(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-};
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-(async() => {
-    const browser = await puppeteer.launch();
+(async () => {
+  const browser = await puppeteer.launch();
 
-    for (currentUrl of [
-        'http://localhost:8000/invite.html',
-        'http://localhost:8000/invite-amma.html',
-        'http://localhost:8000/invite-appa.html',
-        'http://localhost:8000/invite-wedding.html',
-    ]) {
-        const page = await browser.newPage();
-        
-        await page.emulateMediaType('print');
-        await page.goto(currentUrl);
-        await page.waitForSelector('img');
+  for (currentUrl of [
+    "http://localhost:8000/invite.html",
+    "http://localhost:8000/invite-amma.html",
+    "http://localhost:8000/invite-appa.html",
+    "http://localhost:8000/invite-wedding.html",
+  ]) {
+    const page = await browser.newPage();
 
-        const filename = path.basename(url.parse(currentUrl).pathname, '.html');
+    await page.emulateMediaType("print");
+    await page.goto(currentUrl);
+    await page.waitForSelector("img");
 
-        for (width of [400, 720]) {
-            await page.setViewport({
-                width: width,
-                height: width,
-                deviceScaleFactor: 2,
-            })
+    const filename = path.basename(url.parse(currentUrl).pathname, ".html");
 
-            await page.screenshot({
-                path: 'www/invite/' + filename + '-' + width + '.jpg',
-                fullPage: true,
-                type: 'jpeg',
-                quality: 95,
-            });
+    for (width of [400, 720]) {
+      await page.setViewport({
+        width: width,
+        height: width,
+        deviceScaleFactor: 2,
+      });
 
-            await page.screenshot({
-                path: 'www/invite/' + filename + '-' + width + '.webp',
-                fullPage: true,
-                type: 'webp',
-            });
+      await page.screenshot({
+        path: "www/invite/" + filename + "-" + width + ".jpg",
+        fullPage: true,
+        type: "jpeg",
+        quality: 95,
+      });
 
-            await page.screenshot({
-                path: 'www/invite/' + filename + '-' + width + '.png',
-                fullPage: true,
-                type: 'png',
-            });
-        }
+      await page.screenshot({
+        path: "www/invite/" + filename + "-" + width + ".webp",
+        fullPage: true,
+        type: "webp",
+      });
+
+      await page.screenshot({
+        path: "www/invite/" + filename + "-" + width + ".png",
+        fullPage: true,
+        type: "png",
+      });
     }
+  }
 
-    await browser.close();
+  await browser.close();
 })();
