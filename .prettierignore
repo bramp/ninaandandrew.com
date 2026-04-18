@@ -1,0 +1,16 @@
+# Standard ignore directories
+node_modules
+www
+dist
+coverage
+.venv
+
+# Bundled skill files (binary)
+*.skill
+
+# Ignored because Prettier breaks the @@include syntax used by gulp-file-include.
+# We should look into a prettier plugin or custom parser to support this.
+src/invite/*.html
+
+# Ignored because Prettier doesn't natively support Google Apps Script (.gs) syntax well.
+src/invite/scripts/*.gs

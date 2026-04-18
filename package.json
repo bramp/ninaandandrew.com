@@ -1,5 +1,12 @@
 {
   "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "lint": "stylelint \"src/www/css/*.css\" && prettier --check .",
+    "build": "gulp",
+    "test": "echo \"No frontend tests yet\"",
+    "clean": "gulp clean"
+  },
   "devDependencies": {
     "browser-sync": "^3.0.2",
     "del": "^7.1.0",
