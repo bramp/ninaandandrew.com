@@ -11,7 +11,7 @@ import os
 # Must be before rsvp (which feels a hacky)
 os.environ["SPREADSHEET_ID"] = "123"
 
-import rsvp
+import rsvp  # noqa: E402
 
 # Intentionally break the _service method so that we don't actually hit the Google Sheets API
 rsvp._service = MagicMock(side_effect=NotImplementedError)
@@ -429,7 +429,7 @@ class TestUpdate(unittest.TestCase):
             self.assertEqual(req[1], "PUT")
             self.assertEqual(
                 req[0],
-                "https://sheets.googleapis.com/v4/spreadsheets/123/values/Sheet1%21K4%3ABL4?valueInputOption=USER_ENTERED&alt=json",
+                "https://sheets.googleapis.com/v4/spreadsheets/123/values/Main%21K4%3ABL4?valueInputOption=USER_ENTERED&alt=json",
             )
             self.assertEqual(
                 json.loads(req[2]),
@@ -546,7 +546,7 @@ class TestUpdate(unittest.TestCase):
             self.assertEqual(req[1], "PUT")
             self.assertEqual(
                 req[0],
-                "https://sheets.googleapis.com/v4/spreadsheets/123/values/Sheet1%21K5%3ABL5?valueInputOption=USER_ENTERED&alt=json",
+                "https://sheets.googleapis.com/v4/spreadsheets/123/values/Main%21K5%3ABL5?valueInputOption=USER_ENTERED&alt=json",
             )
             self.assertEqual(
                 json.loads(req[2]),
