@@ -1,7 +1,7 @@
 {
   "type": "module",
   "devDependencies": {
-    "browser-sync": "^3.0.2",
+    "browser-sync": "^3.0.4",
     "del": "^7.1.0",
     "glob": "^10.4.1",
     "gulp": "^5.0.0",
