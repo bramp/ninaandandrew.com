@@ -43,7 +43,7 @@ analyze: check-npm check-python check-venv
 
 test: check-npm check-python check-venv
 	npm test
-	cd rsvp && source .venv/bin/activate && python3 rsvp_test.py
+	cd rsvp && .venv/bin/python3 rsvp_test.py
 
 build: check-npm
 	npm run build
@@ -55,7 +55,7 @@ fix: check-npm check-python check-venv
 
 upgrade: check-npm check-python check-venv
 	npm update
-	cd rsvp && source .venv/bin/activate && pip install --upgrade -r requirements.txt
+	cd rsvp && .venv/bin/pip install --upgrade -r requirements.txt
 
 images-engagement: check-magick
 	magick 'artwork/engagement/*.jpg' -resize 720x480  src/www/engagement/engagement_%02d.jpg
