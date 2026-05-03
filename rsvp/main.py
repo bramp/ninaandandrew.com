@@ -59,6 +59,8 @@ def rsvp_http(request):
 
             return ("", 204, headers)
 
+        return ({"error": "RSVPs are now closed. Thank you!"}, 410, headers)
+
         if request.method == "GET":
             # If they haven't provided the correct info, redirect them to the
             # main page
