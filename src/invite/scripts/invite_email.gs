@@ -17,7 +17,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
- 
+
 /**
  * @OnlyCurrentDoc
 */
@@ -37,22 +37,22 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
     'appa-true-true': getGmailTemplateFromDrafts_('email-appa-both.html', "You are invited!"),
     'friends-true-true': getGmailTemplateFromDrafts_('email-friends-both.html', "You are invited!"),
     'friends-false-true': getGmailTemplateFromDrafts_('email-friends-reception.html', "You are invited!"),
-  }  
+  }
   // Gets the data from the passed sheet
   const dataRange = sheet.getRange("Sheet1!A2:BZ300"); // sheet.getDataRange();
 
-  // Fetches displayed values for each row in the Range HT Andrew Roberts 
+  // Fetches displayed values for each row in the Range HT Andrew Roberts
   // https://mashe.hawksey.info/2020/04/a-bulk-email-mail-merge-with-gmail-and-google-sheets-solution-evolution-using-v8/#comment-187490
   // @see https://developers.google.com/apps-script/reference/spreadsheet/range#getdisplayvalues
   const data = dataRange.getDisplayValues();
 
   // Assumes row 1 contains our column headings
-  const heads = data.shift(); 
-  
+  const heads = data.shift();
+
   // Gets the index of the column named 'Email Status' (Assumes header names are unique)
   // @see http://ramblings.mcpher.com/Home/excelquirks/gooscript/arrayfunctions
   const inviteSentColIdx = heads.indexOf(INVITE_SENT_COL);
-  
+
   // Converts 2d array into an object array
   // See https://stackoverflow.com/a/22917499/1027723
   // For a pretty version, see https://mashe.hawksey.info/?p=17869/#comment-184945
@@ -121,7 +121,7 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
     }
 
   });
-  
+
   if (out.length == 0) {
     throw new Error('Found no rows');
   }
@@ -132,7 +132,7 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
   }
 
   SpreadsheetApp.getUi().alert((dryRun ? 'DRY-RUN:' : '') + "Scanned " + out.length + " rows, and Sent " + count + " emails");
-  
+
   function getGmailTemplateForRow(row) {
     const key = (row[WHICH_EMAIL_COL] + '-' + row[WHICH_EMAIL_WEDDING_COL] + '-' + row[WHICH_EMAIL_RECEPTION_COL]).toLowerCase();
 
@@ -162,9 +162,9 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
       // Gets all attachments and inline image attachments
       const allInlineImages = draft.getMessage().getAttachments({includeInlineImages: true,includeAttachments:false});
       const attachments = draft.getMessage().getAttachments({includeInlineImages: false});
-      const htmlBody = msg.getBody(); 
+      const htmlBody = msg.getBody();
 
-      // Creates an inline image object with the image name as key 
+      // Creates an inline image object with the image name as key
       // (can't rely on image index as array based on insert order)
       const img_obj = allInlineImages.reduce((obj, i) => (obj[i.getName()] = i, obj) ,{});
 
@@ -183,7 +183,7 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
           subject: "You are invited!",
           text: msg.getPlainBody(),
           html:htmlBody
-        }, 
+        },
         attachments: attachments,
         inlineImages: inlineImagesObj,
       };
@@ -204,7 +204,7 @@ function sendInviteEmails(sheet=SpreadsheetApp.getActiveSheet(), dryRun=false) {
       }
     }
   }
-  
+
   /**
    * Fill template string with data object
    * @see https://stackoverflow.com/a/378000/1027723

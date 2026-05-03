@@ -17,9 +17,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 */
- 
+
 /**
- * Change these to match the column names you are using for email 
+ * Change these to match the column names you are using for email
  * recipient addresses and email sent column.
 */
 const PRIMARY_GUEST_EMAIL_COL  = "Primary Guest Email";
@@ -38,7 +38,7 @@ const GUEST10_EMAIL_COL  = "Guest10 Email";
 const INVITE_SENT_COL = "Invite Sent?\n(by email)";
 const REMINDER_SENT_COL = "Reminder Sent?";
 
-// Have they RSVPd 
+// Have they RSVPd
 // True - At least one person in party said yes.
 // False - All members of party said no
 // Blank - No response
@@ -53,7 +53,7 @@ const limit = 1; // Stop after sending limit mails
 const headerRows = 2;
 
 
-/** 
+/**
  * Creates the menu item "Mail Merge" for user to run scripts on drop-down.
  */
 function onOpen() {
@@ -94,9 +94,9 @@ function getGmailTemplateFromDrafts_(subject_line, new_subject_line) {
     // Gets all attachments and inline image attachments
     const allInlineImages = draft.getMessage().getAttachments({includeInlineImages: true,includeAttachments:false});
     const attachments = draft.getMessage().getAttachments({includeInlineImages: false});
-    const htmlBody = msg.getBody(); 
+    const htmlBody = msg.getBody();
 
-    // Creates an inline image object with the image name as key 
+    // Creates an inline image object with the image name as key
     // (can't rely on image index as array based on insert order)
     const img_obj = allInlineImages.reduce((obj, i) => (obj[i.getName()] = i, obj) ,{});
 
@@ -114,7 +114,7 @@ function getGmailTemplateFromDrafts_(subject_line, new_subject_line) {
         subject: new_subject_line,
         text: msg.getPlainBody(),
         html:htmlBody
-      }, 
+      },
       attachments: attachments,
       inlineImages: inlineImagesObj,
     };
@@ -135,4 +135,3 @@ function getGmailTemplateFromDrafts_(subject_line, new_subject_line) {
     }
   }
 }
-

@@ -411,6 +411,9 @@ function to_json() {
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
+  // RSVPs are now closed.
+  return;
+
   const urlParams = new URLSearchParams(window.location.search);
   const primary_guest = urlParams.get("primary_guest");
 
